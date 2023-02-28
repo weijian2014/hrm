@@ -1,0 +1,75 @@
+input.modifyButton {
+    width: 111px;
+    height: 56px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    color: #252d17;
+    font-family: 'Istok Web', sans-serif;
+    font-size: 16px;
+    background: no-repeat url("/static/img/addemail.png");
+    cursor: pointer;
+    zoom: 0.4;
+}
+
+.inputDiv {
+    /*background: url("/static/img/barse.png");*/
+    width: 538px;
+    height: 79px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.addDiv {
+    width: 1200px;
+    font-size: 22px;
+    color: #fff;
+    padding-top: 40px;
+    margin: 0 auto;
+}
+
+.addDiv p {
+    width: 980px;
+    text-align: left;
+}
+
+.addDiv p span {
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+.tips {
+    font-size: 22px;
+    height: 20px;
+    padding-left: 30px;
+    text-align: center;
+}
+
+input.addInput {
+    width: 370px;
+    height: 55px;
+    border: 0;
+    padding: 0 10px;
+    margin: 13px 7px 13px 13px;
+    color: #312f2f;
+    font-family: 'Istok Web', sans-serif;
+    font-size: 18px;
+    background: no-repeat url("/static/img/input.png");
+    zoom: 0.5;
+    vertical-align: middle;
+}
+
+.addBtn {
+    width: 111px;
+    height: 56px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    color: #000000;
+    font-family: 'Istok Web', sans-serif;
+    font-size: 20px;
+    background: no-repeat url("/static/img/addemail.png");
+    cursor: pointer;
+    zoom: 0.5;
+}
