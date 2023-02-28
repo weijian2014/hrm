@@ -21,6 +21,10 @@ var (
 )
 
 func init() {
+
+}
+
+func Init() {
 	sessionMgr = session.New(common.JsonConfigs.CookieName)
 }
 

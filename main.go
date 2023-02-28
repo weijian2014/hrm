@@ -52,8 +52,8 @@ func main() {
 	// The third parameter "" mean the log output to stdout
 	log.LoggerInit(logLevel, logRoll, "")
 
-	log.System("Logger init ok.")
-
+	log.System("Log init ok.")
+	handler.Init()
 	router := httprouter.New()
 
 	// 静态资源
@@ -70,5 +70,6 @@ func main() {
 	router.POST("/api/v1/index/:action", handler.IndexHandler)
 	router.POST("/api/v1/admin/:action", handler.AdminHandler)
 
+	log.System("HRM system listen on %v", common.JsonConfigs.ServerListenHost)
 	http.ListenAndServe(common.JsonConfigs.ServerListenHost, router)
 }
