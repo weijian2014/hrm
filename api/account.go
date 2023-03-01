@@ -3,6 +3,7 @@ package api
 import (
 	"errors"
 	"fmt"
+	"hrm/common"
 	"hrm/db"
 )
 
@@ -12,15 +13,15 @@ type LoginInfo struct {
 }
 
 func Login(info *LoginInfo) (bool, error) {
-	pgInfo, err := db.New()
+	_, err := db.Open(common.DbType)
 	if nil != err {
 		return false, err
 	}
-	defer pgInfo.Close()
+	defer db.Close()
 
 	sql := fmt.Sprintf("SELECT password, user_type FROM t_user WHERE user_name='%s';", info.UserName)
 
-	row, err := pgInfo.Conn.Query(sql)
+	row, err := db.Conn.Query(sql)
 	if nil != err {
 		return false, err
 	}

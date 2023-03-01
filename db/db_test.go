@@ -11,7 +11,7 @@ func init() {
 
 func Test_Query(t *testing.T) {
 	fmt.Println("Test db Query function")
-	conn, err := New()
+	conn, err := Open(1)
 	if nil != err {
 		panic(err)
 	}

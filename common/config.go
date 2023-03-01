@@ -8,7 +8,14 @@ import (
 	"path/filepath"
 )
 
+const (
+	PostgresDatabaseType int = iota // 0
+	SqliteDatabaseType
+	MysqlDatabaseType
+)
+
 var (
+	DbType      int = SqliteDatabaseType
 	CurrDir     string
 	JsonConfigs *JsonConfigStruct
 	FlagInfos   FlagInfoStruct
@@ -33,6 +40,7 @@ type JsonConfigStruct struct {
 	LogRoll                int    `json:"LogRoll"`
 	ServerListenHost       string `json:"ServerListenHost"`
 	CookieName             string `json:"CookieName"`
+	DatabaseName           string `json:"DatabaseName"`
 	PostgresqlHost         string `json:"PostgresqlHost"`
 	PostgresqlPort         uint16 `json:"PostgresqlPort"`
 	PostgresqlUser         string `json:"PostgresqlUser"`

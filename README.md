@@ -30,27 +30,7 @@ go build .
 ```
 
 # 安装Postgresql(https://www.postgresql.org/download/)
-    #https://blog.csdn.net/rudy5348/article/details/79299162
-    yum -y install https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/pgdg-centos10-10-2.noarch.rpm
-    yum -y install postgresql10 postgresql10-server
-    /usr/pgsql-10/bin/postgresql-10-setup initdb && systemctl enable postgresql-10 && systemctl start postgresql-10
-    su - postgres
-    psql
-    ALTER USER postgres WITH PASSWORD 'wj303101610';
-    \q
-    exit
 
-    vim /var/lib/pgsql/10/data/pg_hba.conf(perr--->md5, ident--->md5)
-    local   all             postgres                                peer
-    local   all             postgres                                md5<---
-
-    vim /var/lib/pgsql/10/data/postgresql.conf
-    listen_addresses = 'localhost'
-    listen_addresses = '*'
-
-    systemctl restart postgresql-10
-
-    psql -U postgres #打开postgresql命令行
 
 # 创建数据库和表
     psql -h localhost -d postgres -U postgres -f /opt/create_table.sql
@@ -64,8 +44,8 @@ go build .
     pg_dump -h 192.168.199.123 -p 5432 -U postgres -W -C -F -f ~/hi.sql db_hi
 
 # 打包
-    cd hiweb/src
-    tar -czf hiweb.tar.gzip ../config/ web/ main
+    cd hrm
+    tar -czf hiweb.tar.gzip ../config/ web/ hrm.ext
 
 # 安装
     mkdir -p /opt/hiweb

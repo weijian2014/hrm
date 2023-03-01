@@ -32,7 +32,7 @@ func main() {
 		common.FlagInfos.ConfigFileFullPath = common.CurrDir + "/config/config.json"
 		_, err := os.Stat(common.FlagInfos.ConfigFileFullPath)
 		if os.IsNotExist(err) {
-			common.FlagInfos.ConfigFileFullPath = common.CurrDir + "/../config/config.json"
+			common.FlagInfos.ConfigFileFullPath = common.CurrDir + "/config.json"
 		}
 
 		_, err = os.Stat(common.FlagInfos.ConfigFileFullPath)
