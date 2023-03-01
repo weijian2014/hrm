@@ -29,9 +29,6 @@ gofmt -l -w .
 go build .
 ```
 
-# 安装Postgresql(https://www.postgresql.org/download/)
-
-
 # 创建数据库和表
     psql -h localhost -d postgres -U postgres -f /opt/create_table.sql
 
