@@ -24,9 +24,6 @@ func main() {
 		return
 	}
 
-	var logLevel int = 0
-	var logRoll int = 50000
-
 	_, err := os.Stat(common.FlagInfos.ConfigFileFullPath)
 	if os.IsNotExist(err) {
 		common.FlagInfos.ConfigFileFullPath = common.CurrDir + "/config/config.json"
@@ -46,12 +43,10 @@ func main() {
 		panic(err)
 	}
 
-	logLevel = common.JsonConfigs.LogLevel
-	logRoll = common.JsonConfigs.LogRoll
+	// LogFullPathName为空则输出到标准输出
+	log.LoggerInit(common.JsonConfigs.LogLevel, common.JsonConfigs.LogRoll, common.JsonConfigs.LogFullPathName)
 
-	// The third parameter "" mean the log output to stdout
-	log.LoggerInit(logLevel, logRoll, "")
-
+	log.System("\nJson config:%+v\n\n", common.JsonConfigs)
 	log.System("Log init ok.")
 	handler.Init()
 	router := httprouter.New()

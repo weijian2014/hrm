@@ -38,6 +38,7 @@ type JsonConfigStruct struct {
 	Version                string `json:"Version"`
 	LogLevel               int    `json:"LogLevel"`
 	LogRoll                int    `json:"LogRoll"`
+	LogFullPathName        string `json:"LogFullPathName"`
 	ServerListenHost       string `json:"ServerListenHost"`
 	CookieName             string `json:"CookieName"`
 	DatabaseName           string `json:"DatabaseName"`
