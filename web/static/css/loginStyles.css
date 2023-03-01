@@ -226,6 +226,8 @@ body h1 {
    text-align: center;
    background: #323542;
    padding: 4em;
+   border: #0be093 10px solid;
+   border-radius: 20px;
 }
 
 .app-location h2 {
