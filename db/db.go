@@ -85,7 +85,7 @@ func Open(dbType int) (*sql.DB, error) {
 	}
 
 	if nil != err {
-		return nil, errors.New("connect to postgresql fail")
+		return nil, errors.New("can not connect to datebase")
 	}
 
 	return Conn, nil
