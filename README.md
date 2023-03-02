@@ -36,28 +36,14 @@ go build .
    配置CGO_ENABLED=1到系统环境
 
 # 使用sqlite
+   golang交叉编译go-sqlite3后就可以单独使用了, 不需要sqlite-dll-win64-x64(本体)和sqlite-tools-win32-x86(命令行工具)
    https://sqlite.org/download.html   下载sqlite-dll-win64-x64(本体)和sqlite-tools-win32-x86(命令行工具), 放在任意目录下
    打开cmd,切换到安装的目录,执行`sqlite test.db`可以在当前创建数据库文件,然后就可以把test.db放到工程中单独使用了
 
-# 创建数据库和表
-    psql -h localhost -d postgres -U postgres -f /opt/create_table.sql
-
-# 批量导入数据(序列不用在文件中给出，插入需要插入的字段即可)
-    psql -U postgres
-    COPY t_parts(vehicle_name, parts_name, parts_no, parts_count, parts_price, parts_selling_price) FROM '/tmp/data.txt' DELIMITER ',';
-
-# 导出数据库
-    pg_dump --host=192.168.199.123 --port=5432 --username=postgres --password=123456 --dbname=db_hi -C -F -v -f ~/hi.sql
-    pg_dump -h 192.168.199.123 -p 5432 -U postgres -W -C -F -f ~/hi.sql db_hi
-
-# 打包
-    cd hrm
-    tar -czf hiweb.tar.gzip ../config/ web/ hrm.ext
+# 打包 (Inno Setup)
+   打包工具: http://www.dayanzai.me/inno-setup.html
 
 # 安装
-    mkdir -p /opt/hiweb
-    tar -zxvf hiweb.tar.gzip -C /opt/hiweb
-    /opt/hiweb/main -f /opt/hiweb/config/config.json
 
-# 从SQL文件中创建并恢复数据
-    psql -U postgres --set ON_ERROR_STOP=ON -f /root/weijian/hiweb/doc/hi_20180328232626.sql
+# 系统初始化
+   hrm.exe -init -u admin -p 123456

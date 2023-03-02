@@ -5,7 +5,6 @@
   "LogFullPathName": "",
   "ServerListenHost": "0.0.0.0:80",
   "CookieName": "hrm",
-  "DatabaseName": "hrm.db",
   "PostgresqlHost": "127.0.0.1",
   "PostgresqlPort": 5432,
   "PostgresqlUser": "postgres",

@@ -41,7 +41,6 @@ type JsonConfigStruct struct {
 	LogFullPathName        string `json:"LogFullPathName"`
 	ServerListenHost       string `json:"ServerListenHost"`
 	CookieName             string `json:"CookieName"`
-	DatabaseName           string `json:"DatabaseName"`
 	PostgresqlHost         string `json:"PostgresqlHost"`
 	PostgresqlPort         uint16 `json:"PostgresqlPort"`
 	PostgresqlUser         string `json:"PostgresqlUser"`
