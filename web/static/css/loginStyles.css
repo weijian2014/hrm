@@ -204,7 +204,7 @@ body {
 
 body a,
 form li,
-.submit input[type="submit"],
+/* .loginBtn input[type="button"], */
 .new h3 a,
 .new h4 a {
    transition: 0.1s all;
@@ -293,36 +293,14 @@ form {
    margin: 1em 0;
 }
 
-.app-location input[type="submit"] {
+.app-location input[type="button"] {
    font-size: 20px;
    font-weight: 300;
    color: #fff;
    cursor: pointer;
    outline: none;
-   padding: 10px 10px;
-   width: 100%;
-   border: 3px solid #0bd38a;
-   background: #0bd38a;
-   border-radius: 0.3em;
-   -o-border-radius: 0.3em;
-   -webkit-border-radius: 0.3em;
-   -moz-border-radius: 0.3em;
-}
-
-input[type="submit"]:hover {
-   background: none;
-   border: 3px solid #0bd38a;
-   color: #0bd38a;
-
-}
-
-.loginBtn {
-   font-size: 20px;
-   font-weight: 300;
-   color: #fff;
-   cursor: pointer;
-   outline: none;
-   padding: 0.3em 0.3em;
+   padding-top: 10px;
+   padding-bottom: 5px;
    width: 102%;
    border: 3px solid #0bd38a;
    background: #0bd38a;
@@ -330,6 +308,12 @@ input[type="submit"]:hover {
    -o-border-radius: 0.3em;
    -webkit-border-radius: 0.3em;
    -moz-border-radius: 0.3em;
+}
+
+input[type="button"]:hover {
+   background: none;
+   border: 3px solid #0bd38a;
+   color: #0bd38a;
 }
 
 .loginBtn:hover {
@@ -384,6 +368,21 @@ input[type="submit"]:hover {
 }
 
 /*-----start-responsive-design------*/
+@media (max-width: 1920px) {
+   .app-location {
+      width: 33.5%;
+   }
+
+   .app-location input[type="text"],
+   .app-location input[type="password"] {
+      width: 82.2%;
+   }
+
+   .app-location input[type="button"] {
+      width: 96%;
+   }
+}
+
 @media (max-width: 1440px) {
    .app-location {
       width: 30%;
