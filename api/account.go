@@ -13,15 +13,15 @@ type LoginInfo struct {
 }
 
 func Login(info *LoginInfo) (bool, error) {
-	_, err := db.Open(common.DbType)
+	conn, err := db.Open(common.DbType)
 	if nil != err {
 		return false, err
 	}
-	defer db.Close()
+	defer conn.Close()
 
 	sql := fmt.Sprintf("SELECT password, user_type FROM t_user WHERE user_name='%s';", info.UserName)
 
-	row, err := db.Conn.Query(sql)
+	row, err := conn.Query(sql)
 	if nil != err {
 		return false, err
 	}
@@ -39,7 +39,7 @@ func Login(info *LoginInfo) (bool, error) {
 	}
 
 	// 用户类型 0:管理员 1普通用户
-	if 0 == userType {
+	if userType == 0 {
 		return true, nil
 	} else {
 		return false, nil

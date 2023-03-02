@@ -41,13 +41,13 @@ type PagingInfo struct {
 }
 
 func AllPartsRow(isAdmin bool) (*AllPartsRowInfo, error) {
-	_, err := db.Open(common.DbType)
+	conn, err := db.Open(common.DbType)
 	if nil != err {
 		return nil, err
 	}
-	defer db.Close()
+	defer conn.Close()
 
-	rows, err := db.Conn.Query("SELECT * FROM t_parts")
+	rows, err := conn.Query("SELECT * FROM t_parts")
 	if nil != err {
 		return nil, err
 	}
@@ -90,13 +90,13 @@ func AllPartsRow(isAdmin bool) (*AllPartsRowInfo, error) {
 }
 
 func Count() (*CountInfo, error) {
-	_, err := db.Open(common.DbType)
+	conn, err := db.Open(common.DbType)
 	if nil != err {
 		return nil, err
 	}
-	defer db.Close()
+	defer conn.Close()
 
-	rows, err := db.Conn.Query("SELECT COUNT(*) FROM t_parts")
+	rows, err := conn.Query("SELECT COUNT(*) FROM t_parts")
 	if nil != err {
 		return nil, err
 	}
@@ -116,16 +116,16 @@ func Count() (*CountInfo, error) {
 }
 
 func UpdatePartsRow(row *PartsRowInfo) error {
-	_, err := db.Open(common.DbType)
+	conn, err := db.Open(common.DbType)
 	if nil != err {
 		return err
 	}
-	defer db.Close()
+	defer conn.Close()
 
 	sql := `UPDATE t_parts
 	SET vehicle_name=$1, parts_name=$2, parts_no=$3, parts_count=$4, parts_price=$5, parts_selling_price=$6
 	WHERE parts_id=$7;`
-	stmt, err := db.Conn.Prepare(sql)
+	stmt, err := conn.Prepare(sql)
 	if nil != err {
 		return err
 	}
@@ -153,17 +153,17 @@ func UpdatePartsRow(row *PartsRowInfo) error {
 }
 
 func InsertPartsRow(row *PartsRowInfo) (*InsertInfo, error) {
-	_, err := db.Open(common.DbType)
+	conn, err := db.Open(common.DbType)
 	if nil != err {
 		return nil, err
 	}
-	defer db.Close()
+	defer conn.Close()
 
 	sql := `INSERT INTO t_parts(parts_id, vehicle_name, parts_name, parts_no, parts_count, parts_price, parts_selling_price)
 	VALUES (nextval('t_parts_parts_id_seq'), $1, $2, $3, $4, $5, $6) RETURNING parts_id;`
 
 	insertInfo := &InsertInfo{}
-	err = db.Conn.QueryRow(sql,
+	err = conn.QueryRow(sql,
 		row.VehicleName,
 		row.PartsName,
 		row.PartsNo,
@@ -178,16 +178,16 @@ func InsertPartsRow(row *PartsRowInfo) (*InsertInfo, error) {
 }
 
 func DeletePartsRow(row *PartsRowInfo) error {
-	_, err := db.Open(common.DbType)
+	conn, err := db.Open(common.DbType)
 	if nil != err {
 		return err
 	}
-	defer db.Close()
+	defer conn.Close()
 
 	sql := `DELETE FROM t_parts
 	WHERE parts_id=$1;`
 
-	stmt, err := db.Conn.Prepare(sql)
+	stmt, err := conn.Prepare(sql)
 	if nil != err {
 		return err
 	}
@@ -207,14 +207,14 @@ func DeletePartsRow(row *PartsRowInfo) error {
 }
 
 func Search(sInfo *SearchInfo, isAdmin bool) (*AllPartsRowInfo, error) {
-	_, err := db.Open(common.DbType)
+	conn, err := db.Open(common.DbType)
 	if nil != err {
 		return nil, err
 	}
-	defer db.Close()
+	defer conn.Close()
 
 	sql := `SELECT * FROM t_parts WHERE vehicle_name like $1 OR parts_name like $2 OR parts_no like $3;`
-	stmt, err := db.Conn.Prepare(sql)
+	stmt, err := conn.Prepare(sql)
 	if nil != err {
 		return nil, err
 	}
@@ -264,14 +264,14 @@ func Search(sInfo *SearchInfo, isAdmin bool) (*AllPartsRowInfo, error) {
 }
 
 func Paging(isAdmin bool, info *PagingInfo) (*AllPartsRowInfo, error) {
-	_, err := db.Open(common.DbType)
+	conn, err := db.Open(common.DbType)
 	if nil != err {
 		return nil, err
 	}
-	defer db.Close()
+	defer conn.Close()
 
 	sql := `SELECT * FROM t_parts LIMIT $1 OFFSET $2;`
-	stmt, err := db.Conn.Prepare(sql)
+	stmt, err := conn.Prepare(sql)
 	if nil != err {
 		return nil, err
 	}
