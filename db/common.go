@@ -14,14 +14,15 @@ var (
 
 func Init(adminUsername, adminPassword string) error {
 	// 数据库文件存在时, 将删除
-	dbPath := common.CurrDir + "/" + DatabaseName
+	dbPath := common.CurrDir + common.GetRampByOs() + DatabaseName
 	_, err := os.Stat(dbPath)
-	if os.IsExist(err) {
-		os.Remove(dbPath)
+	if err == nil {
+		// 文件存在
+		err = os.Remove(dbPath)
 		if err != nil {
 			return err
 		}
-		fmt.Printf("Database %v has been removed", dbPath)
+		fmt.Printf("Database [%v] has been removed\n", dbPath)
 	}
 
 	err = createLoginTable()
@@ -48,6 +49,8 @@ func Open(dbType int) (*sql.DB, error) {
 		db, err = openSqlite()
 	case common.MysqlDatabaseType:
 		db, err = openMysql()
+	default:
+		panic("Unknown database type")
 	}
 
 	if nil != err {

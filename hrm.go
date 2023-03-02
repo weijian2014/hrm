@@ -16,7 +16,7 @@ import (
 
 func init() {
 	flag.BoolVar(&common.FlagInfos.IsHelp, "h", false, "Show help and exit")
-	flag.StringVar(&common.FlagInfos.ConfigFileFullPath, "f", common.CurrDir+"/config.json", "The path of config.json file, support for absolute and relative paths")
+	flag.StringVar(&common.FlagInfos.ConfigFileFullPath, "f", common.CurrDir+common.GetRampByOs()+"config.json", "The path of config.json file, support for absolute and relative paths")
 	flag.BoolVar(&common.FlagInfos.IsInitSystem, "init", false, "Init system and exit")
 	flag.StringVar(&common.FlagInfos.AdminUsername, "u", "admin", "User name for admin account")
 	flag.StringVar(&common.FlagInfos.AdminPassword, "p", "123456", "Password for admin account")
@@ -40,10 +40,10 @@ func main() {
 
 	_, err := os.Stat(common.FlagInfos.ConfigFileFullPath)
 	if os.IsNotExist(err) {
-		common.FlagInfos.ConfigFileFullPath = common.CurrDir + "/config/config.json"
+		common.FlagInfos.ConfigFileFullPath = common.CurrDir + common.GetRampByOs() + "config" + common.GetRampByOs() + "config.json"
 		_, err := os.Stat(common.FlagInfos.ConfigFileFullPath)
 		if os.IsNotExist(err) {
-			common.FlagInfos.ConfigFileFullPath = common.CurrDir + "/config.json"
+			common.FlagInfos.ConfigFileFullPath = common.CurrDir + common.GetRampByOs() + "config.json"
 		}
 
 		_, err = os.Stat(common.FlagInfos.ConfigFileFullPath)

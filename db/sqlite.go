@@ -9,7 +9,7 @@ import (
 )
 
 func openSqlite() (*sql.DB, error) {
-	dbPath := common.CurrDir + "/" + DatabaseName
+	dbPath := common.CurrDir + common.GetRampByOs() + DatabaseName
 	// 如果数据库不存在, 则会创建
 	db, err := sql.Open("sqlite3", dbPath)
 	if nil != err {
@@ -50,7 +50,7 @@ func createLoginTable() error {
 		return err
 	}
 
-	fmt.Printf("Table %v was created\n", LoginTableName)
+	fmt.Printf("Table [%v] was created\n", LoginTableName)
 	return nil
 }
 
@@ -79,6 +79,6 @@ func insertIntoLogin(adminUsername, adminPassword string) error {
 		return err
 	}
 
-	fmt.Printf("Insert admin account to teble %v ok, username [%v], password [%v], entry id %v\n", adminUsername, adminPassword, LoginTableName, id)
+	fmt.Printf("Insert admin account to teble [%v] ok, username [%v], password [%v], entry id [%v]\n", LoginTableName, adminUsername, adminPassword, id)
 	return nil
 }
