@@ -1,0 +1,27 @@
+package db
+
+import (
+	"database/sql"
+	"errors"
+	"hrm/common"
+)
+
+// db需要用户自己关闭
+func Open(dbType int) (*sql.DB, error) {
+	var err error
+	var db *sql.DB
+	switch dbType {
+	case common.PostgresDatabaseType:
+		db, err = openPostgres()
+	case common.SqliteDatabaseType:
+		db, err = openSqlite()
+	case common.MysqlDatabaseType:
+		db, err = openMysql()
+	}
+
+	if nil != err {
+		return nil, errors.New("can not connect to datebase")
+	}
+
+	return db, nil
+}
