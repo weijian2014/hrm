@@ -20,7 +20,7 @@ func AccountHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params)
 		log.Debug("LoginInfo %+v\n", li)
 		isAdmin, err := api.Login(li)
 		if nil != err {
-			log.Error("AccountHandler login fail, %s", err.Error())
+			log.Error("AccountHandler login fail, %v", err)
 			respString(w, 0, err.Error())
 			return
 		}

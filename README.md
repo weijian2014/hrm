@@ -29,6 +29,16 @@ gofmt -l -w .
 go build .
 ```
 
+# Windows下golang使用sqlite, 开发环境需要安装GCC, 因为go在编译github.com/mattn/go-sqlite3(sqlite数据库驱动)需要CGO_ENABLED=1
+   https://github.com/niXman/mingw-builds-binaries  有MinGWX64的安装器和整个离线包在Releases中
+   https://www.mingw-w64.org/  下载安装对应操作系统位的mingw或者其它Windows上的GCC
+   配置gcc的bin到PATH
+   配置CGO_ENABLED=1到系统环境
+
+# 使用sqlite
+   https://sqlite.org/download.html   下载sqlite-dll-win64-x64(本体)和sqlite-tools-win32-x86(命令行工具), 放在任意目录下
+   打开cmd,切换到安装的目录,执行`sqlite test.db`可以在当前创建数据库文件,然后就可以把test.db放到工程中单独使用了
+
 # 创建数据库和表
     psql -h localhost -d postgres -U postgres -f /opt/create_table.sql
 

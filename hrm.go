@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"hrm/common"
+	"hrm/db"
 	"hrm/handler"
 	"hrm/log"
 
@@ -48,6 +49,12 @@ func main() {
 
 	log.System("\nJson config:%+v\n\n", common.JsonConfigs)
 	log.System("Log init ok.")
+
+	err = db.Init()
+	if err != nil {
+		log.Error("Init database failed, %v", err)
+	}
+
 	handler.Init()
 	router := httprouter.New()
 

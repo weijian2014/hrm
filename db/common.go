@@ -2,7 +2,6 @@ package db
 
 import (
 	"database/sql"
-	"errors"
 	"hrm/common"
 )
 
@@ -20,8 +19,17 @@ func Open(dbType int) (*sql.DB, error) {
 	}
 
 	if nil != err {
-		return nil, errors.New("can not connect to datebase")
+		return nil, err
 	}
 
 	return db, nil
+}
+
+func Init() error {
+	err := createUserTable()
+	if err != nil {
+		return err
+	}
+
+	return err
 }
