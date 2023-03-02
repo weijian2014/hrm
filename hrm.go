@@ -20,6 +20,7 @@ func init() {
 	flag.BoolVar(&common.FlagInfos.IsInitSystem, "init", false, "Init system and exit")
 	flag.StringVar(&common.FlagInfos.AdminUsername, "u", "admin", "User name for admin account")
 	flag.StringVar(&common.FlagInfos.AdminPassword, "p", "123456", "Password for admin account")
+	flag.Parse()
 }
 
 func main() {
@@ -33,6 +34,7 @@ func main() {
 		if err != nil {
 			panic(fmt.Sprintf("Init database failed, %v", err))
 		}
+		fmt.Printf("Init system ok, admin username %v, password %v", common.FlagInfos.AdminUsername, common.FlagInfos.AdminPassword)
 		return
 	}
 
@@ -77,6 +79,6 @@ func main() {
 	router.POST("/api/v1/admin/:action", handler.AdminHandler)
 
 	log.System("HRM system listen on %v", common.JsonConfigs.ServerListenHost)
-	log.System("\nJson config:%+v\n\n", common.JsonConfigs)
+	log.System("Json config from %v:\n%+v\n\n", common.FlagInfos.ConfigFileFullPath, common.JsonConfigs)
 	http.ListenAndServe(common.JsonConfigs.ServerListenHost, router)
 }
