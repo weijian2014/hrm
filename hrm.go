@@ -48,7 +48,7 @@ func main() {
 	log.LoggerInit(common.JsonConfigs.LogLevel, common.JsonConfigs.LogRoll, common.JsonConfigs.LogFullPathName)
 
 	log.System("\nJson config:%+v\n\n", common.JsonConfigs)
-	log.System("Log init ok.")
+	log.System("Log init ok")
 
 	err = db.Init()
 	if err != nil {

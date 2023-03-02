@@ -51,7 +51,7 @@ func createUserTable() error {
 		return err
 	}
 
-	log.System("Table '%v' was created", LoginTableName)
+	log.System("Table %v was created", LoginTableName)
 
 	//插入数据
 	sql = fmt.Sprintf(`
@@ -73,7 +73,7 @@ func createUserTable() error {
 		return err
 	}
 
-	log.System("Insert admin to teble %v ok, last insert id ", LoginTableName, id)
+	log.System("Insert admin to teble %v ok, last insert id %v", LoginTableName, id)
 
 	return nil
 }
