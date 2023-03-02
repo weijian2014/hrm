@@ -34,8 +34,9 @@ func createUserTable() error {
 	}
 	defer db.Close()
 
-	createUserTableStr := `
-	CREATE TABLE 'login' (
+	// 创建表
+	sql := fmt.Sprintf(`
+	CREATE TABLE '%v' (
 		'id' INTEGER PRIMARY KEY AUTOINCREMENT,
 		'username' TEXT NOT NULL,
 		'password' TEXT NOT NULL,
@@ -43,13 +44,36 @@ func createUserTable() error {
 		'created' TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		'modify' TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 		);
-	`
+	`, LoginTableName)
 
-	_, err = db.Exec(createUserTableStr)
+	_, err = db.Exec(sql)
 	if err != nil {
 		return err
 	}
 
-	log.System("Table 'login' was created")
+	log.System("Table '%v' was created", LoginTableName)
+
+	//插入数据
+	sql = fmt.Sprintf(`
+	INSERT INTO %v(username, password, type) values(?,?,?)
+	`, LoginTableName)
+	stmt, err := db.Prepare(sql)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	res, err := stmt.Exec("admin", "12345678", 0)
+	if err != nil {
+		return err
+	}
+
+	id, err := res.LastInsertId()
+	if err != nil {
+		return err
+	}
+
+	log.System("Insert admin to teble %v ok, last insert id ", LoginTableName, id)
+
 	return nil
 }

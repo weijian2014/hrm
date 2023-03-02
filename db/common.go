@@ -5,6 +5,10 @@ import (
 	"hrm/common"
 )
 
+var (
+	LoginTableName = "login"
+)
+
 // db需要用户自己关闭
 func Open(dbType int) (*sql.DB, error) {
 	var err error

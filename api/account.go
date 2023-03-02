@@ -7,10 +7,6 @@ import (
 	"hrm/db"
 )
 
-var (
-	loginTableName = "login"
-)
-
 type LoginInfo struct {
 	UserName string `json:"user_name"`
 	Password string `json:"password"`
@@ -23,7 +19,7 @@ func Login(info *LoginInfo) (bool, error) {
 	}
 	defer conn.Close()
 
-	sql := fmt.Sprintf("SELECT password, type FROM %v WHERE username='%v';", loginTableName, info.UserName)
+	sql := fmt.Sprintf("SELECT password, type FROM %v WHERE username='%v';", db.LoginTableName, info.UserName)
 	rows, err := conn.Query(sql)
 	if err != nil || !rows.Next() {
 		return false, errors.New("用户名或密码错误")
