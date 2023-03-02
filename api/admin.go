@@ -145,8 +145,8 @@ func UpdatePartsRow(row *PartsRowInfo) error {
 	}
 
 	ar, err := ret.RowsAffected()
-	if -1 == ar {
-		return errors.New("Update fail, affected row error")
+	if ar == -1 {
+		return errors.New("update fail, affected row error")
 	}
 
 	return err

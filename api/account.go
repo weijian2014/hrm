@@ -28,14 +28,14 @@ func Login(info *LoginInfo) (bool, error) {
 	defer row.Close()
 
 	if !row.Next() {
-		return false, errors.New("用户名或密码错误!")
+		return false, errors.New("用户名或密码错误")
 	}
 
 	dbPassword := ""
 	userType := 1
 	row.Scan(&dbPassword, &userType)
 	if info.Password != dbPassword {
-		return false, errors.New("密码错误!")
+		return false, errors.New("密码错误")
 	}
 
 	// 用户类型 0:管理员 1普通用户

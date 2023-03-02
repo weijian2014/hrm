@@ -1,10 +1,4 @@
 /*
-	Date: 2018.03.29
-	Code by weijian 303101610@qq.com
-	Copyright (C) 2018 weijian
-*/
-
-/*
 Thread safe
 */
 package session
@@ -78,7 +72,7 @@ func (mgr *SessionMgr) StartSession(w http.ResponseWriter, r *http.Request) stri
 
 func (mgr *SessionMgr) StopSession(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie(mgr.cookieName)
-	if err != nil || "" == cookie.Value {
+	if err != nil || cookie.Value == "" {
 		return
 	} else {
 		mgr.mutex.Lock()
