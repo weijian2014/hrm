@@ -4,10 +4,12 @@ import (
 	"database/sql"
 	"hrm/common"
 
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/mattn/go-sqlite3"
 )
 
 func openSqlite() (*sql.DB, error) {
+	sqlite3.SQLiteDriver
+
 	db, err := sql.Open("sqlite3", common.JsonConfigs.DatabaseName)
 	if nil != err {
 		return nil, err
