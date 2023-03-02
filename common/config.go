@@ -51,7 +51,10 @@ type JsonConfigStruct struct {
 
 type FlagInfoStruct struct {
 	IsHelp             bool
+	IsInitSystem       bool
 	ConfigFileFullPath string
+	AdminUsername      string
+	AdminPassword      string
 }
 
 // 读取json配置文件

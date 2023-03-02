@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"hrm/common"
-	"hrm/log"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -27,7 +26,7 @@ func openSqlite() (*sql.DB, error) {
 	return db, nil
 }
 
-func createUserTable() error {
+func createLoginTable() error {
 	db, err := openSqlite()
 	if err != nil {
 		return err
@@ -51,19 +50,26 @@ func createUserTable() error {
 		return err
 	}
 
-	log.System("Table %v was created", LoginTableName)
+	fmt.Printf("Table %v was created", LoginTableName)
+	return nil
+}
+
+func insertIntoLogin(adminUsername, adminPassword string) error {
+	db, err := openSqlite()
+	if err != nil {
+		return err
+	}
+	defer db.Close()
 
 	//插入数据
-	sql = fmt.Sprintf(`
-	INSERT INTO %v(username, password, type) values(?,?,?)
-	`, LoginTableName)
+	sql := fmt.Sprintf(`INSERT INTO %v(username, password, type) values(?,?,?)`, LoginTableName)
 	stmt, err := db.Prepare(sql)
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
 
-	res, err := stmt.Exec("admin", "12345678", 0)
+	res, err := stmt.Exec(adminUsername, adminPassword, 0)
 	if err != nil {
 		return err
 	}
@@ -73,7 +79,6 @@ func createUserTable() error {
 		return err
 	}
 
-	log.System("Insert admin to teble %v ok, last insert id %v", LoginTableName, id)
-
+	fmt.Printf("Insert admin to teble %v ok, last insert id %v", LoginTableName, id)
 	return nil
 }

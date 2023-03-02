@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"net/http"
 	"os"
 
@@ -14,14 +15,24 @@ import (
 )
 
 func init() {
-	// common option
-	flag.BoolVar(&common.FlagInfos.IsHelp, "h", false, "Show help")
+	flag.BoolVar(&common.FlagInfos.IsHelp, "h", false, "Show help and exit")
 	flag.StringVar(&common.FlagInfos.ConfigFileFullPath, "f", common.CurrDir+"/config.json", "The path of config.json file, support for absolute and relative paths")
+	flag.BoolVar(&common.FlagInfos.IsInitSystem, "init", false, "Init system and exit")
+	flag.StringVar(&common.FlagInfos.AdminUsername, "u", "admin", "User name for admin account")
+	flag.StringVar(&common.FlagInfos.AdminPassword, "p", "123456", "Password for admin account")
 }
 
 func main() {
 	if common.FlagInfos.IsHelp {
 		flag.Usage()
+		return
+	}
+
+	if common.FlagInfos.IsInitSystem {
+		err := db.Init(common.FlagInfos.AdminUsername, common.FlagInfos.AdminPassword)
+		if err != nil {
+			panic(fmt.Sprintf("Init database failed, %v", err))
+		}
 		return
 	}
 
@@ -46,14 +57,7 @@ func main() {
 
 	// LogFullPathName为空则输出到标准输出
 	log.LoggerInit(common.JsonConfigs.LogLevel, common.JsonConfigs.LogRoll, common.JsonConfigs.LogFullPathName)
-
-	log.System("\nJson config:%+v\n\n", common.JsonConfigs)
 	log.System("Log init ok")
-
-	err = db.Init()
-	if err != nil {
-		log.Error("Init database failed, %v", err)
-	}
 
 	handler.Init()
 	router := httprouter.New()
@@ -73,5 +77,6 @@ func main() {
 	router.POST("/api/v1/admin/:action", handler.AdminHandler)
 
 	log.System("HRM system listen on %v", common.JsonConfigs.ServerListenHost)
+	log.System("\nJson config:%+v\n\n", common.JsonConfigs)
 	http.ListenAndServe(common.JsonConfigs.ServerListenHost, router)
 }

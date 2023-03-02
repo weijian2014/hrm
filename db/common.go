@@ -29,11 +29,16 @@ func Open(dbType int) (*sql.DB, error) {
 	return db, nil
 }
 
-func Init() error {
-	err := createUserTable()
+func Init(adminUsername, adminPassword string) error {
+	err := createLoginTable()
 	if err != nil {
 		return err
 	}
 
-	return err
+	err = insertIntoLogin(adminUsername, adminPassword)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

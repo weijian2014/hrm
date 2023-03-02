@@ -7,6 +7,11 @@ import (
 	"hrm/db"
 )
 
+const (
+	AdminLoginUserType   int = iota // 0 管理员
+	GeneralLoginUserType            // 1 普通用户
+)
+
 type LoginInfo struct {
 	UserName string `json:"user_name"`
 	Password string `json:"password"`
@@ -32,8 +37,7 @@ func Login(info *LoginInfo) (bool, error) {
 		return false, errors.New("密码错误")
 	}
 
-	// 用户类型 0:管理员 1普通用户
-	if userType == 0 {
+	if userType == AdminLoginUserType {
 		return true, nil
 	} else {
 		return false, nil
