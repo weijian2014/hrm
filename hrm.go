@@ -34,7 +34,7 @@ func main() {
 		if err != nil {
 			panic(fmt.Sprintf("Init database failed, %v", err))
 		}
-		fmt.Printf("Init system ok")
+		fmt.Printf("Init system ok\n")
 		return
 	}
 
