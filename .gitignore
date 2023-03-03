@@ -1,7 +1,7 @@
 # Executables
 hrm.exe
-./hrm.db
-./hrm
 *.out
 *.app
 main
+hrm
+hrm.db
