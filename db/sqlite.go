@@ -9,7 +9,7 @@ import (
 )
 
 func openSqlite() (*sql.DB, error) {
-	dbPath := common.CurrDir + common.GetRampByOs() + DatabaseName
+	dbPath := common.CurrDir + "/" + DatabaseName
 	// 如果数据库不存在, 则会创建
 	db, err := sql.Open("sqlite3", dbPath)
 	if nil != err {

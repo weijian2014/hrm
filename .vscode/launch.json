@@ -1,0 +1,16 @@
+{
+   "version": "2.0.0",
+   // "configurations": [
+   // {
+   //    "name": "UtDebug",
+   //    "type": "go",
+   //    "request": "launch",
+   //    "mode": "test",
+   //    "program": "${workspaceFolder}/api",
+   //    "args": [
+   //       "-test.run",
+   //       "Test_ReadExcel"
+   //    ]
+   // }
+   // ]
+}

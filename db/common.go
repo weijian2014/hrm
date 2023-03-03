@@ -14,7 +14,7 @@ var (
 
 func Init(adminUsername, adminPassword string) error {
 	// 数据库文件存在时, 将删除
-	dbPath := common.CurrDir + common.GetRampByOs() + DatabaseName
+	dbPath := common.CurrDir + "/" + DatabaseName
 	_, err := os.Stat(dbPath)
 	if err == nil {
 		// 文件存在

@@ -13,7 +13,6 @@ import (
 	"net"
 	"os"
 	"os/exec"
-	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -35,18 +34,6 @@ func IsLocalIP(ip string) (bool, error) {
 		}
 	}
 	return false, nil
-}
-
-func GetRampByOs() string {
-	osType := runtime.GOOS
-	switch osType {
-	case "windows":
-		return `\`
-	case "linux":
-		return "/"
-	default:
-		return "/"
-	}
 }
 
 func Command(name string, arg ...string) ([]byte, error) {
