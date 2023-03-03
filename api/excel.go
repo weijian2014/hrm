@@ -164,17 +164,126 @@ func ReadExcel(excelFile string) (*EmployeeInfo, error) {
 		return nil, err
 	}
 
-	// // Get all the rows in the Sheet1.
-	// rows, err := f.GetRows("Sheet1")
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// for _, row := range rows {
-	// 	for _, colCell := range row {
-	// 		fmt.Print(colCell, "\t")
-	// 	}
-	// 	fmt.Println()
-	// }
-
 	return e, nil
+}
+
+func WriteExcel(excelFile string, ei *EmployeeInfo) error {
+	f, err := excelize.OpenFile(excelFile)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err := f.Close(); err != nil {
+			panic(err)
+		}
+	}()
+
+	// 姓名
+	err = f.SetCellValue(excelSheetName, nameCell, ei.Name)
+	if err != nil {
+		return err
+	}
+
+	// 性别
+	err = f.SetCellValue(excelSheetName, genderCell, ei.Gender)
+	if err != nil {
+		return err
+	}
+
+	// 年龄
+	err = f.SetCellValue(excelSheetName, ageCell, ei.Age)
+	if err != nil {
+		return err
+	}
+
+	// 工作时间
+	err = f.SetCellValue(excelSheetName, workTimeCell, ei.WorkTime)
+	if err != nil {
+		return err
+	}
+
+	// 工资
+	err = f.SetCellValue(excelSheetName, salaryCell, ei.Salary)
+	if err != nil {
+		return err
+	}
+
+	// 岗位
+	err = f.SetCellValue(excelSheetName, postCell, ei.Post)
+	if err != nil {
+		return err
+	}
+
+	// 社保
+	err = f.SetCellValue(excelSheetName, socialSecurityCell, ei.SocialSecurity)
+	if err != nil {
+		return err
+	}
+
+	// 电话
+	err = f.SetCellValue(excelSheetName, phoneCell, ei.Phone)
+	if err != nil {
+		return err
+	}
+
+	// 原单位
+	err = f.SetCellValue(excelSheetName, formerEmployerCell, ei.FormerEmployer)
+	if err != nil {
+		return err
+	}
+
+	// 身高
+	err = f.SetCellValue(excelSheetName, heightCell, ei.Height)
+	if err != nil {
+		return err
+	}
+
+	// 体重
+	err = f.SetCellValue(excelSheetName, weightCell, ei.Weight)
+	if err != nil {
+		return err
+	}
+
+	// 文化
+	err = f.SetCellValue(excelSheetName, diplomaCell, ei.Diploma)
+	if err != nil {
+		return err
+	}
+
+	// 政治面貌
+	err = f.SetCellValue(excelSheetName, politicalStatusCell, ei.PoliticalStatus)
+	if err != nil {
+		return err
+	}
+
+	// 身份证
+	err = f.SetCellValue(excelSheetName, idCell, ei.Id)
+	if err != nil {
+		return err
+	}
+
+	// 保安证
+	err = f.SetCellValue(excelSheetName, securityCardCell, ei.SecurityCard)
+	if err != nil {
+		return err
+	}
+
+	// 现住址
+	err = f.SetCellValue(excelSheetName, currentDddressCell, ei.CurrentDddress)
+	if err != nil {
+		return err
+	}
+
+	// 需要了解的情况
+	err = f.SetCellValue(excelSheetName, commentsCell, ei.Comments)
+	if err != nil {
+		return err
+	}
+
+	err = f.Save()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
