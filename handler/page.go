@@ -29,7 +29,7 @@ func Init() {
 }
 
 func LoginPageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	if ret := sessionMgr.CheckCookieValid(w, r); "" == ret {
+	if ret := sessionMgr.CheckCookieValid(w, r); ret == "" {
 		sessionId := sessionMgr.StartSession(w, r)
 		jump := "/index"
 		log.Debug("Invalid cookie, start session [%s] and set jump to [%s]\n", sessionId, jump)
@@ -52,7 +52,7 @@ func IndexPageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 		return
 	}
 
-	if ret := sessionMgr.CheckCookieValid(w, r); "" == ret {
+	if ret := sessionMgr.CheckCookieValid(w, r); ret == "" {
 		sessionId := sessionMgr.StartSession(w, r)
 		jump := r.RequestURI
 		log.Debug("Invalid cookie, start session [%s] and set jump to [%s].\n", sessionId, jump)
@@ -77,7 +77,7 @@ func AdminPageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 		return
 	}
 
-	if ret := sessionMgr.CheckCookieValid(w, r); "" == ret {
+	if ret := sessionMgr.CheckCookieValid(w, r); ret == "" {
 		sessionId := sessionMgr.StartSession(w, r)
 		jump := r.RequestURI
 		log.Debug("Invalid cookie, start session [%s] and set jump to [%s].\n", sessionId, jump)
@@ -108,6 +108,52 @@ func AdminPageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 	}
 
 	t, err := template.ParseFiles(common.CurrDir + "/web/html/admin.html")
+	if err != nil {
+		log.Error("Parse admin.html file failt, error %s\n", err.Error())
+		return
+	}
+
+	t.Execute(w, nil)
+}
+
+func EmployeePageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	if !isLogin(r) {
+		log.Warn("Not login!")
+		http.Redirect(w, r, "/", http.StatusFound)
+		return
+	}
+
+	if ret := sessionMgr.CheckCookieValid(w, r); ret == "" {
+		sessionId := sessionMgr.StartSession(w, r)
+		jump := r.RequestURI
+		log.Debug("Invalid cookie, start session [%s] and set jump to [%s].\n", sessionId, jump)
+		sessionMgr.SetSessionValuse(sessionId, "jump", jump)
+		http.Redirect(w, r, "/", http.StatusFound)
+		return
+	}
+
+	cookie, err := r.Cookie(common.JsonConfigs.CookieName)
+	if nil != err || nil == cookie {
+		log.Error("EmployeePageHandler get cookie fail\n")
+		http.Redirect(w, r, "/", http.StatusFound)
+		return
+	}
+
+	sessionId := cookie.Value
+	isAdmin, ok := sessionMgr.GetSessionValuse(sessionId, "isAdmin")
+	if !ok {
+		log.Error("EmployeePageHandler get isAdmin fail\n")
+		http.Redirect(w, r, "/", http.StatusFound)
+		return
+	}
+
+	if !isAdmin.(bool) {
+		log.Error("EmployeePageHandler a illegal request!")
+		http.NotFound(w, r)
+		return
+	}
+
+	t, err := template.ParseFiles(common.CurrDir + "/web/html/employee.html")
 	if err != nil {
 		log.Error("Parse admin.html file failt, error %s\n", err.Error())
 		return

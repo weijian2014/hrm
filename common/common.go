@@ -8,7 +8,7 @@ import (
 	"crypto/x509/pkix"
 	"encoding/pem"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"math/big"
 	"net"
 	"os"
@@ -64,21 +64,21 @@ func Command(name string, arg ...string) ([]byte, error) {
 		return []byte(""), err
 	}
 
-	errBytes, err := ioutil.ReadAll(stderr)
+	errBytes, err := io.ReadAll(stderr)
 	if err != nil {
 		cancel()
 		cmd.Wait()
 		return []byte(""), err
 	}
 
-	if 0 != len(errBytes) {
+	if len(errBytes) != 0 {
 		noEnterErrStr := strings.TrimRight(string(errBytes), "\n")
 		cancel()
 		cmd.Wait()
 		return []byte(""), fmt.Errorf(noEnterErrStr)
 	}
 
-	opBytes, err := ioutil.ReadAll(stdout)
+	opBytes, err := io.ReadAll(stdout)
 	if err != nil {
 		cancel()
 		cmd.Wait()
@@ -207,10 +207,10 @@ func IsExist(fileFullPath string) bool {
 func SetUdpReceiveBufferSizeByQuic() error {
 	// https://github.com/quic-go/quic-go/wiki/UDP-Receive-Buffer-Size
 	// sysctl -w net.core.rmem_max=2500000
-	cmd := fmt.Sprintf(`sysctl -w net.core.rmem_max=2500000 > /dev/null`)
+	cmd := `sysctl -w net.core.rmem_max=2500000 > /dev/null`
 	_, err := Command("/bin/sh", "-c", cmd)
 	if nil != err {
-		return fmt.Errorf("Set UDP receive buffer size by QUIC failed, err: [%v]", err.Error())
+		return fmt.Errorf("set UDP receive buffer size by QUIC failed, err: [%v]", err.Error())
 	}
 
 	return nil

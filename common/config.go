@@ -2,7 +2,7 @@ package common
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -64,7 +64,7 @@ func LoadConfigFile(filePath string) (*JsonConfigStruct, error) {
 	}
 	defer file.Close()
 
-	cData, err := ioutil.ReadAll(file)
+	cData, err := io.ReadAll(file)
 	if err != nil {
 		return nil, err
 	}

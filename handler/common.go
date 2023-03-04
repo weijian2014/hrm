@@ -5,7 +5,7 @@ import (
 	"errors"
 	"hrm/common"
 	"hrm/log"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
@@ -15,9 +15,9 @@ type result struct {
 }
 
 func apiCheckCookie(w http.ResponseWriter, r *http.Request) error {
-	if ret := sessionMgr.CheckCookieValid(w, r); "" == ret {
+	if ret := sessionMgr.CheckCookieValid(w, r); ret == "" {
 		w.Header().Add("sessionstatus", "timeout")
-		return errors.New("Cookie check fail, set session timeout to response header.")
+		return errors.New("cookie check fail, set session timeout to response header")
 
 		// 这里跳转不成功,原因可能是Redirect后加载的HTML无法发送给浏览器
 		// http.Redirect(w, r, "/", http.StatusFound)
@@ -25,7 +25,7 @@ func apiCheckCookie(w http.ResponseWriter, r *http.Request) error {
 
 	if !isLogin(r) {
 		w.Header().Add("sessionstatus", "timeout")
-		return errors.New("Cookie check fail, Not login.")
+		return errors.New("cookie check fail, Not login")
 	}
 
 	return nil
@@ -33,8 +33,7 @@ func apiCheckCookie(w http.ResponseWriter, r *http.Request) error {
 
 // string
 func respString(w http.ResponseWriter, isOk int, str string) {
-	var f interface{}
-	f = &result{isOk, str}
+	f := &result{isOk, str}
 	b, err := json.Marshal(f)
 	if err != nil {
 		log.Error("respString fail, %s\n", err.Error())
@@ -51,9 +50,7 @@ func respJson(w http.ResponseWriter, isOk int, jsonStr []byte) {
 		log.Error("respJson fail1, %s\n", err.Error())
 	}
 
-	var f interface{}
-	f = &result{isOk, jf}
-
+	f := &result{isOk, jf}
 	b, err := json.Marshal(f)
 	if err != nil {
 		log.Error("respJson fail2, %s\n", err.Error())
@@ -76,13 +73,13 @@ func respArrayOrStruct(w http.ResponseWriter, isOk int, arrOrStruct interface{})
 }
 
 func getPostData(r *http.Request, out interface{}) error {
-	data, err := ioutil.ReadAll(r.Body)
+	data, err := io.ReadAll(r.Body)
 	if nil != err {
 		return err
 	}
 
-	if 0 == len(data) {
-		return errors.New("Not post data")
+	if len(data) == 0 {
+		return errors.New("not post data")
 	}
 
 	err = json.Unmarshal(data, out)
@@ -101,9 +98,5 @@ func isLogin(r *http.Request) bool {
 
 	sessionId := cookie.Value
 	_, ok := sessionMgr.GetSessionValuse(sessionId, "isAdmin")
-	if !ok {
-		return false
-	}
-
-	return true
+	return ok
 }

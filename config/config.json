@@ -3,7 +3,7 @@
   "LogLevel": 0,
   "LogRoll": 5000,
   "LogFullPathName": "",
-  "ServerListenHost": "0.0.0.0:80",
+  "ServerListenHost": "0.0.0.0:8080",
   "CookieName": "hrm",
   "PostgresqlHost": "127.0.0.1",
   "PostgresqlPort": 5432,

@@ -72,6 +72,7 @@ func main() {
 	router.GET("/", handler.LoginPageHandler)
 	router.GET("/index", handler.IndexPageHandler)
 	router.GET("/admin", handler.AdminPageHandler)
+	router.GET("/employee", handler.EmployeePageHandler)
 
 	// API
 	router.POST("/api/v1/account/:action", handler.AccountHandler)
@@ -80,5 +81,5 @@ func main() {
 
 	log.System("HRM system listen on %v", common.JsonConfigs.ServerListenHost)
 	log.System("Json config from %v:\n%+v\n\n", common.FlagInfos.ConfigFileFullPath, common.JsonConfigs)
-	http.ListenAndServe(common.JsonConfigs.ServerListenHost, router)
+	log.Error("%v", http.ListenAndServe(common.JsonConfigs.ServerListenHost, router))
 }
