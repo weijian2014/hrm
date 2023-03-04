@@ -1,44 +1,65 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="-zh-CN">
 
 <head>
-   <title>Hi~ 欢迎登录人事管理系统</title>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
    <link rel="shortcut icon" href="./static/img/security.png" type="image/x-icon" />
-   <!-- jquery -->
-   <script src="./static/js/jquery-3.6.3.min.js"></script>
-   <!-- bootstrap -->
    <link href="./static/css/bootstrap-5.2.3.min.css" rel='stylesheet' type='text/css' />
-   <script src="./static/js/bootstrap-5.2.3.min.js"></script>
-   <!-- bootstrap-icons -->
    <link href="./static/css/bootstrap-icons-1.10.3.css" rel='stylesheet' type='text/css' />
-   <!-- bootstrap-table -->
    <link href="./static/css/bootstrap-table-1.21.3.min.css" rel='stylesheet' type='text/css' />
-   <script src="./static/js/bootstrap-table-1.21.3.min.js"></script>
-   <script src="./static/js/bootstrap-table-1.21.3-zh-CN.min.js"></script>
-   <!--  -->
    <link href="./static/css/common.css" rel='stylesheet' type='text/css' />
-   <script src="./static/js/common.js"></script>
-   <script src="./static/js/employee.js"></script>
-   <meta name="viewport" content="width=device-width, initial-scale=1" />
-   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <title>Hi~ 欢迎登录人事管理系统</title>
 </head>
 
 <body>
-   <div class="app-location">
-      <div class="nav">
-         <ul>
-            <li><a href="index">首页</a></li>
-            <li><a href="admin">管理页</a></li>
-            <li><a href="employee">人员管理页</a></li>
-            <li><a href="#" onclick="logoutClick()">登出</a></li>
-         </ul>
+   <nav class="navbar navbar-expand-lg bg-primary text-light navbar-dark fixed-top">
+      <div class="container">
+         <div class="d-flex">
+            <div>
+               <h1><span class="text-warning">HRM</span> 人事管理系统</h1>
+            </div>
+         </div>
       </div>
-      <table id="table"></table>
+   </nav>
+   <section class="pt-5 bg-dark text-light table-light text-center">
+      <div class=".container">
+         <div class="table-responsive">
+            <table class="table table bg-dark table-light" id="table">
+               <thead class="table-dark">
+               </thead>
+               <tbody class="table-dark">
+               </tbody>
+            </table>
+            <nav class="pt-2" aria-label="Page navigation example">
+               <ul class="pagination justify-content-end">
+                  <li class="page-item">
+                     <a class="page-link" href="#" tabindex="-1" aria-disabled="true">上一页</a>
+                  </li>
+                  <li class="page-item"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item">
+                     <a class="page-link" href="#">下一页</a>
+                  </li>
+               </ul>
+            </nav>
+         </div>
+      </div>
+   </section>
 
-      <!--start-copyright-->
-      <div class="copy-right">
-         <p> Copyright © 2023 HRM · 人事管理系统 | 服务热线 +86-13866666666</p>
+   <footer class="p-2 fixed-bottom bg-primary text-white text-center">
+      <div class="container">
+         <p class="lead">Copyright &copy; 2023 HRM · 人事管理系统 | 服务热线 +86-13866666666</h4>
       </div>
+   </footer>
+
+   <!-- js最好放在body的底部, 这样可以避免有些js绑定了某些事件而使其方法失效 -->
+   <script src="./static/js/jquery-3.6.3.min.js"></script>
+   <script src="./static/js/bootstrap-5.2.3.min.js"></script>
+   <script src="./static/js/bootstrap-table-1.21.3.min.js"></script>
+   <script src="./static/js/bootstrap-table-1.21.3-zh-CN.min.js"></script>
+   <script src="./static/js/employee.js"></script>
 </body>
 
 </html>

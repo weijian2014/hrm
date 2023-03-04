@@ -21,7 +21,7 @@ const (
 	politicalStatusCell = "B6" // 政治面貌
 	idCell              = "D6" // 身份证
 	securityCardCell    = "F6" // 保安证
-	currentDddressCell  = "B7" // 现住址
+	currentAddressCell  = "B7" // 现住址
 	commentsCell        = "A8" // 需要了解的情况
 )
 
@@ -45,7 +45,7 @@ type EmployeeInfo struct {
 	PoliticalStatus string // 政治面貌
 	Id              string // 身份证
 	SecurityCard    string // 保安证
-	CurrentDddress  string // 现住址
+	CurrentAddress  string // 现住址
 	Comments        string // 需要了解的情况
 }
 
@@ -153,7 +153,7 @@ func ReadExcel(excelFile string) (*EmployeeInfo, error) {
 	}
 
 	// 现住址
-	e.CurrentDddress, err = f.GetCellValue(excelSheetName, currentDddressCell)
+	e.CurrentAddress, err = f.GetCellValue(excelSheetName, currentAddressCell)
 	if err != nil {
 		return nil, err
 	}
@@ -269,7 +269,7 @@ func WriteExcel(excelFile string, ei *EmployeeInfo) error {
 	}
 
 	// 现住址
-	err = f.SetCellValue(excelSheetName, currentDddressCell, ei.CurrentDddress)
+	err = f.SetCellValue(excelSheetName, currentAddressCell, ei.CurrentAddress)
 	if err != nil {
 		return err
 	}

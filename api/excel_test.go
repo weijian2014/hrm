@@ -42,7 +42,7 @@ func Test_WriteExcel(t *testing.T) {
 		PoliticalStatus: "党员",
 		Id:              "7654321",
 		SecurityCard:    "54321",
-		CurrentDddress:  "广西省南宁市江南区华夏街道180号",
+		CurrentAddress:  "广西省南宁市江南区华夏街道180号",
 		Comments:        "1、近日,全国两会受到了社会各界的广泛关注",
 	}
 
