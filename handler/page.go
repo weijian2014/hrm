@@ -36,7 +36,7 @@ func LoginPageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 		sessionMgr.SetSessionValuse(sessionId, "jump", jump)
 	}
 
-	t, err := template.ParseFiles(common.CurrDir + "/web/html/login.html")
+	t, err := template.ParseFiles(common.CurrDir + "/web/login.html")
 	if err != nil {
 		log.Error("Parse login.html file failt, error %s\n", err.Error())
 		return
@@ -61,7 +61,7 @@ func IndexPageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 		return
 	}
 
-	t, err := template.ParseFiles(common.CurrDir + "/web/html/index.html")
+	t, err := template.ParseFiles(common.CurrDir + "/web/index.html")
 	if err != nil {
 		log.Error("Parse index.html file failt, error %s\n", err.Error())
 		return
@@ -107,7 +107,7 @@ func AdminPageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 		return
 	}
 
-	t, err := template.ParseFiles(common.CurrDir + "/web/html/admin.html")
+	t, err := template.ParseFiles(common.CurrDir + "/web/admin.html")
 	if err != nil {
 		log.Error("Parse admin.html file failt, error %s\n", err.Error())
 		return
@@ -153,7 +153,7 @@ func EmployeePageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		return
 	}
 
-	t, err := template.ParseFiles(common.CurrDir + "/web/html/employee.html")
+	t, err := template.ParseFiles(common.CurrDir + "/web/employee.html")
 	if err != nil {
 		log.Error("Parse admin.html file failt, error %s\n", err.Error())
 		return
