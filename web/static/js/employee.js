@@ -1,4 +1,25 @@
 $(document).ready(function () {
+   (function($) {
+
+      "use strict";
+   
+      var fullHeight = function() {
+   
+         $('.js-fullheight').css('height', $(window).height());
+         $(window).resize(function(){
+            $('.js-fullheight').css('height', $(window).height());
+         });
+   
+      };
+      fullHeight();
+   
+      // 侧边导航
+      $('#sidebarCollapse').on('click', function () {
+         $('#sidebar').toggleClass('active');
+     });
+   
+   })(jQuery);
+
    $('#table').bootstrapTable({
       columns: [{
          field: 'ids',

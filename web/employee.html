@@ -1,65 +1,111 @@
 <!doctype html>
-<html lang="-zh-CN">
+<html lang='-zh-CN'>
 
 <head>
-   <meta charset="utf-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1">
-   <link rel="shortcut icon" href="./static/img/security.png" type="image/x-icon" />
-   <link href="./static/css/bootstrap-5.2.3.min.css" rel='stylesheet' type='text/css' />
-   <link href="./static/css/bootstrap-icons-1.10.3.css" rel='stylesheet' type='text/css' />
-   <link href="./static/css/bootstrap-table-1.21.3.min.css" rel='stylesheet' type='text/css' />
-   <link href="./static/css/common.css" rel='stylesheet' type='text/css' />
+   <meta charset='utf-8'>
+   <meta name='viewport' content='width=device-width, initial-scale=1'>
+   <link rel='icon' type='image/png' href="./static/img/logo.png" sizes="16x16">
+   <link rel='stylesheet' href='./static/css/bootstrap-5.2.3.min.css' />
+   <link rel='stylesheet' href='./static/css/bootstrap-table-1.21.3.min.css' />
+   <link rel='stylesheet' href='./static/fontawesome-free-6.3.0-web/css/fontawesome.min.css'>
+   <link rel='stylesheet' href='./static/fontawesome-free-6.3.0-web/css/brands.min.css'>
+   <link rel='stylesheet' href='./static/fontawesome-free-6.3.0-web/css/solid.min.css'>
+   <link rel='stylesheet' href='./static/css/common.css' />
+   <link rel='stylesheet' href="./static/css/style.css">
    <title>Hi~ 欢迎登录人事管理系统</title>
 </head>
 
 <body>
-   <nav class="navbar navbar-expand-lg bg-primary text-light navbar-dark fixed-top">
-      <div class="container">
-         <div class="d-flex">
-            <div>
-               <h1><span class="text-warning">HRM</span> 人事管理系统</h1>
+   <div class="wrapper d-flex align-items-stretch">
+      <nav id="sidebar">
+         <div class="custom-menu">
+            <button type="button" id="sidebarCollapse" class="btn btn-primary">
+            </button>
+         </div>
+         <div class="img bg-wrap text-center py-4" style="background-image: url(./static/img/bg_1.jpg);">
+            <div class="user-logo">
+               <div class="img" style="background-image: url(./static/img/logo.png);"></div>
+               <h3><span class="text-warning">HRM · 人事管理系统</span></h3>
             </div>
          </div>
-      </div>
-   </nav>
-   <section class="pt-5 bg-dark text-light table-light text-center">
-      <div class=".container">
-         <div class="table-responsive">
-            <table class="table table bg-dark table-light" id="table">
-               <thead class="table-dark">
-               </thead>
-               <tbody class="table-dark">
-               </tbody>
-            </table>
-            <nav class="pt-2" aria-label="Page navigation example">
-               <ul class="pagination justify-content-end">
-                  <li class="page-item">
-                     <a class="page-link" href="#" tabindex="-1" aria-disabled="true">上一页</a>
-                  </li>
-                  <li class="page-item"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item">
-                     <a class="page-link" href="#">下一页</a>
-                  </li>
-               </ul>
-            </nav>
-         </div>
-      </div>
-   </section>
+         <ul class="list-unstyled components mb-5">
+            <li class="active">
+               <a href="#"><span class="fa fa-home mr-3"></span> 首页</a>
+            </li>
+            <li>
+               <a href="#"><span class="fa fa-user mr-3"></span> 人员管理</a>
+            </li>
+            <li>
+               <a href="#"><span class="fa fa-cog mr-3"></span> 设置</a>
+            </li>
+            <li>
+               <a href="#"><span class="fa fa-sign-out mr-3"></span> 退出</a>
+            </li>
+         </ul>
+         <p class="pt-1024 text-white text-center">Copyright &copy; 2023 HRM</p>
+      </nav>
 
-   <footer class="p-2 fixed-bottom bg-primary text-white text-center">
-      <div class="container">
-         <p class="lead">Copyright &copy; 2023 HRM · 人事管理系统 | 服务热线 +86-13866666666</h4>
-      </div>
-   </footer>
+      <!-- Page Content  -->
+      <section>
+         <div id="content" class="p-4 p-md-5 pt-5">
+            <!-- <nav class="navbar navbar-expand-lg bg-primary text-light navbar-dark fixed-top">
+            <div class="container">
+               <div class="d-flex">
+                  <div>
+                     <h1><span class="text-warning">HRM</span> 人事管理系统</h1>
+                  </div>
+               </div>
+            </div>
+         </nav> -->
+            <h2 class="mb-4">人员管理</h2>
+            <section class="pt-5 bg-light text-light table-light text-center">
+               <div class=".container-sm">
+                  <div class="table-responsive">
+                     <table class="table table bg-light table-black" id="table">
+                        <thead class="table-light">
+                        </thead>
+                        <tbody class="table-light">
+                        </tbody>
+                     </table>
+                     <nav class="pt-2" aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end">
+                           <li class="page-item">
+                              <a class="page-link" href="#" tabindex="-1" aria-disabled="true">上一页</a>
+                           </li>
+                           <li class="page-item"><a class="page-link" href="#">1</a></li>
+                           <li class="page-item"><a class="page-link" href="#">2</a></li>
+                           <li class="page-item"><a class="page-link" href="#">3</a></li>
+                           <li class="page-item">
+                              <a class="page-link" href="#">下一页</a>
+                           </li>
+                        </ul>
+                     </nav>
+                  </div>
+               </div>
+            </section>
+
+
+            <!-- <footer class="p-2 fixed-bottom bg-primary text-white text-center">
+            <div class="container">
+               <p class="lead">Copyright &copy; 2023 HRM · 人事管理系统 | 服务热线 +86-13866666666</p>
+            </div>
+         </footer> -->
+         </div>
+      </section>
+
+
+
+   </div>
+
 
    <!-- js最好放在body的底部, 这样可以避免有些js绑定了某些事件而使其方法失效 -->
-   <script src="./static/js/jquery-3.6.3.min.js"></script>
-   <script src="./static/js/bootstrap-5.2.3.min.js"></script>
-   <script src="./static/js/bootstrap-table-1.21.3.min.js"></script>
-   <script src="./static/js/bootstrap-table-1.21.3-zh-CN.min.js"></script>
-   <script src="./static/js/employee.js"></script>
+   <script defer src='./static/js/jquery-3.6.3.min.js'></script>
+   <script defer src='./static/js/bootstrap-5.2.3.min.js'></script>
+   <script defer src='./static/js/bootstrap-table-1.21.3.min.js'></script>
+   <script defer src='./static/js/bootstrap-table-1.21.3-zh-CN.min.js'></script>
+   <script defer src="./static/fontawesome-free-6.3.0-web/js/brands.min.js"></script>
+   <script defer src="./static/fontawesome-free-6.3.0-web/js/solid.min.js"></script>
+   <script defer src='./static/js/employee.js'></script>
 </body>
 
 </html>
