@@ -7,9 +7,8 @@
    <link rel='icon' type='image/png' href="./static/img/logo.png" sizes="16x16">
    <link rel='stylesheet' href='./static/css/bootstrap-5.2.3.min.css' />
    <link rel='stylesheet' href='./static/css/bootstrap-table-1.21.3.min.css' />
-   <link rel='stylesheet' href='./static/fontawesome-free-6.3.0-web/css/fontawesome.min.css'>
-   <link rel='stylesheet' href='./static/fontawesome-free-6.3.0-web/css/brands.min.css'>
-   <link rel='stylesheet' href='./static/fontawesome-free-6.3.0-web/css/solid.min.css'>
+   <!-- all.min.css 包含所有font awesom 中所有css, 免费的只能用brands和solid -->
+   <link rel='stylesheet' href='./static/fontawesome-free-6.3.0-web/css/all.min.css'>
    <link rel='stylesheet' href='./static/css/common.css' />
    <link rel='stylesheet' href="./static/css/style.css">
    <title>Hi~ 欢迎登录人事管理系统</title>
@@ -25,7 +24,7 @@
          <div class="img bg-wrap text-center py-4" style="background-image: url(./static/img/bg_1.jpg);">
             <div class="user-logo">
                <div class="img" style="background-image: url(./static/img/logo.png);"></div>
-               <h3><span class="text-warning">HRM · 人事管理系统</span></h3>
+               <h3><span class="text-white">HRM · 人事管理系统</span></h3>
             </div>
          </div>
          <ul class="list-unstyled components mb-5">
@@ -46,55 +45,62 @@
       </nav>
 
       <!-- Page Content  -->
-      <section>
-         <div id="content" class="p-4 p-md-5 pt-5">
-            <!-- <nav class="navbar navbar-expand-lg bg-primary text-light navbar-dark fixed-top">
-            <div class="container">
-               <div class="d-flex">
-                  <div>
-                     <h1><span class="text-warning">HRM</span> 人事管理系统</h1>
+      <div id="content" class="p-4 p-md-5 pt-5">
+         <h2 class="mb-4">人员管理</h2>
+         <section class="pt-2 bg-dark text-light table-light text-center">
+            <!-- 搜索 -->
+            <div class="container-fluid">
+               <form class="row g-2">
+                  <div class="col-auto mb-2">
+                     <button type="submit" class="btn btn-primary ml-1">新增</button>
+                     <button type="submit" class="btn btn-primary ml-1">删除</button>
+                     <button type="submit" class="btn btn-primary ml-1">导入</button>
+                     <button type="submit" class="btn btn-primary ml-1">导出</button>
                   </div>
+                  <div class="col-auto row pt-2">
+                     <div class="col-auto">
+                        <input type="text" class="form-control ts-50" id="inputPassword2" placeholder="Password">
+                     </div>
+                     <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">模糊搜索</button>
+                     </div>
+                  </div>
+               </form>
+            </div>
+
+            <!-- 表格 -->
+            <div class="container-fluid">
+               <div class="table-responsive">
+                  <table class="table table bg-light table-black" id="table">
+                     <thead class="table-dark">
+                     </thead>
+                     <tbody class="table-light">
+                     </tbody>
+                  </table>
+                  <nav class="pt-2" aria-label="Page navigation example">
+                     <ul class="pagination justify-content-end">
+                        <li class="page-item">
+                           <a class="page-link" href="#" tabindex="-1" aria-disabled="true">上一页</a>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                           <a class="page-link" href="#">下一页</a>
+                        </li>
+                     </ul>
+                  </nav>
                </div>
             </div>
-         </nav> -->
-            <h2 class="mb-4">人员管理</h2>
-            <section class="pt-5 bg-light text-light table-light text-center">
-               <div class=".container-sm">
-                  <div class="table-responsive">
-                     <table class="table table bg-light table-black" id="table">
-                        <thead class="table-light">
-                        </thead>
-                        <tbody class="table-light">
-                        </tbody>
-                     </table>
-                     <nav class="pt-2" aria-label="Page navigation example">
-                        <ul class="pagination justify-content-end">
-                           <li class="page-item">
-                              <a class="page-link" href="#" tabindex="-1" aria-disabled="true">上一页</a>
-                           </li>
-                           <li class="page-item"><a class="page-link" href="#">1</a></li>
-                           <li class="page-item"><a class="page-link" href="#">2</a></li>
-                           <li class="page-item"><a class="page-link" href="#">3</a></li>
-                           <li class="page-item">
-                              <a class="page-link" href="#">下一页</a>
-                           </li>
-                        </ul>
-                     </nav>
-                  </div>
-               </div>
-            </section>
+         </section>
 
 
-            <!-- <footer class="p-2 fixed-bottom bg-primary text-white text-center">
+         <!-- <footer class="p-2 bg-primary text-white text-center">
             <div class="container">
                <p class="lead">Copyright &copy; 2023 HRM · 人事管理系统 | 服务热线 +86-13866666666</p>
             </div>
          </footer> -->
-         </div>
-      </section>
-
-
-
+      </div>
    </div>
 
 
@@ -103,8 +109,8 @@
    <script defer src='./static/js/bootstrap-5.2.3.min.js'></script>
    <script defer src='./static/js/bootstrap-table-1.21.3.min.js'></script>
    <script defer src='./static/js/bootstrap-table-1.21.3-zh-CN.min.js'></script>
-   <script defer src="./static/fontawesome-free-6.3.0-web/js/brands.min.js"></script>
-   <script defer src="./static/fontawesome-free-6.3.0-web/js/solid.min.js"></script>
+   <!-- all.min.js 包含所有font awesom 中所有js -->
+   <script defer src="./static/fontawesome-free-6.3.0-web/js/all.min.js"></script>
    <script defer src='./static/js/employee.js'></script>
 </body>
 
