@@ -52,7 +52,7 @@
          <h2 class="mb-4">人员管理</h2>
          <section class="pt-2 text-center">
             <!-- 搜索 -->
-            <div class="container-fluid">
+            <!-- <div class="container-fluid">
                <form class="row g-2">
                   <div class="col-auto mb-2">
                      <button type="submit" class="btn btn-primary ml-1">新增</button>
@@ -69,18 +69,36 @@
                      </div>
                   </div>
                </form>
-            </div>
+            </div> -->
 
             <!-- 表格 -->
             <div class="container-fluid">
                <div class="table-responsive">
-                  <table class="table table bg-light table-black" id="table">
-                     <thead class="table-dark">
-                     </thead>
-                     <tbody class="table-light">
-                     </tbody>
+                  <div id="toolbar">
+                     <button id="new" class="btn btn-primary" disabled>
+                        <i class="fa fa-add"></i> 新增
+                     </button>
+                     <button id="remove" class="btn btn-primary" disabled>
+                        <i class="fa fa-in"></i> 导入
+                     </button>
+                     <button id="remove" class="btn btn-primary" disabled>
+                        <i class="fa fa-out"></i> 导出
+                     </button>
+                     <button id="import" class="btn btn-danger" disabled>
+                        <i class="fa fa-trash"></i> 删除
+                     </button>
+                  </div>
+                  <table id="table" data-toolbar="#toolbar" data-search="true" data-show-refresh="true"
+                     data-show-toggle="true" data-show-fullscreen="true" data-show-columns="true"
+                     data-show-columns-toggle-all="true" data-detail-view="true" data-show-export="true"
+                     data-click-to-select="true" data-detail-formatter="detailFormatter" data-minimum-count-columns="2"
+                     data-show-pagination-switch="true" data-pagination="true" data-id-field="id"
+                     data-page-list="[10, 25, 50, 100, all]" data-show-footer="true" data-side-pagination="server"
+                     data-url="https://examples.wenzhixin.net.cn/examples/bootstrap_table/data"
+                     data-response-handler="responseHandler">
                   </table>
-                  <nav class="pt-2" aria-label="Page navigation example">
+                  <!-- 分页 -->
+                  <!-- <nav class="pt-2" aria-label="Page navigation example">
                      <ul class="pagination justify-content-end">
                         <li class="page-item">
                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">上一页</a>
@@ -92,7 +110,7 @@
                            <a class="page-link" href="#">下一页</a>
                         </li>
                      </ul>
-                  </nav>
+                  </nav> -->
                </div>
             </div>
          </section>
@@ -112,7 +130,7 @@
    <!-- bootstrap.bundle.min.js 包含bootstrap中所有的js -->
    <script defer src='./static/bootstrap-5.2.3-dist/js/bootstrap.bundle.min.js'></script>
    <script defer src='./static/bootstrap-table-1.21.3-dist/bootstrap-table.min.js'></script>
-   <script defer src='./static/bootstrap-table-1.21.3-dist/bootstrap-table-locale-all.min.js'></script>
+   <script defer src='./static/bootstrap-table-1.21.3-dist/locale/bootstrap-table-zh-CN.min.js'></script>
    <script defer src='./static/bootstrap-table-1.21.3-dist/extensions/export/bootstrap-table-export.min.js'></script>
    <!-- all.min.js 包含所有font awesom 中所有js -->
    <script defer src="./static/fontawesome-free-6.3.0-web/js/all.min.js"></script>
