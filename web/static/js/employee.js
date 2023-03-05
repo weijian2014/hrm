@@ -1,26 +1,33 @@
 $(document).ready(function () {
-   (function($) {
+   (function ($) {
 
       "use strict";
-   
-      var fullHeight = function() {
-   
+
+      var fullHeight = function () {
+
          $('.js-fullheight').css('height', $(window).height());
-         $(window).resize(function(){
+         $(window).resize(function () {
             $('.js-fullheight').css('height', $(window).height());
          });
-   
+
       };
       fullHeight();
-   
+
       // 侧边导航
       $('#sidebarCollapse').on('click', function () {
          $('#sidebar').toggleClass('active');
-     });
-   
+      });
+
    })(jQuery);
 
    $('#table').bootstrapTable({
+      pagination: true, // 显示记录统计
+      sortable: true,  //是否启用排序
+      sortOrder: "des",  //排序方式 asc升序
+      pageSize: 50, // 每页的记录行数
+      // clickToSelect: true, //是否启用点击选中行
+      uniqueId: "ids",  //每一行的唯一标识，一般为主键列
+      // cardView: true,  //是否显示详细视图
       columns: [{
          field: 'ids',
          title: '序号'
