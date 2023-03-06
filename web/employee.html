@@ -6,12 +6,12 @@
    <meta name='viewport' content='width=device-width, initial-scale=1'>
    <link rel='icon' type='image/png' href="./static/img/logo.png" sizes="16x16">
    <!-- font awesome图标, 字体库 -->
+   <!-- all.min.css 包含所有font awesom 中所有css, 免费的只能用brands和solid -->
    <link rel='stylesheet' href='./static/fontawesome-free-6.3.0-web/css/all.min.css'>
    <!-- bootstrap icons图标, 字体库 -->
-   <link rel='stylesheet' href='./static/bootstrap-icons-1.10.3/bootstrap-icons.css'>
+   <!-- <link rel='stylesheet' href='./static/bootstrap-icons-1.10.3/bootstrap-icons.css'> -->
    <link rel='stylesheet' href='./static/bootstrap-5.2.3-dist/css/bootstrap.min.css' />
    <link rel='stylesheet' href='./static/bootstrap-table-1.21.3-dist/bootstrap-table.min.css' />
-   <!-- all.min.css 包含所有font awesom 中所有css, 免费的只能用brands和solid -->
    <link rel='stylesheet' href='./static/css/common.css' />
    <link rel='stylesheet' href="./static/css/style.css">
    <title>Hi~ 欢迎登录人事管理系统</title>
@@ -78,7 +78,13 @@
                      <button id="add" class="btn btn-primary" disabled>
                         <i class="fa fa-add"></i> 新增
                      </button>
-                     <button id="import" class="btn btn-primary" disabled>
+                     <!-- <div class="file btn btn-sm btn-primary">
+                        <button id="import" class="btn btn-sm btn-primary">
+                           <i class="fa fa-upload"></i> 导入
+                        </button>
+                        <input type="file" name="file" />
+                     </div> -->
+                     <button id="import" class="btn btn-primary">
                         <i class="fa fa-upload"></i> 导入
                      </button>
                      <button id="export" class="btn btn-primary" disabled>

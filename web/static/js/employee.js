@@ -184,7 +184,8 @@ function initTable() {
          columns: 'fa-th-list',
          detailOpen: 'fa-plus',
          detailClose: 'fa-minus',
-         fullscreen: 'fa-arrows-alt'
+         fullscreen: 'fa-arrows-alt',
+         clearSearch: 'fa-undo'
       },
       iconsPrefix: 'fa',//定义图标集名称（FontAwesome的'glyphicon'或'fa'）
       iconSize: 'btn-xssm',// 定义icon图表 undefined => btnxs => btn-xssm => btn-smlg => btn-lg
@@ -196,6 +197,7 @@ function initTable() {
          title: '选择',
          checkbox: true,
          align: 'center',
+         halign: 'center',
          valign: 'middle',
       }, {
          field: 'id',
@@ -262,10 +264,14 @@ function initTable() {
          field: 'current_address',
          title: '现住址',
          align: 'left',
+         halign: 'center',
+         valign: 'center',
       }, {
          field: 'comments',
          title: '需要了解的情况',
          align: 'left',
+         halign: 'center',
+         valign: 'center',
       }, {
          field: 'operate',
          title: '操作',
@@ -304,6 +310,14 @@ function initTable() {
    $export.click(function () {
       var ids = getIdSelections()
       $export.prop('disabled', true)
+   })
+
+   $add.click(function () {
+      alert('You click add')
+   })
+
+   $import.click(function () {
+      alert('You click import')
    })
 
 
