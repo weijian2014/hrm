@@ -11,8 +11,8 @@
 }
 
 #sidebar {
-   min-width: 300px;
-   max-width: 300px;
+   min-width: 250px;
+   max-width: 250px;
    background: #32373d;
    color: #fff;
    -webkit-transition: all 0.3s;
@@ -26,7 +26,7 @@
 }
 
 #sidebar.active {
-   margin-left: -300px;
+   margin-left: -250px;
 }
 
 #sidebar.active .custom-menu {
@@ -115,7 +115,7 @@
 
 @media (max-width: 991.98px) {
    #sidebar {
-      margin-left: -300px;
+      margin-left: -250px;
    }
 
    #sidebar.active {
