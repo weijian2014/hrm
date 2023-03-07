@@ -5,7 +5,7 @@
   "LogFullPathName": "",
   "ServerListenHost": "0.0.0.0:8080",
   "CookieName": "hrm",
-  "Staticdirectory": "/../client/web/",
+  "Staticdirectory": "/../client/web",
   "PostgresqlHost": "",
   "PostgresqlPort": 5432,
   "PostgresqlUser": "",
