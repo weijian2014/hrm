@@ -1,0 +1,14 @@
+{
+  "Version": "v0.1",
+  "LogLevel": 0,
+  "LogRoll": 5000,
+  "LogFullPathName": "",
+  "ServerListenHost": "0.0.0.0:8080",
+  "CookieName": "hrm",
+  "Staticdirectory": "/../client/web/",
+  "PostgresqlHost": "",
+  "PostgresqlPort": 5432,
+  "PostgresqlUser": "",
+  "PostgresqlPassword": "",
+  "PostgresqlDatabaseName": ""
+}
