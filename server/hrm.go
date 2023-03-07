@@ -65,7 +65,7 @@ func main() {
 	router := httprouter.New()
 
 	// 静态资源
-	staticDir := http.Dir(common.CurrDir + common.JsonConfigs.Staticdirectory)
+	staticDir := http.Dir(common.CurrDir + common.JsonConfigs.StaticDirectory)
 	router.ServeFiles("/static/*filepath", staticDir)
 
 	// 页面
