@@ -6,10 +6,5 @@
   "ServerListenHost": "0.0.0.0:8080",
   "CookieName": "hrm",
   "HtmlDirectory": "../client/web",
-  "StaticDirectory": "../client/web/static",
-  "PostgresqlHost": "",
-  "PostgresqlPort": 5432,
-  "PostgresqlUser": "",
-  "PostgresqlPassword": "",
-  "PostgresqlDatabaseName": ""
+  "StaticDirectory": "../client/web/static"
 }
