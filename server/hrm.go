@@ -65,7 +65,8 @@ func main() {
 	router := httprouter.New()
 
 	// 静态资源
-	staticDir := http.Dir(common.CurrDir + common.JsonConfigs.StaticDirectory)
+	staticDir := http.Dir(common.CurrDir + "/" + common.JsonConfigs.StaticDirectory)
+	// html中引用静态资源时使用/static/开始为根目录, 例如/static/xxx.js或者/static/xxx.css
 	router.ServeFiles("/static/*filepath", staticDir)
 
 	// 页面

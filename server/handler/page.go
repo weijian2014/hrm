@@ -36,7 +36,7 @@ func LoginPageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 		sessionMgr.SetSessionValuse(sessionId, "jump", jump)
 	}
 
-	htmlFile := common.CurrDir + common.JsonConfigs.HtmlDirectory + "/login.html"
+	htmlFile := common.CurrDir + "/" + common.JsonConfigs.HtmlDirectory + "/login.html"
 	t, err := template.ParseFiles(htmlFile)
 	if err != nil {
 		log.Error("Parse %v file failt, error %s\n", htmlFile, err.Error())
@@ -62,7 +62,7 @@ func IndexPageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 		return
 	}
 
-	htmlFile := common.CurrDir + common.JsonConfigs.HtmlDirectory + "/index.html"
+	htmlFile := common.CurrDir + "/" + common.JsonConfigs.HtmlDirectory + "/index.html"
 	t, err := template.ParseFiles(htmlFile)
 	if err != nil {
 		log.Error("Parse %v file failt, error %s\n", htmlFile, err.Error())
@@ -109,7 +109,7 @@ func AdminPageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 		return
 	}
 
-	htmlFile := common.CurrDir + common.JsonConfigs.HtmlDirectory + "/admin.html"
+	htmlFile := common.CurrDir + "/" + common.JsonConfigs.HtmlDirectory + "/admin.html"
 	t, err := template.ParseFiles(htmlFile)
 	if err != nil {
 		log.Error("Parse %v file failt, error %s\n", htmlFile, err.Error())
@@ -156,7 +156,7 @@ func EmployeePageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		return
 	}
 
-	htmlFile := common.CurrDir + common.JsonConfigs.HtmlDirectory + "/employee.html"
+	htmlFile := common.CurrDir + "/" + common.JsonConfigs.HtmlDirectory + "/employee.html"
 	t, err := template.ParseFiles(htmlFile)
 	if err != nil {
 		log.Error("Parse %v file failt, error %s\n", htmlFile, err.Error())
