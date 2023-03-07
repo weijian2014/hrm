@@ -181,7 +181,7 @@ function initTable() {
       // exportDataType : "all",    // 导出所有数据, 否则只导出页面显示的
       exportOptions: {              // https://github.com/hhurz/tableExport.jquery.plugin
          ignoreColumn: [0],
-         fileName: '导出数据',
+         fileName: '导出当前可见数据',
          worksheetName: 'sheet1',
          csvEnclosure: '"',
          csvSeparator: ',',
@@ -201,6 +201,8 @@ function initTable() {
       },
       iconsPrefix: 'fa',//定义图标集名称（FontAwesome的'glyphicon'或'fa'）
       iconSize: 'btn-xssm',// 定义icon图表 undefined => btnxs => btn-xssm => btn-smlg => btn-lg
+      // fixedColumns:true,
+      // fixedNumber:1,
       responseHandler: responseHandler,
       detailFormatter: detailFormatter,
       loadingTemplate: loadingTemplate,
@@ -218,17 +220,16 @@ function initTable() {
          sortable: true,
          searchable: false,
          align: 'center',
+         halign: 'center',
          valign: 'middle',
       }, {
          field: 'name',
          title: '姓名',
          sortable: true,
-         align: 'center'
       }, {
          field: 'gender',
          title: '性别',
          sortable: true,
-         align: 'center',
          formatter: genderFormatter,
       }, {
          field: 'age',
@@ -277,6 +278,7 @@ function initTable() {
       }, {
          field: 'current_address',
          title: '现住址',
+         visible: false,
          align: 'left',
          halign: 'center',
          valign: 'center',
