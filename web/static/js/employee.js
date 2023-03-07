@@ -122,9 +122,10 @@ function initTable() {
       onlyInfoPagination: false,          //设置为true以仅显示表中显示的数据量, 这会导致分页失效
       showExtendedPagination: true,       // 分页显示的增强, 比如搜索时可以显示 
       totalNotFilteredField: true,        // 从 xx 总记录中过滤
-      sortable: true,                     //是否启用排序  列中也有此变量
-      sortName: '',                        //定义要排序的列, 没定义默认都不排列，同sortOrder结合使用，sortOrder没写的话列默认递增（asc）
-      sortOrder: "asc",                   //定义列排序顺序，只能是'asc'或'desc'。
+      sortable: true,                     // 全局的, 是否启用排序, 列中也有此变量
+      sortName: '',                        //全局的, 可以在列中单独使用sortName: 'name', 定义要排序的列, 没定义默认都不排列，同sortOrder结合使用，sortOrder没写的话列默认递增（asc）
+      sortOrder: "asc",                   //全局的, 可以在列中单独使用sortOrder: 'desc', 定义列排序顺序，只能是'asc'或'desc'。
+      sortResetPage: true,                // 排序时重置分页信息
       sortStable: false,                   //如果你把此属性设为了true）我们将为此行添加'_position'属性 （别看错了，是sortStable，sortable在下面）设为true，则和sort部分一样，区别是：在排序过程中，如果存在相等的元素，则原来的顺序不会改变
       sidePagination: "client",           //分页方式：client客户端分页（默认），server服务端分页（*）
       silentSort: true,                   //设置为false以便对加载的消息数据进行排序。当sidePagination选项设置为“server”时，此选项有效。 
@@ -141,7 +142,8 @@ function initTable() {
       showSearchButton: false,             // 搜索框搜索按钮
       showSearchClearButton: true,        // 搜索框内容清除按钮
       searchHighlight: true,              //搜索高亮
-      showColumns: true,                 //是否显示所有的列 设置为true以显示列下拉列表（一个可以设置显示想要的列的下拉f按钮）  
+      showColumns: true,                 //是否显示所有的列 设置为true以显示列下拉列表（一个可以设置显示想要的列的下拉f按钮）
+      visibleSearch: false,               // 是否只搜索可见数据
       showRefresh: true,                  //是否显示刷新按钮 默认false
       minimumCountColumns: 5,             //最少允许的列数  要从列下拉列表中隐藏的最小列数
       showColumnsToggleAll: true,         //显示或者隐藏所有列
@@ -173,8 +175,18 @@ function initTable() {
       clickToSelect: true,          //设置为true时 在点击列时可以选择checkbox或radio
       singleSelect: false,           //默认false，设为true则允许复选框仅选择一行
       checkboxHeader: true,            //设置为false以隐藏标题行中的check-all复选框 即隐藏全选框
-      maintainSelected: false,         // true时点击分页按钮或搜索按钮时，记住checkbox的选择项 设为true则保持被选的那一行的状态
+      maintainSelected: true,         // true时点击分页按钮或搜索按钮时，记住checkbox的选择项 设为true则保持被选的那一行的状态
       showButtonText: true,         //设置表格右上角的图标是否显示文字
+      showExport: true,             // 显示导出数据-表格右上角
+      // exportDataType : "all",    // 导出所有数据, 否则只导出页面显示的
+      exportOptions: {              // https://github.com/hhurz/tableExport.jquery.plugin
+         ignoreColumn: [0],
+         fileName: '导出数据',
+         worksheetName: 'sheet1',
+         csvEnclosure: '"',
+         csvSeparator: ',',
+         csvUseBOM: true,
+      },
       icons: {                   //定义工具栏，分页和详细信息视图中使用的图标
          paginationSwitchDown: 'fa-caret-square-down',
          paginationSwitchUp: 'fa-caret-square-up',
@@ -202,9 +214,11 @@ function initTable() {
       }, {
          field: 'id',
          title: '序号',
+         visible: false,
+         sortable: true,
+         searchable: false,
          align: 'center',
          valign: 'middle',
-         sortable: true,
       }, {
          field: 'name',
          title: '姓名',
@@ -269,6 +283,7 @@ function initTable() {
       }, {
          field: 'comments',
          title: '需要了解的情况',
+         visible: false,
          align: 'left',
          halign: 'center',
          valign: 'center',
