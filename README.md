@@ -61,11 +61,11 @@ go build .
 - [pnpm](https://nodejs.org/zh-cn/), pnpm 是 npm 改进版本
 - [Vue3](https://cn.vuejs.org/) 比 Vue2 更快
 - [Vite](https://cn.vitejs.dev/) 是比 Webpack 更快更先进的前端项目构建工具
+- TypeScript 是 JavaScript 的超集, 支持面向对象的特性
+- [Element Plus](https://element-plus.gitee.io/zh-CN/guide/installation.html) 是基于 Vue3 的 UI 库
 - [Vue-Router](https://router.vuejs.org/zh/installation.html)
 - [WindiCSS](https://cn.windicss.org/integrations/vite.html) SCSS
-- [axios](http://axios-js.com/)
-- [Element Plus](https://element-plus.gitee.io/zh-CN/guide/installation.html) 是基于 Vue3 的 UI 库
-- TypeScript 是 JavaScript 的超集, 支持面向对象的特性
+- [Axios](http://axios-js.com/)
 
 ### VScode 开发需要安装插件
 
@@ -84,38 +84,38 @@ pnpm config set registry https://registry.npm.taobao.org
 
 # 查看镜像源
 npm config get registry
-pnpm config get registry
 
 # 创建项目
 npm init vue@latest
-pnpm create vue@latest
+
+cd path/to/project/root
 
 # 初始化项目, install命令会根据 package.json 中 dependencies 和 devDependenciesr 的描述安装相应的依赖
 npm install
-pnpm install
 ```
 
 ### 安装组件
 
 ```
-cd path/to/project/root
-
-# 安装Vue的路由组件
+# 安装Vue的路由组件, https://router.vuejs.org/zh/installation.html
+# 安装完成配置已经自动增加
 npm install vue-router -S
 
-# 安装windicss
+# 自动导入模块插件, 使用element-plus的按需引入需要这两个插件
+npm install -D unplugin-vue-components unplugin-auto-import
+
+# 安装element-plus, https://element-plus.gitee.io/zh-CN/guide/installation.html
+# 修改vite.config.ts文件, [参考](https://element-plus.gitee.io/zh-CN/guide/quickstart.html#%E6%8C%89%E9%9C%80%E5%AF%BC%E5%85%A5)
+npm install element-plus -S
+
+# 安装WindiCSS, https://cn.windicss.org/integrations/vite.html
+# 修改vite.config.js文件, [参考](https://cn.windicss.org/integrations/vite.html#install)
+# 修改main.js文件, [参考](https://cn.windicss.org/integrations/vite.html#install)
+# 创建tailwind.config.ts文件, [参考](https://cn.windicss.org/integrations/vite.html#typeScript)
 npm i -D vite-plugin-windicss windicss
 
-# 安装axios
+# 安装axios, http://axios-js.com/
 npm install axios
-
-# 安装element-plus
-npm install element-plus -S
-pnpm install element-plus
-
-
-# 自动导入模块插件
-npm install -D unplugin-vue-components unplugin-auto-import
 ```
 
 ### 将项目运行起来
@@ -123,7 +123,6 @@ npm install -D unplugin-vue-components unplugin-auto-import
 ```
 # dev 是 package.json 中 scripts 的一个命令
 nmp run dev
-pnpm run dev
 ```
 
 # 打包
