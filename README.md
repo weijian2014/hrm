@@ -88,7 +88,7 @@ pnpm config get registry
 
 # 创建项目
 npm init vue@latest
-pnpm init vue@latest
+pnpm create vue@latest
 
 # 初始化项目, install命令会根据 package.json 中 dependencies 和 devDependenciesr 的描述安装相应的依赖
 npm install
