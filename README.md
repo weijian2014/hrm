@@ -1,6 +1,6 @@
 # 系统概述
 
-- 前端 Node.js18 + Vite4 + Vue3 + WindiCSS + Element Plus + TypeScript +
+- 前端 Node.js18 + Vite4 + Vue3 + WindiCSS + Element Plus + TypeScript + Axios
 - 后端 Golang + Sqlite + Restful API
 
 # 后端
