@@ -1,6 +1,6 @@
 <template>
    <el-table
-      ref="multipleTableRef"
+      ref="tableRef"
       :data="tableData"
       :border="tableSettings?.border"
       :fit="tableSettings?.fit"
@@ -28,10 +28,27 @@
          </template>
       </el-table-column>
    </el-table>
+   <el-pagination
+      ref="paginationRef"
+      background
+      :layout="paginationSettings?.layout"
+      :page-sizes="paginationSettings?.page_sizes"
+      :prev-text="paginationSettings?.prev_text"
+      :next-text="paginationSettings?.next_text"
+      :default-current-page="paginationSettings?.default_current_page"
+      :default-page-size="paginationSettings?.default_page_size"
+      :hide-on-single-page="false"
+      :total="tableTotal"
+      :page-size="pageSize"
+      :current-page="currentPage"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      @prev-click="handlePrevClick"
+      @next-click="handleNextClick" />
 </template>
 
 <script lang="ts" setup>
-import type { TableColumnCtx, ElTable } from "element-plus"
+import { TableColumnCtx, ElTable, ElPagination } from "element-plus"
 import { ref, computed } from "vue"
 import Axios from "axios"
 
@@ -64,7 +81,18 @@ interface TableColumnSettings {
    align: string
 }
 
+interface PaginationSettings {
+   layout: string // 分页器布局
+   prev_text: string
+   next_text: string
+   page_sizes: number[] // 每一页展示多少条数据
+   default_page_size: number // 代表的是每一页需要展示多少条数据, 与page-size属性相同
+   default_current_page: number // 当前第几页, 与current-page属性相同
+   hide_on_single_page: boolean
+}
+
 interface TableSettings {
+   paginationSettings: PaginationSettings
    border: boolean
    fit: boolean
    height: number
@@ -75,19 +103,23 @@ interface TableSettings {
    table_columns: TableColumnSettings[]
 }
 
-const multipleTableRef = ref<InstanceType<typeof ElTable>>()
+const tableRef = ref<InstanceType<typeof ElTable>>()
+const paginationRef = ref<InstanceType<typeof ElPagination>>()
 
 const formatter = (row: Employee, column: TableColumnCtx<Employee>) => {
    return row.current_address
 }
 
 const tableData = ref<Employee[]>()
+const tableTotal = ref<number>()
 Axios.get("./public/table_data.json", {
    params: {},
 })
    .then(function (response) {
-      console.log(response)
+      // console.log(response)
       tableData.value = response.data.rows
+      tableTotal.value = response.data.total
+      console.log(tableTotal)
    })
    .catch(function (error) {
       console.log(error)
@@ -97,12 +129,14 @@ Axios.get("./public/table_data.json", {
    })
 
 const tableSettings = ref<TableSettings>()
+const paginationSettings = ref<PaginationSettings>()
 Axios.get("./public/table_settings.json", {
    params: {},
 })
    .then(function (response) {
-      console.log(response)
       tableSettings.value = response.data
+      paginationSettings.value = response.data.pagination
+      console.log(paginationSettings)
    })
    .catch(function (error) {
       console.log(error)
@@ -117,7 +151,7 @@ tableColumns = computed(() => {
 })
 
 const rowClick = (row: Employee) => {
-   multipleTableRef.value!.toggleRowSelection(row)
+   tableRef.value!.toggleRowSelection(row)
 }
 
 const handleEdit = (index: number, row: Employee) => {
@@ -125,6 +159,19 @@ const handleEdit = (index: number, row: Employee) => {
 }
 const handleDelete = (index: number, row: Employee) => {
    console.log(index, row)
+}
+
+const handleSizeChange = (value: number) => {
+   console.log(value)
+}
+const handleCurrentChange = (value: number) => {
+   console.log(value)
+}
+const handlePrevClick = (value: number) => {
+   console.log(value)
+}
+const handleNextClick = (value: number) => {
+   console.log(value)
 }
 </script>
 <style lang="scss" scoped></style>

@@ -1,8 +1,17 @@
 {
+   "pagination": {
+      "layout": "->, total, sizes, prev, pager, next, jumper",
+      "prev_text": "上一页",
+      "next_text": "下一页",
+      "page_sizes": [10, 20, 30, 40, 50, 100],
+      "default_page_size": 10,
+      "default_current_page": 1,
+      "hide_on_single_page": false
+   },
    "border": true,
    "fit": true,
    "highlight_current_row": true,
-   "height": 800,
+   "height": 500,
    "empty_text": "N/A",
    "table_layout": "auto",
    "row_key": "id",
