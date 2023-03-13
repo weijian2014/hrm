@@ -9,7 +9,7 @@
       :empty-text="tableSettings?.empty_text"
       :highlight-current-row="tableSettings?.highlight_current_row"
       :row-key="tableSettings?.row_key"
-      default-sort="{ prop: 'name', order: 'descending' }"
+      :default-sort="{ prop: 'name', order: 'descending' }"
       @row-click="rowClick"
       style="width: 100%">
       <el-table-column fixed type="selection" />
@@ -40,7 +40,7 @@ interface Employee {
    name: string
    gender: string
    age: number
-   work_time: number
+   work_time: string
    salary: number
    post: string
    social_security: string
@@ -82,7 +82,7 @@ const formatter = (row: Employee, column: TableColumnCtx<Employee>) => {
 }
 
 const tableData = ref<Employee[]>()
-Axios.get("./public/testData.json", {
+Axios.get("./public/table_data.json", {
    params: {},
 })
    .then(function (response) {
@@ -97,7 +97,7 @@ Axios.get("./public/testData.json", {
    })
 
 const tableSettings = ref<TableSettings>()
-Axios.get("./public/tableSettings.json", {
+Axios.get("./public/table_settings.json", {
    params: {},
 })
    .then(function (response) {
