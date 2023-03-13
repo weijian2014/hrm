@@ -5,7 +5,7 @@
       :border="tableSettings?.border"
       :fit="tableSettings?.fit"
       :height="tableSettings?.height"
-      :table-layout="tableSettings?.tableLayout"
+      :table-layout="tableSettings?.table_layout"
       :empty-text="tableSettings?.empty_text"
       :highlight-current-row="tableSettings?.highlight_current_row"
       :row-key="tableSettings?.row_key"
@@ -14,7 +14,7 @@
       style="width: 100%">
       <el-table-column fixed type="selection" />
       <el-table-column
-         v-for="(column, index) in bindTableColumns"
+         v-for="(column, index) in tableColumns"
          :key="column.prop"
          :prop="column.prop"
          :label="column.label"
@@ -68,36 +68,14 @@ interface TableSettings {
    border: boolean
    fit: boolean
    height: number
-   tableLayout: string
+   table_layout: string
    empty_text: string
    highlight_current_row: boolean
    row_key: string
    table_columns: TableColumnSettings[]
 }
 
-interface ColumnsVisible {
-   id: boolean
-   name: boolean
-   gender: boolean
-   age: boolean
-   work_time: boolean
-   salary: boolean
-   post: boolean
-   social_security: boolean
-   phone: boolean
-   former_employer: boolean
-   height: boolean
-   weight: boolean
-   diploma: boolean
-   political_status: boolean
-   identifier: boolean
-   security_card: boolean
-   current_address: boolean
-   comments: boolean
-}
-
 const multipleTableRef = ref<InstanceType<typeof ElTable>>()
-const columnsVisible = ref<ColumnsVisible>()
 
 const formatter = (row: Employee, column: TableColumnCtx<Employee>) => {
    return row.current_address
@@ -133,13 +111,10 @@ Axios.get("./public/tableSettings.json", {
       // always executed
    })
 
-export default {
-   computed: {
-      bindTableColumns() {
-         return tableSettings.value?.table_columns.filter((column) => column.visible)
-      },
-   },
-}
+let tableColumns = ref<TableColumnSettings[]>()
+tableColumns = computed(() => {
+   return tableSettings.value?.table_columns.filter((column) => column.visible)
+})
 
 const rowClick = (row: Employee) => {
    multipleTableRef.value!.toggleRowSelection(row)

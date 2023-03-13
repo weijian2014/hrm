@@ -77,6 +77,8 @@ go build .
 
 ### 项目初始化
 
+[创建项目参考](https://blog.csdn.net/nanchen_J/article/details/126245279)
+
 ```
 # 设置镜像源
 npm config set registry https://registry.npm.taobao.org
