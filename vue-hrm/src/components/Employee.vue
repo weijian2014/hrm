@@ -2,7 +2,7 @@
    <div class="container">
       <el-row class="m-1 pt-2 pb-2">
          <el-col :span="12">
-            <el-button :icon="Plus" type="primary">新增</el-button>
+            <el-button :icon="Plus" type="primary" @click="handleAdd">新增</el-button>
             <el-button :icon="Upload" type="primary">导入</el-button>
             <el-button :icon="Delete" type="danger">删除</el-button>
          </el-col>
@@ -63,6 +63,7 @@
          @prev-click="handlePrevClick"
          @next-click="handleNextClick" />
    </div>
+   <AddVue :isShow="isShow" :id="id" :employee="employee"></AddVue>
 </template>
 
 <script lang="ts" setup>
@@ -70,27 +71,8 @@ import { TableColumnCtx, ElTable, ElPagination } from "element-plus"
 import { ref, computed } from "vue"
 import Axios from "axios"
 import { Upload, Delete, Plus, Search } from "@element-plus/icons-vue"
-
-interface Employee {
-   id: number
-   name: string
-   gender: string
-   age: number
-   work_time: string
-   salary: number
-   post: string
-   social_security: string
-   phone: string
-   former_employer: string
-   height: number
-   weight: number
-   diploma: string
-   political_status: string
-   identifier: string
-   security_card: string
-   current_address: string
-   comments: string
-}
+import Employee from "./../class/Employee"
+import AddVue from "./Add.vue"
 
 interface TableColumnSettings {
    prop: string
@@ -173,8 +155,18 @@ const rowClick = (row: Employee) => {
    tableRef.value!.toggleRowSelection(row)
 }
 
+const isShow = ref(false)
+const id = ref(0)
+const employee = ref<Employee>()
+const handleAdd = () => {
+   console.log("新增")
+   isShow.value = true
+}
 const handleEdit = (index: number, row: Employee) => {
    console.log(index, row)
+   isShow.value = true
+   id.value = index
+   employee.value = row as Employee
 }
 const handleDelete = (index: number, row: Employee) => {
    console.log(index, row)
