@@ -8,7 +8,12 @@ import WindiCSS from "vite-plugin-windicss"
 export default defineConfig({
    plugins: [
       vue(),
-      WindiCSS(),
+      WindiCSS({
+         scan: {
+            dirs: ["./src"], // ./src目录下所有文件
+            fileExtensions: ["vue", "js", "ts", "tsx"], // 同时启用扫描vue/js/ts/tsx
+         },
+      }),
       AutoImport({
          resolvers: [ElementPlusResolver()],
       }),
