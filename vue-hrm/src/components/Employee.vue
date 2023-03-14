@@ -1,16 +1,28 @@
 <template>
    <div class="container">
-      <el-row>
-         <el-col> </el-col>
-         <el-col> </el-col>
+      <el-row class="m-1 pt-2 pb-2">
+         <el-col :span="12">
+            <el-button :icon="Plus" type="primary">新增</el-button>
+            <el-button :icon="Upload" type="primary">导入</el-button>
+            <el-button :icon="Delete" type="danger">删除</el-button>
+         </el-col>
+         <el-col :span="6">
+            <el-input v-model="input" class="w-50" placeholder="" clearable>
+               <template #prepend>模糊搜索</template>
+               <template #prefix>
+                  <el-icon class="el-input__icon"><search /></el-icon>
+               </template>
+            </el-input>
+         </el-col>
       </el-row>
       <el-table
+         class=""
          ref="tableRef"
          :data="tableData"
          :border="tableSettings?.border"
          :fit="tableSettings?.fit"
          :height="tableSettings?.height"
-         :table-layout="tableSettings?.table_layout"
+         table-layout="auto"
          :empty-text="tableSettings?.empty_text"
          :highlight-current-row="tableSettings?.highlight_current_row"
          :row-key="tableSettings?.row_key"
@@ -34,18 +46,18 @@
          </el-table-column>
       </el-table>
       <el-pagination
-         ref="paginationRef"
+         class="pt-2"
          background
+         :hide-on-single-page="false"
          :layout="paginationSettings?.layout"
          :page-sizes="paginationSettings?.page_sizes"
          :prev-text="paginationSettings?.prev_text"
          :next-text="paginationSettings?.next_text"
-         :default-current-page="paginationSettings?.default_current_page"
-         :default-page-size="paginationSettings?.default_page_size"
-         :hide-on-single-page="false"
-         :total="tableTotal"
-         :page-size="pageSize"
-         :current-page="currentPage"
+         :default-current-page="currentPage"
+         :default-page-size="pageSize"
+         v-model:current-page="currentPage"
+         v-model:page-size="pageSize"
+         v-model:total="tableTotal"
          @size-change="handleSizeChange"
          @current-change="handleCurrentChange"
          @prev-click="handlePrevClick"
@@ -57,6 +69,7 @@
 import { TableColumnCtx, ElTable, ElPagination } from "element-plus"
 import { ref, computed } from "vue"
 import Axios from "axios"
+import { Upload, Delete, Plus, Search } from "@element-plus/icons-vue"
 
 interface Employee {
    id: number
@@ -173,17 +186,22 @@ const handleSizeChange = (value: number) => {
    console.log(value)
    pageSize.value = value
 }
+
 const handleCurrentChange = (value: number) => {
    console.log(value)
    currentPage.value = value
 }
+
 const handlePrevClick = (value: number) => {
    console.log(value)
    currentPage.value = value
 }
+
 const handleNextClick = (value: number) => {
    console.log(value)
    currentPage.value = value
 }
+
+const input = ref("")
 </script>
 <style lang="scss" scoped></style>

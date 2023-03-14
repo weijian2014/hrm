@@ -1,6 +1,6 @@
 {
    "pagination": {
-      "layout": "->, total, sizes, prev, pager, next, jumper",
+      "layout": "->, total, sizes, prev, pager, next",
       "prev_text": "上一页",
       "next_text": "下一页",
       "page_sizes": [10, 20, 30, 40, 50, 100],
@@ -133,14 +133,14 @@
          "label": "现住址",
          "visible": false,
          "sortable": false,
-         "align": "center"
+         "align": "left"
       },
       {
          "prop": "comments",
          "label": "备注",
          "visible": false,
          "sortable": false,
-         "align": "center"
+         "align": "left"
       }
    ]
 }
