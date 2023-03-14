@@ -1,50 +1,56 @@
 <template>
-   <el-table
-      ref="tableRef"
-      :data="tableData"
-      :border="tableSettings?.border"
-      :fit="tableSettings?.fit"
-      :height="tableSettings?.height"
-      :table-layout="tableSettings?.table_layout"
-      :empty-text="tableSettings?.empty_text"
-      :highlight-current-row="tableSettings?.highlight_current_row"
-      :row-key="tableSettings?.row_key"
-      :default-sort="{ prop: 'name', order: 'descending' }"
-      @row-click="rowClick"
-      style="width: 100%">
-      <el-table-column fixed type="selection" />
-      <el-table-column
-         v-for="(column, index) in tableColumns"
-         :key="column.prop"
-         :prop="column.prop"
-         :label="column.label"
-         :sortable="column.sortable"
-         :align="column.align"
-         :index="index"></el-table-column>
-      <el-table-column width="140" label="操作" align="center">
-         <template #default="scope">
-            <el-button size="small" type="primary" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
-            <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-         </template>
-      </el-table-column>
-   </el-table>
-   <el-pagination
-      ref="paginationRef"
-      background
-      :layout="paginationSettings?.layout"
-      :page-sizes="paginationSettings?.page_sizes"
-      :prev-text="paginationSettings?.prev_text"
-      :next-text="paginationSettings?.next_text"
-      :default-current-page="paginationSettings?.default_current_page"
-      :default-page-size="paginationSettings?.default_page_size"
-      :hide-on-single-page="false"
-      :total="tableTotal"
-      :page-size="pageSize"
-      :current-page="currentPage"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      @prev-click="handlePrevClick"
-      @next-click="handleNextClick" />
+   <div class="container">
+      <el-row>
+         <el-col> </el-col>
+         <el-col> </el-col>
+      </el-row>
+      <el-table
+         ref="tableRef"
+         :data="tableData"
+         :border="tableSettings?.border"
+         :fit="tableSettings?.fit"
+         :height="tableSettings?.height"
+         :table-layout="tableSettings?.table_layout"
+         :empty-text="tableSettings?.empty_text"
+         :highlight-current-row="tableSettings?.highlight_current_row"
+         :row-key="tableSettings?.row_key"
+         :default-sort="{ prop: 'name', order: 'descending' }"
+         @row-click="rowClick"
+         style="width: 100%">
+         <el-table-column fixed type="selection" />
+         <el-table-column
+            v-for="(column, index) in tableColumns"
+            :key="column.prop"
+            :prop="column.prop"
+            :label="column.label"
+            :sortable="column.sortable"
+            :align="column.align"
+            :index="index"></el-table-column>
+         <el-table-column width="140" label="操作" align="center">
+            <template #default="scope">
+               <el-button size="small" type="primary" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
+               <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            </template>
+         </el-table-column>
+      </el-table>
+      <el-pagination
+         ref="paginationRef"
+         background
+         :layout="paginationSettings?.layout"
+         :page-sizes="paginationSettings?.page_sizes"
+         :prev-text="paginationSettings?.prev_text"
+         :next-text="paginationSettings?.next_text"
+         :default-current-page="paginationSettings?.default_current_page"
+         :default-page-size="paginationSettings?.default_page_size"
+         :hide-on-single-page="false"
+         :total="tableTotal"
+         :page-size="pageSize"
+         :current-page="currentPage"
+         @size-change="handleSizeChange"
+         @current-change="handleCurrentChange"
+         @prev-click="handlePrevClick"
+         @next-click="handleNextClick" />
+   </div>
 </template>
 
 <script lang="ts" setup>
@@ -161,17 +167,23 @@ const handleDelete = (index: number, row: Employee) => {
    console.log(index, row)
 }
 
+const pageSize = ref(10)
+const currentPage = ref(1)
 const handleSizeChange = (value: number) => {
    console.log(value)
+   pageSize.value = value
 }
 const handleCurrentChange = (value: number) => {
    console.log(value)
+   currentPage.value = value
 }
 const handlePrevClick = (value: number) => {
    console.log(value)
+   currentPage.value = value
 }
 const handleNextClick = (value: number) => {
    console.log(value)
+   currentPage.value = value
 }
 </script>
 <style lang="scss" scoped></style>
