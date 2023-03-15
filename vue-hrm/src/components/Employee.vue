@@ -18,7 +18,7 @@
       <el-table
          class=""
          ref="tableRef"
-         :data="tableData"
+         :data="tableRows"
          :border="tableSettings?.border"
          :fit="tableSettings?.fit"
          :height="tableSettings?.height"
@@ -49,10 +49,10 @@
          class="pt-2"
          background
          :hide-on-single-page="false"
-         :layout="paginationSettings?.layout"
-         :page-sizes="paginationSettings?.page_sizes"
-         :prev-text="paginationSettings?.prev_text"
-         :next-text="paginationSettings?.next_text"
+         :layout="tablePaginationSettings?.layout"
+         :page-sizes="tablePaginationSettings?.page_sizes"
+         :prev-text="tablePaginationSettings?.prev_text"
+         :next-text="tablePaginationSettings?.next_text"
          :default-current-page="currentPage"
          :default-page-size="pageSize"
          v-model:current-page="currentPage"
@@ -67,101 +67,50 @@
 </template>
 
 <script lang="ts" setup>
-import { TableColumnCtx, ElTable, ElPagination, ElMessage } from "element-plus"
-import { ref, computed } from "vue"
-import Axios from "axios"
+import { ref, computed, onMounted } from "vue"
+import { ElTable, ElPagination, ElMessage } from "element-plus"
 import { Upload, Delete, Plus, Search } from "@element-plus/icons-vue"
 import Employee from "./../class/Employee"
 import AddVue from "./Add.vue"
-
-interface TableColumnSettings {
-   prop: string
-   label: string
-   visible: boolean
-   sortable: boolean
-   align: string
-}
-
-interface PaginationSettings {
-   layout: string // 分页器布局
-   prev_text: string
-   next_text: string
-   page_sizes: number[] // 每一页展示多少条数据
-   default_page_size: number // 代表的是每一页需要展示多少条数据, 与page-size属性相同
-   default_current_page: number // 当前第几页, 与current-page属性相同
-   hide_on_single_page: boolean
-}
-
-interface TableSettings {
-   paginationSettings: PaginationSettings
-   border: boolean
-   fit: boolean
-   height: number
-   table_layout: string
-   empty_text: string
-   highlight_current_row: boolean
-   row_key: string
-   table_columns: TableColumnSettings[]
-}
+import Test from "./../api/test"
+import { Table } from "../class/Table"
 
 const tableRef = ref<InstanceType<typeof ElTable>>()
 const paginationRef = ref<InstanceType<typeof ElPagination>>()
 
-const formatter = (row: Employee, column: TableColumnCtx<Employee>) => {
-   return row.current_address
-}
-
-const tableData = ref<Employee[]>()
+const tableRows = ref<Employee[]>()
 const tableTotal = ref<number>()
-Axios.get("./public/table_data.json", {
-   params: {},
-})
-   .then(function (response) {
-      // console.log(response)
-      tableData.value = response.data.rows
-      tableTotal.value = response.data.total
-      console.log(tableTotal)
-   })
-   .catch(function (error) {
-      console.log(error)
-   })
-   .then(function () {
-      // always executed
-   })
+const tablePaginationSettings = ref<Table.PaginationSettings>()
+const tableSettings = ref<Table.TableSettings>()
+const tableColumns = ref<Table.TableColumn[]>()
 
-const tableSettings = ref<TableSettings>()
-const paginationSettings = ref<PaginationSettings>()
-Axios.get("./public/table_settings.json", {
-   params: {},
-})
-   .then(function (response) {
-      tableSettings.value = response.data
-      paginationSettings.value = response.data.pagination
-      console.log(paginationSettings)
-   })
-   .catch(function (error) {
-      console.log(error)
-   })
-   .then(function () {
-      // always executed
-   })
+onMounted(async () => {
+   const data = await Test.getTableData()
+   tableRows.value = data.rows as Employee[]
+   tableTotal.value = data.total as number
 
-let tableColumns = ref<TableColumnSettings[]>()
-tableColumns = computed(() => {
-   return tableSettings.value?.table_columns.filter((column) => column.visible)
+   const settings = await Test.getTableSettings()
+   tablePaginationSettings.value = settings.pagination
+   tableSettings.value = settings.table_settings
+   tableColumns.value = settings.table_columns
 })
 
 const rowClick = (row: Employee) => {
-   tableRef.value!.toggleRowSelection(row)
+   tableRef.value!.$emit("select")
 }
 
+// AddVue组件的属性
 const isShow = ref(false)
 const id = ref(0)
 const employee = ref<Employee>()
+
+// 向AddVue组件传值 -- 只传isShow
 const handleAdd = () => {
    console.log("新增")
    isShow.value = true
 }
+
+// 向AddVue组件传值
 const handleEdit = (index: number, row: Employee) => {
    console.log(index, row)
    isShow.value = true
@@ -169,6 +118,7 @@ const handleEdit = (index: number, row: Employee) => {
    employee.value = row as Employee
 }
 
+// AddVue组件发送的保存事件
 const handleSave = (message: string) => {
    isShow.value = false
    employee.value = new Employee()
@@ -176,6 +126,7 @@ const handleSave = (message: string) => {
    ElMessage.success(message)
 }
 
+// AddVue组件发送的消息事件
 const handleCancel = () => {
    isShow.value = false
    employee.value = new Employee()

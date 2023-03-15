@@ -101,7 +101,7 @@ const dialogVisible = computed(() => props.isShow)
 
 const handleSave = () => {
    // 向外发送save(保存)事件
-   emits("save")
+   emits("save", "保存成功")
 }
 
 const handleCancel = () => {

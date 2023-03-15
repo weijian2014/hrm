@@ -22,4 +22,7 @@ export default defineConfig({
       }),
       WindiCSS(),
    ],
+   server: {
+      open: true, // 自动打开浏览器
+   },
 })

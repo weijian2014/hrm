@@ -8,6 +8,7 @@ export function getSeller(params: any) {
       data: params,
    })
 }
+
 export function Login(params: any) {
    return service.request({
       method: "POST",

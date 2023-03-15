@@ -1,5 +1,5 @@
 {
-   "pagination": {
+   "pagination_settings": {
       "layout": "->, total, sizes, prev, pager, next",
       "prev_text": "上一页",
       "next_text": "下一页",
@@ -8,13 +8,15 @@
       "default_current_page": 1,
       "hide_on_single_page": false
    },
-   "border": true,
-   "fit": true,
-   "highlight_current_row": true,
-   "height": 500,
-   "empty_text": "N/A",
-   "table_layout": "auto",
-   "row_key": "id",
+   "table_settings": {
+      "border": true,
+      "fit": true,
+      "highlight_current_row": true,
+      "height": 500,
+      "empty_text": "N/A",
+      "table_layout": "auto",
+      "row_key": "id"
+   },
    "table_columns": [
       {
          "prop": "id",
