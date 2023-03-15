@@ -22,7 +22,7 @@
          :border="tableSettings?.border"
          :fit="tableSettings?.fit"
          :height="tableSettings?.height"
-         table-layout="auto"
+         :table-layout="tableSettings?.table_layout"
          :empty-text="tableSettings?.empty_text"
          :highlight-current-row="tableSettings?.highlight_current_row"
          :row-key="tableSettings?.row_key"
@@ -31,7 +31,7 @@
          style="width: 100%">
          <el-table-column fixed type="selection" />
          <el-table-column
-            v-for="(column, index) in tableColumns"
+            v-for="(column, index) in columns"
             :key="column.prop"
             :prop="column.prop"
             :label="column.label"
@@ -74,6 +74,7 @@ import Employee from "./../class/Employee"
 import AddVue from "./Add.vue"
 import Test from "./../api/test"
 import { Table } from "../class/Table"
+import Axios from "axios"
 
 const tableRef = ref<InstanceType<typeof ElTable>>()
 const paginationRef = ref<InstanceType<typeof ElPagination>>()
@@ -83,20 +84,45 @@ const tableTotal = ref<number>()
 const tablePaginationSettings = ref<Table.PaginationSettings>()
 const tableSettings = ref<Table.TableSettings>()
 const tableColumns = ref<Table.TableColumn[]>()
+let columns = ref<Table.TableColumn[]>()
 
-onMounted(async () => {
-   const data = await Test.getTableData()
-   tableRows.value = data.rows as Employee[]
-   tableTotal.value = data.total as number
-
-   const settings = await Test.getTableSettings()
-   tablePaginationSettings.value = settings.pagination
-   tableSettings.value = settings.table_settings
-   tableColumns.value = settings.table_columns
+columns = computed(() => {
+   return tableColumns.value?.filter((column) => column.visible)
 })
 
+Axios.get("./public/table_data.json", {
+   params: {},
+})
+   .then(function (response) {
+      console.log(response)
+      tableRows.value = response.data.rows
+      tableTotal.value = response.data.total
+      console.log(tableRows.value, tableTotal.value)
+   })
+   .catch(function (error) {
+      console.log(error)
+   })
+   .then(function () {
+      // always executed
+   })
+
+Axios.get("./public/table_settings.json", {
+   params: {},
+})
+   .then(function (response) {
+      tablePaginationSettings.value = response.data.pagination
+      tableSettings.value = response.data.table_settings
+      tableColumns.value = response.data.table_columns
+   })
+   .catch(function (error) {
+      console.log(error)
+   })
+   .then(function () {
+      // always executed
+   })
+
 const rowClick = (row: Employee) => {
-   tableRef.value!.$emit("select")
+   tableRef.value!.toggleRowSelection(row)
 }
 
 // AddVue组件的属性
