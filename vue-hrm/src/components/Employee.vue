@@ -63,11 +63,11 @@
          @prev-click="handlePrevClick"
          @next-click="handleNextClick" />
    </div>
-   <AddVue :isShow="isShow" :id="id" :employee="employee"></AddVue>
+   <AddVue :isShow="isShow" :id="id" :employee="employee" @save="handleSave" @canel="handleCancel"> </AddVue>
 </template>
 
 <script lang="ts" setup>
-import { TableColumnCtx, ElTable, ElPagination } from "element-plus"
+import { TableColumnCtx, ElTable, ElPagination, ElMessage } from "element-plus"
 import { ref, computed } from "vue"
 import Axios from "axios"
 import { Upload, Delete, Plus, Search } from "@element-plus/icons-vue"
@@ -168,6 +168,19 @@ const handleEdit = (index: number, row: Employee) => {
    id.value = index
    employee.value = row as Employee
 }
+
+const handleSave = (message: string) => {
+   isShow.value = false
+   employee.value = new Employee()
+   console.log(message)
+   ElMessage.success(message)
+}
+
+const handleCancel = () => {
+   isShow.value = false
+   employee.value = new Employee()
+}
+
 const handleDelete = (index: number, row: Employee) => {
    console.log(index, row)
 }
