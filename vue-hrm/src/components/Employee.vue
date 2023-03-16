@@ -51,7 +51,7 @@
          class="pt-2"
          background
          :hide-on-single-page="false"
-         :layout="tablePaginationSettings?.layout"
+         layout="->, total, sizes, prev, pager, next"
          :page-sizes="tablePaginationSettings?.page_sizes"
          :prev-text="tablePaginationSettings?.prev_text"
          :next-text="tablePaginationSettings?.next_text"
@@ -98,7 +98,7 @@ Axios.get("./public/table_data.json", {
 })
    .then(function (response) {
       tableData.value = response.data.rows
-      tableTotal.value = response.data.total
+      tableTotal.value = Number(response.data.total)
       console.log("getTableData", tableData.value, tableTotal.value)
    })
    .catch(function (error) {
