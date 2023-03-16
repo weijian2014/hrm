@@ -4,7 +4,8 @@
          <el-col :span="12">
             <el-button :icon="Plus" type="primary" @click="handleAdd">新增</el-button>
             <el-button :icon="Upload" type="primary">导入</el-button>
-            <el-button :icon="Delete" type="danger">删除</el-button>
+            <el-button :icon="Download" :disabled="isDisabled" type="primary">导出</el-button>
+            <el-button :icon="Delete" :disabled="isDisabled" type="danger">删除</el-button>
          </el-col>
          <el-col :span="6">
             <el-input v-model="input" class="w-50" placeholder="" clearable>
@@ -18,7 +19,7 @@
       <el-table
          class=""
          ref="tableRef"
-         :data="tableRows"
+         :data="tableData"
          :border="tableSettings?.border"
          :fit="tableSettings?.fit"
          :height="tableSettings?.height"
@@ -27,7 +28,8 @@
          :highlight-current-row="tableSettings?.highlight_current_row"
          :row-key="tableSettings?.row_key"
          :default-sort="{ prop: 'name', order: 'descending' }"
-         @row-click="rowClick"
+         @selection-change="handleSelectChange"
+         @row-click="handleRowClick"
          style="width: 100%">
          <el-table-column fixed type="selection" />
          <el-table-column
@@ -67,19 +69,20 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted } from "vue"
+import { ref, computed } from "vue"
 import { ElTable, ElPagination, ElMessage } from "element-plus"
-import { Upload, Delete, Plus, Search } from "@element-plus/icons-vue"
+import { Upload, Download, Delete, Plus, Search } from "@element-plus/icons-vue"
 import Employee from "./../class/Employee"
 import AddVue from "./Add.vue"
-import Test from "./../api/test"
 import { Table } from "../class/Table"
 import Axios from "axios"
 
 const tableRef = ref<InstanceType<typeof ElTable>>()
 const paginationRef = ref<InstanceType<typeof ElPagination>>()
 
-const tableRows = ref<Employee[]>()
+// 在ref中使用数组或者对象, 返回的是reactive类型
+// 基本类型一般使用ref, 数组或者对象一般使用reactive
+const tableData = ref<Employee[]>()
 const tableTotal = ref<number>()
 const tablePaginationSettings = ref<Table.PaginationSettings>()
 const tableSettings = ref<Table.TableSettings>()
@@ -94,10 +97,9 @@ Axios.get("./public/table_data.json", {
    params: {},
 })
    .then(function (response) {
-      console.log(response)
-      tableRows.value = response.data.rows
+      tableData.value = response.data.rows
       tableTotal.value = response.data.total
-      console.log(tableRows.value, tableTotal.value)
+      console.log("getTableData", tableData.value, tableTotal.value)
    })
    .catch(function (error) {
       console.log(error)
@@ -113,6 +115,7 @@ Axios.get("./public/table_settings.json", {
       tablePaginationSettings.value = response.data.pagination
       tableSettings.value = response.data.table_settings
       tableColumns.value = response.data.table_columns
+      console.log("getTableSettings", tablePaginationSettings.value, tableSettings.value, tableColumns.value)
    })
    .catch(function (error) {
       console.log(error)
@@ -121,10 +124,7 @@ Axios.get("./public/table_settings.json", {
       // always executed
    })
 
-const rowClick = (row: Employee) => {
-   tableRef.value!.toggleRowSelection(row)
-}
-
+////////////////////////////////////////////////////////
 // AddVue组件的属性
 const isShow = ref(false)
 const id = ref(0)
@@ -158,32 +158,40 @@ const handleCancel = () => {
    employee.value = new Employee()
 }
 
+//表格操作//////////////////////////////////////////////////////
+const selections = ref<Employee[]>()
+let isDisabled = ref<boolean>(true)
+const handleSelectChange = (rows: Employee[]) => {
+   console.log("handleSelectChange", rows)
+   selections.value = rows
+   isDisabled.value = selections.value.length == 0 ? true : false
+}
+const handleRowClick = (row: Employee) => {
+   console.log("handleRowClick", row)
+}
 const handleDelete = (index: number, row: Employee) => {
    console.log(index, row)
 }
-
-const pageSize = ref(10)
-const currentPage = ref(1)
+const pageSize = ref(tablePaginationSettings.value?.default_page_size)
+const currentPage = ref(tablePaginationSettings.value?.default_current_page)
 const handleSizeChange = (value: number) => {
    console.log(value)
    pageSize.value = value
 }
-
 const handleCurrentChange = (value: number) => {
    console.log(value)
    currentPage.value = value
 }
-
 const handlePrevClick = (value: number) => {
    console.log(value)
    currentPage.value = value
 }
-
 const handleNextClick = (value: number) => {
    console.log(value)
    currentPage.value = value
 }
 
+// 搜索框
 const input = ref("")
 </script>
 <style lang="scss" scoped></style>

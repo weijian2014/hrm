@@ -13,7 +13,7 @@ export namespace Table {
       border: boolean = true
       fit: boolean = true
       height: number = 500
-      table_layout: string = "auto"
+      table_layout: string = "auto" as const
       empty_text: string = "N/A"
       highlight_current_row: boolean = true
       row_key: string = "id"
