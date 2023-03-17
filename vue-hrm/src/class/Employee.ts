@@ -2,8 +2,8 @@ export default class Employee {
    id: number = 0
    name: string = ""
    gender: string = ""
-   age: number = 0
-   work_time: string = ""
+   birthday: string = ""
+   first_work_time: string = ""
    salary: number = 0
    post: string = ""
    social_security: string = ""
@@ -11,7 +11,7 @@ export default class Employee {
    former_employer: string = ""
    height: number = 0
    weight: number = 0
-   diploma: string = ""
+   degree: string = ""
    political_status: string = ""
    identifier: string = ""
    security_card: string = ""

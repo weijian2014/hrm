@@ -5074,7 +5074,7 @@ building-flag:
     terms:
       - ' city'
       - building
-      - diplomat
+      - degreet
       - embassy
       - flag
       - headquarters

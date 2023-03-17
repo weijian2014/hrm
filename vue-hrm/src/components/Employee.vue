@@ -1,5 +1,5 @@
 <template>
-   <div class="container">
+   <div class="container" style="margin: auto">
       <el-row class="m-1 pt-2 pb-2">
          <el-col :span="12">
             <el-button :icon="Plus" type="primary" @click="handleAdd">新增</el-button>
@@ -14,6 +14,29 @@
                   <el-icon class="el-input__icon"><search /></el-icon>
                </template>
             </el-input>
+         </el-col>
+         <el-col :span="6" class="pl-2">
+            <el-dropdown split-button :hide-on-click="false" type="primary" @click="handleDropdownClick">
+               列
+               <template #dropdown>
+                  <el-dropdown-menu>
+                     <el-dropdown-item
+                        ><el-checkbox v-model="checkedFormerEmployer">原单位</el-checkbox></el-dropdown-item
+                     >
+                     <el-dropdown-item
+                        ><el-checkbox v-model="checkedPoliticalStatus">政治面貌</el-checkbox></el-dropdown-item
+                     >
+                     <el-dropdown-item><el-checkbox v-model="checkedIdentifier">身份证</el-checkbox></el-dropdown-item>
+                     <el-dropdown-item
+                        ><el-checkbox v-model="checkedSecurityCard">保安证</el-checkbox></el-dropdown-item
+                     >
+                     <el-dropdown-item
+                        ><el-checkbox v-model="checkedCurrentAddress">现住址</el-checkbox></el-dropdown-item
+                     >
+                     <el-dropdown-item><el-checkbox v-model="checkedComments">备注</el-checkbox></el-dropdown-item>
+                  </el-dropdown-menu>
+               </template>
+            </el-dropdown>
          </el-col>
       </el-row>
       <el-table
@@ -31,7 +54,7 @@
          @selection-change="handleSelectChange"
          @row-click="handleRowClick"
          style="width: 100%">
-         <el-table-column fixed type="selection" />
+         <el-table-column type="selection" />
          <el-table-column
             v-for="(column, index) in columns"
             :key="column.prop"
@@ -65,7 +88,7 @@
          @prev-click="handlePrevClick"
          @next-click="handleNextClick" />
    </div>
-   <AddVue :isShow="isShow" :id="id" :employee="employee" @save="handleSave" @canel="handleCancel"> </AddVue>
+   <AddVue :isShow="isShow" :id="id" :employee="employee" @save="handleSave" @cancel="handleCancel"> </AddVue>
 </template>
 
 <script lang="ts" setup>
@@ -87,9 +110,8 @@ const tableTotal = ref<number>()
 const tablePaginationSettings = ref<Table.PaginationSettings>()
 const tableSettings = ref<Table.TableSettings>()
 const tableColumns = ref<Table.TableColumn[]>()
-let columns = ref<Table.TableColumn[]>()
 
-columns = computed(() => {
+const columns = computed(() => {
    return tableColumns.value?.filter((column) => column.visible)
 })
 
@@ -137,25 +159,26 @@ const handleAdd = () => {
 }
 
 // 向AddVue组件传值
-const handleEdit = (index: number, row: Employee) => {
+const handleEdit = (index: number, row: Employee | undefined) => {
    console.log(index, row)
    isShow.value = true
    id.value = index
-   employee.value = row as Employee
+   employee.value = row
 }
 
 // AddVue组件发送的保存事件
 const handleSave = (message: string) => {
    isShow.value = false
-   employee.value = new Employee()
-   console.log(message)
+   console.log("handleSave", message)
    ElMessage.success(message)
 }
 
 // AddVue组件发送的消息事件
-const handleCancel = () => {
+const handleCancel = (message: string) => {
    isShow.value = false
+   console.log("handleCancel", employee.value)
    employee.value = new Employee()
+   ElMessage.info(message)
 }
 
 //表格操作//////////////////////////////////////////////////////
@@ -193,5 +216,68 @@ const handleNextClick = (value: number) => {
 
 // 搜索框
 const input = ref("")
+
+// 列
+const handleDropdownClick = () => {}
+
+const checkedPoliticalStatus = computed(() => {
+   let isChecked = false
+   tableColumns.value?.forEach((column) => {
+      if (column.prop == "political_status") {
+         isChecked = column.visible
+      }
+   })
+   return isChecked
+})
+
+const checkedFormerEmployer = computed(() => {
+   let isChecked = false
+   tableColumns.value?.forEach((column) => {
+      if (column.prop == "former_employer") {
+         isChecked = column.visible
+      }
+   })
+   return isChecked
+})
+
+const checkedIdentifier = computed(() => {
+   let isChecked = false
+   tableColumns.value?.forEach((column) => {
+      if (column.prop == "identifier") {
+         isChecked = column.visible
+      }
+   })
+   return isChecked
+})
+
+const checkedSecurityCard = computed(() => {
+   let isChecked = false
+   tableColumns.value?.forEach((column) => {
+      if (column.prop == "security_card") {
+         isChecked = column.visible
+      }
+   })
+   return isChecked
+})
+
+const checkedCurrentAddress = computed(() => {
+   let isChecked = false
+   tableColumns.value?.forEach((column) => {
+      if (column.prop == "current_address") {
+         isChecked = column.visible
+      }
+   })
+   return isChecked
+})
+
+const checkedComments = computed(() => {
+   let isChecked = false
+   tableColumns.value?.forEach((column) => {
+      if (column.prop == "comments") {
+         isChecked = column.visible
+      }
+   })
+   return isChecked
+})
 </script>
 <style lang="scss" scoped></style>

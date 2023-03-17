@@ -38,7 +38,7 @@ func Test_WriteExcel(t *testing.T) {
 		FormerEmployer:  "蓝盾",
 		Height:          "178",
 		Weight:          "72",
-		Diploma:         "高职",
+		degree:          "高职",
 		PoliticalStatus: "党员",
 		Id:              "7654321",
 		SecurityCard:    "54321",

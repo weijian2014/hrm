@@ -40,15 +40,15 @@
          "align": "center"
       },
       {
-         "prop": "age",
-         "label": "年龄",
+         "prop": "birthday",
+         "label": "生日",
          "visible": true,
          "sortable": true,
          "align": "center"
       },
       {
-         "prop": "work_time",
-         "label": "工作时间",
+         "prop": "first_work_time",
+         "label": "参加工作时间",
          "visible": true,
          "sortable": true,
          "align": "center"
@@ -103,8 +103,8 @@
          "align": "center"
       },
       {
-         "prop": "diploma",
-         "label": "文化",
+         "prop": "degree",
+         "label": "学历",
          "visible": true,
          "sortable": true,
          "align": "center"

@@ -17,7 +17,7 @@ const (
 	formerEmployerCell  = "F4" // 原单位
 	heightCell          = "B5" // 身高
 	weightCell          = "D5" // 体重
-	diplomaCell         = "F5" // 文化
+	degreeCell          = "F5" // 学历
 	politicalStatusCell = "B6" // 政治面貌
 	idCell              = "D6" // 身份证
 	securityCardCell    = "F6" // 保安证
@@ -41,7 +41,7 @@ type EmployeeInfo struct {
 	FormerEmployer  string // 原单位
 	Height          string // 身高
 	Weight          string // 体重
-	Diploma         string // 文化
+	degree          string // 学历
 	PoliticalStatus string // 政治面貌
 	Id              string // 身份证
 	SecurityCard    string // 保安证
@@ -128,8 +128,8 @@ func ReadExcel(excelFile string) (*EmployeeInfo, error) {
 		return nil, err
 	}
 
-	// 文化
-	e.Diploma, err = f.GetCellValue(excelSheetName, diplomaCell)
+	// 学历
+	e.degree, err = f.GetCellValue(excelSheetName, degreeCell)
 	if err != nil {
 		return nil, err
 	}
@@ -244,8 +244,8 @@ func WriteExcel(excelFile string, ei *EmployeeInfo) error {
 		return err
 	}
 
-	// 文化
-	err = f.SetCellValue(excelSheetName, diplomaCell, ei.Diploma)
+	// 学历
+	err = f.SetCellValue(excelSheetName, degreeCell, ei.degree)
 	if err != nil {
 		return err
 	}

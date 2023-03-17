@@ -49,7 +49,7 @@ export function useColumns() {
          align: "center",
       },
       {
-         prop: "work_time",
+         prop: "first_work_time",
          label: "工作时间",
          visible: true,
          sortable: true,
@@ -105,8 +105,8 @@ export function useColumns() {
          align: "center",
       },
       {
-         prop: "diploma",
-         label: "文化",
+         prop: "degree",
+         label: "学历",
          visible: true,
          sortable: true,
          align: "center",
