@@ -20,20 +20,11 @@
                列
                <template #dropdown>
                   <el-dropdown-menu>
-                     <el-dropdown-item
-                        ><el-checkbox v-model="checkedFormerEmployer">原单位</el-checkbox></el-dropdown-item
+                     <el-dropdown-item v-for="(column, index) in tableColumns"
+                        ><el-checkbox :key="column.prop" :checked="column.visible">{{
+                           column.label
+                        }}</el-checkbox></el-dropdown-item
                      >
-                     <el-dropdown-item
-                        ><el-checkbox v-model="checkedPoliticalStatus">政治面貌</el-checkbox></el-dropdown-item
-                     >
-                     <el-dropdown-item><el-checkbox v-model="checkedIdentifier">身份证</el-checkbox></el-dropdown-item>
-                     <el-dropdown-item
-                        ><el-checkbox v-model="checkedSecurityCard">保安证</el-checkbox></el-dropdown-item
-                     >
-                     <el-dropdown-item
-                        ><el-checkbox v-model="checkedCurrentAddress">现住址</el-checkbox></el-dropdown-item
-                     >
-                     <el-dropdown-item><el-checkbox v-model="checkedComments">备注</el-checkbox></el-dropdown-item>
                   </el-dropdown-menu>
                </template>
             </el-dropdown>
@@ -155,15 +146,16 @@ const employee = ref<Employee>()
 // 向AddVue组件传值 -- 只传isShow
 const handleAdd = () => {
    console.log("新增")
+   employee.value = new Employee()
    isShow.value = true
 }
 
 // 向AddVue组件传值
 const handleEdit = (index: number, row: Employee | undefined) => {
    console.log(index, row)
-   isShow.value = true
    id.value = index
    employee.value = row
+   isShow.value = true
 }
 
 // AddVue组件发送的保存事件

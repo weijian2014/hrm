@@ -172,7 +172,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, defineProps, Ref, watch } from "vue"
+import { ref, computed, watch } from "vue"
 import Employee from "./../class/Employee"
 
 const genderOptions = [
