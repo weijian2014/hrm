@@ -61,6 +61,7 @@
             :label="column.label"
             :sortable="column.sortable"
             :align="column.align"
+            :min-width="column.minWidth"
             :index="index"></el-table-column>
          <el-table-column width="140" label="操作" align="center">
             <template #default="scope">
@@ -131,7 +132,10 @@ const employee = ref<Employee>()
 const handleSave = (message: string) => {
    isShow.value = false
    console.log("handleSave", message)
-   ElMessage.success(message)
+   ElMessage({
+      message: message,
+      type: "success",
+   })
 }
 
 // AddVue组件发送的消息事件
@@ -258,14 +262,14 @@ const tableSettings = {
       {
          prop: "identifier",
          label: "身份证",
-         visible: true,
+         visible: false,
          sortable: false,
          align: "center",
       },
       {
          prop: "security_card",
          label: "保安证",
-         visible: true,
+         visible: false,
          sortable: false,
          align: "center",
       },
@@ -302,6 +306,7 @@ const tableColumns = [
       visible: false,
       sortable: false,
       align: "center",
+      minWidth: 18,
    },
    {
       prop: "name",
@@ -309,6 +314,7 @@ const tableColumns = [
       visible: true,
       sortable: true,
       align: "center",
+      minWidth: 18,
    },
    {
       prop: "gender",
@@ -316,6 +322,7 @@ const tableColumns = [
       visible: true,
       sortable: true,
       align: "center",
+      minWidth: 18,
    },
    {
       prop: "birthday",
@@ -323,6 +330,7 @@ const tableColumns = [
       visible: true,
       sortable: true,
       align: "center",
+      minWidth: 30,
    },
    {
       prop: "first_work_time",
@@ -330,6 +338,7 @@ const tableColumns = [
       visible: true,
       sortable: true,
       align: "center",
+      minWidth: 30,
    },
    {
       prop: "salary",
@@ -337,6 +346,7 @@ const tableColumns = [
       visible: true,
       sortable: true,
       align: "center",
+      minWidth: 18,
    },
    {
       prop: "post",
@@ -344,6 +354,7 @@ const tableColumns = [
       visible: true,
       sortable: true,
       align: "center",
+      minWidth: 18,
    },
    {
       prop: "social_security",
@@ -351,6 +362,7 @@ const tableColumns = [
       visible: true,
       sortable: true,
       align: "center",
+      minWidth: 18,
    },
    {
       prop: "phone",
@@ -358,6 +370,7 @@ const tableColumns = [
       visible: true,
       sortable: true,
       align: "center",
+      minWidth: 30,
    },
    {
       prop: "former_employer",
@@ -365,6 +378,7 @@ const tableColumns = [
       visible: true,
       sortable: true,
       align: "center",
+      minWidth: 18,
    },
    {
       prop: "height",
@@ -372,6 +386,7 @@ const tableColumns = [
       visible: true,
       sortable: true,
       align: "center",
+      minWidth: 18,
    },
    {
       prop: "weight",
@@ -379,6 +394,7 @@ const tableColumns = [
       visible: true,
       sortable: true,
       align: "center",
+      minWidth: 18,
    },
    {
       prop: "degree",
@@ -386,6 +402,7 @@ const tableColumns = [
       visible: true,
       sortable: true,
       align: "center",
+      minWidth: 18,
    },
    {
       prop: "political_status",
@@ -393,20 +410,23 @@ const tableColumns = [
       visible: true,
       sortable: true,
       align: "center",
+      minWidth: 18,
    },
    {
       prop: "identifier",
       label: "身份证",
-      visible: true,
+      visible: false,
       sortable: false,
       align: "center",
+      minWidth: 18,
    },
    {
       prop: "security_card",
       label: "保安证",
-      visible: true,
+      visible: false,
       sortable: false,
       align: "center",
+      minWidth: 18,
    },
    {
       prop: "current_address",
@@ -414,6 +434,7 @@ const tableColumns = [
       visible: false,
       sortable: false,
       align: "left",
+      minWidth: 18,
    },
    {
       prop: "comments",
@@ -421,6 +442,7 @@ const tableColumns = [
       visible: false,
       sortable: false,
       align: "left",
+      minWidth: 18,
    },
 ]
 
