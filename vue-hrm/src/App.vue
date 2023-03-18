@@ -1,10 +1,8 @@
 <template>
-   <div class="">
-      <router-view></router-view>
-   </div>
+   <router-view></router-view>
 </template>
 
 <script setup lang="ts"></script>
 <style lang="scss">
-@import url("./assets/css/reset.css");
+@import url("@/assets/css/reset.css");
 </style>
