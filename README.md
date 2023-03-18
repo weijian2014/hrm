@@ -114,6 +114,7 @@ npm install element-plus -S
 # 修改vite.config.js文件, [参考](https://cn.windicss.org/integrations/vite.html#install)
 # 修改main.js文件, [参考](https://cn.windicss.org/integrations/vite.html#install)
 # 创建tailwind.config.ts文件, [参考](https://cn.windicss.org/integrations/vite.html#typeScript)
+npm install sass --save-dev
 npm i -D vite-plugin-windicss windicss
 
 # 安装axios, http://axios-js.com/
@@ -124,7 +125,7 @@ npm install axios
 
 ```
 # dev 是 package.json 中 scripts 的一个命令
-nmp run dev
+npm run dev
 ```
 
 # 打包

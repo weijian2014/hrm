@@ -3,6 +3,8 @@
    "tabWidth": 3,
    "useTabs": false,
    "semi": false,
+   "singleQuote": false,
+   "disableLanguages": [],
    "jsxSingleQuote": false,
    "bracketSpacing": true,
    "bracketSameLine": true,
