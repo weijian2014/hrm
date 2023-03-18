@@ -33,7 +33,7 @@ func LoginPageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 		sessionId := sessionMgr.StartSession(w, r)
 		jump := "/index"
 		log.Debug("Invalid cookie, start session [%s] and set jump to [%s]\n", sessionId, jump)
-		sessionMgr.SetSessionValuse(sessionId, "jump", jump)
+		sessionMgr.SetSessionValues(sessionId, "jump", jump)
 	}
 
 	htmlFile := common.CurrDir + "/" + common.JsonConfigs.HtmlDirectory + "/login.html"
@@ -57,7 +57,7 @@ func IndexPageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 		sessionId := sessionMgr.StartSession(w, r)
 		jump := r.RequestURI
 		log.Debug("Invalid cookie, start session [%s] and set jump to [%s].\n", sessionId, jump)
-		sessionMgr.SetSessionValuse(sessionId, "jump", jump)
+		sessionMgr.SetSessionValues(sessionId, "jump", jump)
 		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}
@@ -83,7 +83,7 @@ func AdminPageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 		sessionId := sessionMgr.StartSession(w, r)
 		jump := r.RequestURI
 		log.Debug("Invalid cookie, start session [%s] and set jump to [%s].\n", sessionId, jump)
-		sessionMgr.SetSessionValuse(sessionId, "jump", jump)
+		sessionMgr.SetSessionValues(sessionId, "jump", jump)
 		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}
@@ -96,7 +96,7 @@ func AdminPageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 	}
 
 	sessionId := cookie.Value
-	isAdmin, ok := sessionMgr.GetSessionValuse(sessionId, "isAdmin")
+	isAdmin, ok := sessionMgr.GetSessionValues(sessionId, "isAdmin")
 	if !ok {
 		log.Error("AdminPageHandler get isAdmin fail\n")
 		http.Redirect(w, r, "/", http.StatusFound)
@@ -130,7 +130,7 @@ func EmployeePageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		sessionId := sessionMgr.StartSession(w, r)
 		jump := r.RequestURI
 		log.Debug("Invalid cookie, start session [%s] and set jump to [%s].\n", sessionId, jump)
-		sessionMgr.SetSessionValuse(sessionId, "jump", jump)
+		sessionMgr.SetSessionValues(sessionId, "jump", jump)
 		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}
@@ -143,7 +143,7 @@ func EmployeePageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 	}
 
 	sessionId := cookie.Value
-	isAdmin, ok := sessionMgr.GetSessionValuse(sessionId, "isAdmin")
+	isAdmin, ok := sessionMgr.GetSessionValues(sessionId, "isAdmin")
 	if !ok {
 		log.Error("EmployeePageHandler get isAdmin fail\n")
 		http.Redirect(w, r, "/", http.StatusFound)

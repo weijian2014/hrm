@@ -97,6 +97,6 @@ func isLogin(r *http.Request) bool {
 	}
 
 	sessionId := cookie.Value
-	_, ok := sessionMgr.GetSessionValuse(sessionId, "isAdmin")
+	_, ok := sessionMgr.GetSessionValues(sessionId, "isAdmin")
 	return ok
 }

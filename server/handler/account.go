@@ -13,13 +13,16 @@ func AccountHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params)
 	action := p.ByName("action")
 	switch action {
 	case "login":
-		r.ParseForm()
-		li := &api.LoginInfo{}
-		li.UserName = r.FormValue("username")
-		li.Password = r.FormValue("password")
-		log.Debug("LoginInfo %+v\n", li)
-		isAdmin, err := api.Login(li)
-		if nil != err {
+		info := &api.LoginInfo{}
+		if err := getPostData(r, info); err != nil {
+			log.Error("Get post data fail for login,  %s", err.Error())
+			respString(w, 0, err.Error())
+			return
+		}
+
+		log.Debug("LoginInfo %+v", info)
+		isAdmin, err := api.Login(info)
+		if err != nil {
 			log.Error("AccountHandler login fail, %v", err)
 			respString(w, 0, err.Error())
 			return
@@ -35,8 +38,8 @@ func AccountHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params)
 
 		sessionId := cookie.Value
 		// 设置一个用户类型的session值
-		sessionMgr.SetSessionValuse(sessionId, "isAdmin", isAdmin)
-		u, ok := sessionMgr.GetSessionValuse(sessionId, "jump")
+		sessionMgr.SetSessionValues(sessionId, "isAdmin", isAdmin)
+		u, ok := sessionMgr.GetSessionValues(sessionId, "jump")
 		if !ok {
 			u = "/index"
 		}
@@ -47,7 +50,7 @@ func AccountHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params)
 		} else {
 			jumpUrl = "/index"
 		}
-		sessionMgr.DeleteSessionValuse(sessionId, "jump")
+		sessionMgr.DeleteSessionValues(sessionId, "jump")
 		log.Debug("AccountHandler login ok, jumpUrl [%s]\n", jumpUrl)
 		respString(w, 1, jumpUrl)
 		return

@@ -22,7 +22,7 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	}
 
 	sessionId := cookie.Value
-	isAdmin, ok := sessionMgr.GetSessionValuse(sessionId, "isAdmin")
+	isAdmin, ok := sessionMgr.GetSessionValues(sessionId, "isAdmin")
 	if !ok {
 		log.Error("AdminHandler get isAdmin fail\n")
 		http.Redirect(w, r, "/", http.StatusFound)

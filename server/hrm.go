@@ -64,16 +64,16 @@ func main() {
 	handler.Init()
 	router := httprouter.New()
 
-	// 静态资源
-	staticDir := http.Dir(common.CurrDir + "/" + common.JsonConfigs.StaticDirectory)
-	// html中引用静态资源时使用/static/开始为根目录, 例如/static/xxx.js或者/static/xxx.css
-	router.ServeFiles("/static/*filepath", staticDir)
+	// // 静态资源
+	// staticDir := http.Dir(common.CurrDir + "/" + common.JsonConfigs.StaticDirectory)
+	// // html中引用静态资源时使用/static/开始为根目录, 例如/static/xxx.js或者/static/xxx.css
+	// router.ServeFiles("/static/*filepath", staticDir)
 
-	// 页面
-	router.GET("/", handler.LoginPageHandler)
-	router.GET("/index", handler.IndexPageHandler)
-	router.GET("/admin", handler.AdminPageHandler)
-	router.GET("/employee", handler.EmployeePageHandler)
+	// // 页面
+	// router.GET("/", handler.LoginPageHandler)
+	// router.GET("/index", handler.IndexPageHandler)
+	// router.GET("/admin", handler.AdminPageHandler)
+	// router.GET("/employee", handler.EmployeePageHandler)
 
 	// API
 	router.POST("/api/v1/account/:action", handler.AccountHandler)

@@ -86,7 +86,7 @@ func (mgr *SessionMgr) StopSession(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (mgr *SessionMgr) SetSessionValuse(sessionId string, k interface{}, v interface{}) {
+func (mgr *SessionMgr) SetSessionValues(sessionId string, k interface{}, v interface{}) {
 	mgr.mutex.Lock()
 	defer mgr.mutex.Unlock()
 
@@ -95,7 +95,7 @@ func (mgr *SessionMgr) SetSessionValuse(sessionId string, k interface{}, v inter
 	}
 }
 
-func (mgr *SessionMgr) GetSessionValuse(sessionId string, k interface{}) (interface{}, bool) {
+func (mgr *SessionMgr) GetSessionValues(sessionId string, k interface{}) (interface{}, bool) {
 	mgr.mutex.RLock()
 	defer mgr.mutex.RUnlock()
 	if s, ok := mgr.sessions[sessionId]; ok {
@@ -107,7 +107,7 @@ func (mgr *SessionMgr) GetSessionValuse(sessionId string, k interface{}) (interf
 	return nil, false
 }
 
-func (mgr *SessionMgr) DeleteSessionValuse(sessionId string, k interface{}) {
+func (mgr *SessionMgr) DeleteSessionValues(sessionId string, k interface{}) {
 	mgr.mutex.Lock()
 	defer mgr.mutex.Unlock()
 	delete(mgr.sessions[sessionId].values, k)
@@ -137,7 +137,7 @@ func (mgr *SessionMgr) Dump() {
 	defer mgr.mutex.RUnlock()
 	log.Info("Cookies name:%s, max life time:%d\n", mgr.cookieName, mgr.maxLifeTime)
 	for id, s := range mgr.sessions {
-		log.Info("Session ID:%s, last access time:%d, valuse count:%d\n", id, s.lastAccessTime.Unix(), len(s.values))
+		log.Info("Session ID:%s, last access time:%d, Values count:%d\n", id, s.lastAccessTime.Unix(), len(s.values))
 		for k, v := range s.values {
 			log.Info("k:%s, v:%s\n", k, v)
 		}
