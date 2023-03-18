@@ -132,10 +132,7 @@ const employee = ref<Employee>()
 const handleSave = (message: string) => {
    isShow.value = false
    console.log("handleSave", message)
-   ElMessage({
-      message: message,
-      type: "success",
-   })
+   ElMessage.success(message)
 }
 
 // AddVue组件发送的消息事件
