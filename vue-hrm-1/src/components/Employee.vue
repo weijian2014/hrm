@@ -86,7 +86,7 @@
 import { ref, computed } from "vue"
 import { ElTable, ElPagination, ElMessage } from "element-plus"
 import { Upload, Download, Delete, Plus, Search } from "@element-plus/icons-vue"
-import Employee from "./../class/Employee"
+import Employee from "../class/Employee"
 import AddVue from "./Add.vue"
 import { Table } from "../class/Table"
 import Axios from "axios"
