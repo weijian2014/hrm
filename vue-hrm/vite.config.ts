@@ -1,6 +1,5 @@
-import { fileURLToPath, URL } from "node:url"
-
 import { defineConfig } from "vite"
+import { fileURLToPath, URL } from "node:url"
 import vue from "@vitejs/plugin-vue"
 import AutoImport from "unplugin-auto-import/vite"
 import Components from "unplugin-vue-components/vite"

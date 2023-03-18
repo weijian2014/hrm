@@ -5,4 +5,6 @@
 <script setup lang="ts">
 import Employee from "@/components/Employee.vue"
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import url("@/assets/css/reset.css");
+</style>
