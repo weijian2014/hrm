@@ -13,6 +13,13 @@ type LoginRequest struct {
 	Password string `xml:"password" json:"password" description:"登录的密码"`
 }
 
+func (LoginRequest) SwaggerDoc() map[string]string {
+	return map[string]string{
+		"username": "登录的用户名",
+		"password": "登录的密码",
+	}
+}
+
 type LoginResponse struct {
 	Token string `xml:"token" json:"token" description:"登录成功生成的token"`
 }
@@ -23,8 +30,8 @@ func registerLoginWebService() {
 	ws.Path("/")
 	ws.Route(
 		ws.POST("login").Consumes(restful.MIME_JSON).Produces((restful.MIME_JSON)).To(login).Doc("登录接口").
-			Param(ws.PathParameter("username", "用户名").DataType("string")).
-			Param(ws.PathParameter("password", "密码").DataType("string")))
+			Param(ws.BodyParameter("username", "用户名").DataType("string")).
+			Param(ws.BodyParameter("password", "密码").DataType("string")))
 	restful.Add(ws)
 }
 
