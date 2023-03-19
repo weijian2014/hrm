@@ -19,6 +19,7 @@ type LoginResponse struct {
 
 func registerLoginWebService() {
 	ws := new(restful.WebService)
+
 	ws.Path("/")
 	ws.Route(
 		ws.POST("login").Consumes(restful.MIME_JSON).Produces((restful.MIME_JSON)).To(login).Doc("登录接口").
@@ -29,16 +30,18 @@ func registerLoginWebService() {
 
 func login(req *restful.Request, resp *restful.Response) {
 	lr := new(LoginRequest)
-	req.ReadEntity(lr)
+	if err := req.ReadEntity(lr); err != nil {
+		log.Warn("LoginRequest error")
+		resp.WriteHeaderAndEntity(http.StatusBadRequest, LoginResponse{Token: ""})
+		return
+	}
 	log.Debug("LoginRequest[%v]", lr)
 
 	token, err := token.GenerateToken(lr.UserName)
 	if err != nil {
 		resp.WriteHeaderAndEntity(http.StatusInternalServerError, LoginResponse{Token: ""})
+		return
 	}
 
-	// resp.WriteHeaderAndJson(http.StatusNotFound, LoginResponse{Token: ""}, restful.MIME_JSON)
-	// resp.WriteHeaderAndJson(http.StatusOK, LoginResponse{Token: token}, restful.MIME_JSON)
-	// resp.WriteEntity(LoginResponse{Token: token})
 	resp.WriteHeaderAndEntity(http.StatusOK, LoginResponse{Token: token})
 }

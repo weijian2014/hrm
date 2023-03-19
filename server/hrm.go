@@ -78,13 +78,6 @@ func main() {
 	// router.POST("/api/v1/index/:action", handler.IndexHandler)
 	// router.POST("/api/v1/admin/:action", handler.AdminHandler)
 
-	// wss := []*restful.WebService{ws}
-	// config := swagger.Config{
-	// 	WebServices: wss,
-	// 	ApiPath:     "/apidocs.json",
-	// 	SwaggerPath: "/apidocs/"}
-	// swagger.InstallSwaggerService(config)
-
 	log.System("HRM system listen on %v", common.JsonConfigs.ServerListenHost)
 	log.System("Json config from %v:\n%+v\n\n", common.FlagInfos.ConfigFileFullPath, common.JsonConfigs)
 	log.Error("%v", http.ListenAndServe(common.JsonConfigs.ServerListenHost, nil))
