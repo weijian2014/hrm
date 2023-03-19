@@ -1,7 +1,8 @@
 {
-   "liveServer.settings.port": 5503,
-   "volar.inlayHints.eventArgumentInInlineHandlers": false,
-   "editor.quickSuggestions": {
-      "strings": true
-   }
+  "liveServer.settings.port": 5503,
+  "volar.inlayHints.eventArgumentInInlineHandlers": false,
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "go.testFlags": ["-v"]
 }
