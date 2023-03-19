@@ -10,8 +10,6 @@ import (
 	"hrm/db"
 	"hrm/handler"
 	"hrm/log"
-
-	"github.com/julienschmidt/httprouter"
 )
 
 func init() {
@@ -62,7 +60,7 @@ func main() {
 	log.System("Log init ok")
 
 	handler.Init()
-	router := httprouter.New()
+	// router := httprouter.New()
 
 	// // 静态资源
 	// staticDir := http.Dir(common.CurrDir + "/" + common.JsonConfigs.StaticDirectory)
@@ -75,12 +73,19 @@ func main() {
 	// router.GET("/admin", handler.AdminPageHandler)
 	// router.GET("/employee", handler.EmployeePageHandler)
 
-	// API
-	router.POST("/api/v1/account/:action", handler.AccountHandler)
-	router.POST("/api/v1/index/:action", handler.IndexHandler)
-	router.POST("/api/v1/admin/:action", handler.AdminHandler)
+	// // API
+	// router.POST("/api/v1/account/:action", handler.AccountHandler)
+	// router.POST("/api/v1/index/:action", handler.IndexHandler)
+	// router.POST("/api/v1/admin/:action", handler.AdminHandler)
+
+	// wss := []*restful.WebService{ws}
+	// config := swagger.Config{
+	// 	WebServices: wss,
+	// 	ApiPath:     "/apidocs.json",
+	// 	SwaggerPath: "/apidocs/"}
+	// swagger.InstallSwaggerService(config)
 
 	log.System("HRM system listen on %v", common.JsonConfigs.ServerListenHost)
 	log.System("Json config from %v:\n%+v\n\n", common.FlagInfos.ConfigFileFullPath, common.JsonConfigs)
-	log.Error("%v", http.ListenAndServe(common.JsonConfigs.ServerListenHost, router))
+	log.Error("%v", http.ListenAndServe(common.JsonConfigs.ServerListenHost, nil))
 }

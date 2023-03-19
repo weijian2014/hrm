@@ -25,7 +25,7 @@ func init() {
 }
 
 func Init() {
-	sessionMgr = session.New(common.JsonConfigs.CookieName)
+	registerLoginWebService()
 }
 
 func LoginPageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
