@@ -52,6 +52,7 @@ func login(c *gin.Context) {
 		return
 	}
 
+	log.Debug("Find user in database, [%v]", u)
 	token, err := token.GenerateToken(lr.UserName)
 	if err != nil {
 		log.Warn("系统无法生成token")
@@ -103,6 +104,8 @@ func info(c *gin.Context) {
 		})
 		return
 	}
+
+	log.Debug("Find user in database, [%v]", u)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "用户合法",
