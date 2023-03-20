@@ -8,20 +8,14 @@ import (
 	"github.com/emicklei/go-restful/v3"
 )
 
-type LoginRequest struct {
+type loginRequest struct {
 	UserName string `xml:"username" json:"username" description:"登录的用户名"`
 	Password string `xml:"password" json:"password" description:"登录的密码"`
 }
 
-func (LoginRequest) SwaggerDoc() map[string]string {
-	return map[string]string{
-		"username": "登录的用户名",
-		"password": "登录的密码",
-	}
-}
-
-type LoginResponse struct {
-	Token string `xml:"token" json:"token" description:"登录成功生成的token"`
+type loginResponse struct {
+	TokenHeader string `xml:"token_header" json:"token_header" description:"登录成功生成的令牌头"`
+	Token       string `xml:"token" json:"token" description:"登录成功生成的令牌"`
 }
 
 func registerLoginWebService() {
@@ -36,19 +30,40 @@ func registerLoginWebService() {
 }
 
 func login(req *restful.Request, resp *restful.Response) {
-	lr := new(LoginRequest)
+	lr := new(loginRequest)
 	if err := req.ReadEntity(lr); err != nil {
-		log.Warn("LoginRequest error")
-		resp.WriteHeaderAndEntity(http.StatusBadRequest, LoginResponse{Token: ""})
+		log.Warn("Login request data error")
+		resp.WriteHeaderAndEntity(http.StatusBadRequest,
+			responseData[loginResponse]{
+				Code:    http.StatusBadRequest,
+				Message: "Login request data error",
+				Data: &loginResponse{
+					TokenHeader: "", Token: "",
+				}})
 		return
 	}
-	log.Debug("LoginRequest[%v]", lr)
+	log.Debug("Login request data [%v]", lr)
 
 	token, err := token.GenerateToken(lr.UserName)
 	if err != nil {
-		resp.WriteHeaderAndEntity(http.StatusInternalServerError, LoginResponse{Token: ""})
+		log.Warn("Can not generate token")
+		resp.WriteHeaderAndEntity(http.StatusInternalServerError,
+			responseData[loginResponse]{
+				Code:    http.StatusInternalServerError,
+				Message: "Can not generate token",
+				Data: &loginResponse{
+					TokenHeader: "", Token: "",
+				}})
 		return
+	} else {
+		log.Debug("Generate token [%v] for username [%v]", token, lr.UserName)
 	}
 
-	resp.WriteHeaderAndEntity(http.StatusOK, LoginResponse{Token: token})
+	resp.WriteHeaderAndEntity(http.StatusOK,
+		responseData[loginResponse]{
+			Code:    http.StatusOK,
+			Message: "ok",
+			Data: &loginResponse{
+				TokenHeader: "hrm", Token: token,
+			}})
 }

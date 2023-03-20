@@ -9,9 +9,19 @@ import (
 	"net/http"
 )
 
+func Init() {
+	registerLoginWebService()
+}
+
 type result struct {
 	Response int         `json:"response"`
 	Msg      interface{} `json:"msg"`
+}
+
+type responseData[T interface{}] struct {
+	Code    int    `xml:"code" json:"code" description:"状态"`
+	Message string `xml:"message" json:"message" description:"消息"`
+	Data    *T     `xml:"data" json:"data" description:"数据"`
 }
 
 func apiCheckCookie(w http.ResponseWriter, r *http.Request) error {

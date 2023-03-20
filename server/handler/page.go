@@ -24,10 +24,6 @@ func init() {
 
 }
 
-func Init() {
-	registerLoginWebService()
-}
-
 func LoginPageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if ret := sessionMgr.CheckCookieValid(w, r); ret == "" {
 		sessionId := sessionMgr.StartSession(w, r)

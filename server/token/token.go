@@ -28,7 +28,6 @@ func GenerateToken(userName string) (string, error) {
 		return "", err
 	}
 
-	log.Debug("Generate token [%v] for username [%v]", token, userName)
 	return token, nil
 }
 
