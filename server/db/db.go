@@ -32,7 +32,7 @@ func Init(adminUsername, adminPassword string) error {
 	}
 	fmt.Printf("Database [%v] has been created\n", DatabaseFullPath)
 
-	// 根据User结构体，自动创建表结构.
+	// 根据User结构体，自动创建表结构, 表名为users
 	if err = db.AutoMigrate(&User{}); err != nil {
 		return err
 	}
