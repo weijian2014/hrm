@@ -10,42 +10,40 @@ import (
 )
 
 var (
-	DatabaseName = "hrm.db"
+	DatabaseName     = "hrm.db"
+	DatabaseFullPath = common.CurrDir + "/" + DatabaseName
 )
-
-type User struct {
-	Name     string
-	Password string
-	Data     string
-	gorm.Model
-}
 
 func Init(adminUsername, adminPassword string) error {
 	// 数据库文件存在时, 将删除
-	dbPath := common.CurrDir + "/" + DatabaseName
-	_, err := os.Stat(dbPath)
+	_, err := os.Stat(DatabaseFullPath)
 	if err == nil {
 		// 文件存在
-		err = os.Remove(dbPath)
+		err = os.Remove(DatabaseFullPath)
 		if err != nil {
 			return err
 		}
-		fmt.Printf("Database [%v] has been removed\n", dbPath)
+		fmt.Printf("Database [%v] has been removed\n", DatabaseFullPath)
 	}
 
-	db, err := gorm.Open(sqlite.Open(DatabaseName), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
 	if err != nil {
 		return err
 	}
+	fmt.Printf("Database [%v] has been created\n", DatabaseFullPath)
 
 	// 根据User结构体，自动创建表结构.
-	db.AutoMigrate(&User{})
+	if err = db.AutoMigrate(&User{}); err != nil {
+		return err
+	}
+	fmt.Printf("Table [users] has been created in [%v]\n", DatabaseFullPath)
 
 	// 插入记录
 	r := db.Create(&User{Name: adminUsername, Password: adminPassword})
 	if r.Error != nil {
 		return r.Error
 	}
+	fmt.Printf("Table [users] insert row[%v, %v]\n", adminUsername, adminPassword)
 
 	return nil
 }

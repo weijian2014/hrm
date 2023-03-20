@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"hrm/db"
 	"hrm/log"
 	"hrm/token"
 	"net/http"
@@ -13,40 +14,49 @@ type loginRequest struct {
 	Password string `xml:"password" json:"password" description:"登录的密码"`
 }
 
-type loginResponse struct {
-	TokenHeader string `xml:"token_header" json:"token_header" description:"登录成功生成的令牌头"`
-	Token       string `xml:"token" json:"token" description:"登录成功生成的令牌"`
-}
+// type loginResponse struct {
+// 	TokenHeader string `xml:"token_header" json:"token_header" description:"登录成功生成的令牌头"`
+// 	Token       string `xml:"token" json:"token" description:"登录成功生成的令牌"`
+// }
 
-type userInfoResponse struct {
-	TokenHeader string `xml:"token_header" json:"token_header" description:"登录成功生成的令牌头"`
-	Token       string `xml:"token" json:"token" description:"登录成功生成的令牌"`
-}
+// type userInfoResponse struct {
+// 	TokenHeader string `xml:"token_header" json:"token_header" description:"登录成功生成的令牌头"`
+// 	Token       string `xml:"token" json:"token" description:"登录成功生成的令牌"`
+// }
 
-func registerUser(r *gin.Engine) {
-	r.POST("/user/login", login)
-	r.POST("/user/info", info)
+func registerUserRouter(r *gin.Engine) {
+	userRouter := r.Group("/user")
+	userRouter.POST("login", login)
+	userRouter.GET("info", info)
 }
 
 func login(c *gin.Context) {
 	lr := new(loginRequest)
 	if err := c.ShouldBindJSON(lr); err != nil {
-		log.Warn("Login request data error")
+		log.Warn("请求数据格式错误")
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Login request data error",
+			"message": "请求数据格式错误",
 			"data":    "",
 		})
 		return
 	}
 	log.Debug("Login request data [%v]", lr)
 
-	// // todo find in sqlite
+	u, err := db.FindUser(lr.UserName)
+	if err != nil || u.Password != lr.Password {
+		log.Warn("用户名或者密码不正确")
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": "用户名或者密码不正确",
+			"data":    "",
+		})
+		return
+	}
 
 	token, err := token.GenerateToken(lr.UserName)
 	if err != nil {
-		log.Warn("Can not generate token")
+		log.Warn("系统无法生成token")
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": "Can not generate token",
+			"message": "系统无法生成token",
 			"data":    "",
 		})
 		return
@@ -54,7 +64,6 @@ func login(c *gin.Context) {
 		log.Debug("Generate token [%v] for username [%v]", token, lr.UserName)
 	}
 
-	log.Warn("Can not generate token")
 	c.JSON(http.StatusOK, gin.H{
 		"message": "ok",
 		"data": gin.H{
@@ -65,4 +74,27 @@ func login(c *gin.Context) {
 }
 
 func info(c *gin.Context) {
+	tk := c.Request.Header.Get("Authorization")
+	if len(tk) == 0 {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "请求未认证, 请在HTTP请求头中携带Key为Authorization的token",
+			"data":    "",
+		})
+		return
+	}
+
+	username, err := token.IsTokenValid(tk)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "非法token",
+			"data":    "",
+		})
+		return
+	}
+
+	log.Debug("User name [%v]", username)
+	c.JSON(http.StatusOK, gin.H{
+		"message": "用户合法",
+		"data":    gin.H{},
+	})
 }
