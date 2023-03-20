@@ -39,7 +39,7 @@ func Init(adminUsername, adminPassword string) error {
 	fmt.Printf("Table [users] has been created in [%v]\n", DatabaseFullPath)
 
 	// 插入记录
-	r := db.Create(&User{Name: adminUsername, Password: adminPassword})
+	r := db.Create(&User{Name: adminUsername, Password: adminPassword, Data: "用户的JSON数据"})
 	if r.Error != nil {
 		return r.Error
 	}

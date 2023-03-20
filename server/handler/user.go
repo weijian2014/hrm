@@ -93,8 +93,19 @@ func info(c *gin.Context) {
 	}
 
 	log.Debug("User name [%v]", username)
+
+	u, err := db.FindUser(username)
+	if err != nil {
+		log.Warn("用户不存在")
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": "用户不存在",
+			"data":    "",
+		})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "用户合法",
-		"data":    gin.H{},
+		"data":    u.Data,
 	})
 }
