@@ -18,17 +18,17 @@ func Test_GenerateToken_And_IsTokenValid(t *testing.T) {
 		t.FailNow()
 	}
 
-	t.Logf("Generate token [%v] ok", token)
+	t.Logf("Generate token [%v] for username [%v] ok", token, username)
 
-	isOk, err := IsTokenValid(token)
+	un, err := IsTokenValid(token)
 	if err != nil {
 		t.Error(err)
 		t.FailNow()
 	}
 
-	if !isOk {
+	if un != username {
 		t.FailNow()
 	}
 
-	t.Logf("Token [%v] is valid", token)
+	t.Logf("Token [%v] is valid for username [%v]", token, un)
 }

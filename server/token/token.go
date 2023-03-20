@@ -1,7 +1,6 @@
 package token
 
 import (
-	"hrm/log"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -31,15 +30,14 @@ func GenerateToken(userName string) (string, error) {
 	return token, nil
 }
 
-func IsTokenValid(token string) (bool, error) {
+func IsTokenValid(token string) (string, error) {
 	t, err := jwt.ParseWithClaims(token, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(signKey), nil
 	}, jwt.WithLeeway(5*time.Second))
 
 	if claims, ok := t.Claims.(*jwt.RegisteredClaims); ok && t.Valid {
-		log.Debug("Token [%v] is valid for username [%v], info [%v]", token, claims.ID, t)
-		return true, nil
+		return claims.ID, nil
 	} else {
-		return false, err
+		return "", err
 	}
 }

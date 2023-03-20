@@ -3,13 +3,14 @@ package main
 import (
 	"flag"
 	"fmt"
-	"net/http"
 	"os"
 
 	"hrm/common"
 	"hrm/db"
 	"hrm/handler"
 	"hrm/log"
+
+	"github.com/gin-gonic/gin"
 )
 
 func init() {
@@ -59,9 +60,10 @@ func main() {
 	log.LoggerInit(common.JsonConfigs.LogLevel, common.JsonConfigs.LogRoll, common.JsonConfigs.LogFullPathName)
 	log.System("Log init ok")
 
-	handler.Init()
-	// router := httprouter.New()
+	r := gin.Default()
+	handler.Init(r)
 
+	// router := httprouter.New()
 	// // 静态资源
 	// staticDir := http.Dir(common.CurrDir + "/" + common.JsonConfigs.StaticDirectory)
 	// // html中引用静态资源时使用/static/开始为根目录, 例如/static/xxx.js或者/static/xxx.css
@@ -80,5 +82,5 @@ func main() {
 
 	log.System("HRM system listen on %v", common.JsonConfigs.ServerListenHost)
 	log.System("Json config from %v:\n%+v\n\n", common.FlagInfos.ConfigFileFullPath, common.JsonConfigs)
-	log.Error("%v", http.ListenAndServe(common.JsonConfigs.ServerListenHost, nil))
+	log.Error("%v", r.Run(common.JsonConfigs.ServerListenHost))
 }
