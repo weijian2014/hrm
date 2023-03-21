@@ -25,5 +25,13 @@ export default defineConfig({
    },
    server: {
       open: true, // 自动打开浏览器
+      cors: true,
+      proxy: {
+         "^/api": {
+            target: "http://0.0.0.0:8080",
+            changeOrigin: true, // 允许跨域
+            rewrite: (path) => path.replace(/^\/api/, ""), // 将api替换为空
+         },
+      },
    },
 })

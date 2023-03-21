@@ -1,8 +1,13 @@
 import axios from "axios"
 
 const instance = axios.create({
-   baseURL: "http://0.0.0.0:8080",
+   // 这里的/api是vite.config.ts中的server.proxy配置的
+   baseURL: "/api",
+   // baseURL: "http://0.0.0.0:8080",
    timeout: 15000,
+   headers: {
+      "Content-Type": "application/json;charset=utf-8",
+   },
 })
 
 // 请求拦截器
