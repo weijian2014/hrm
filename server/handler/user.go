@@ -42,7 +42,8 @@ func login(c *gin.Context) {
 	}
 	log.Debug("Login request data [%v]", lr)
 
-	u, err := db.FindUser(lr.UserName)
+	u := new(db.User)
+	err := u.Find(lr.UserName)
 	if err != nil || u.Password != lr.Password {
 		log.Warn("用户名或者密码不正确")
 		c.JSON(http.StatusNotFound, gin.H{
@@ -95,7 +96,8 @@ func info(c *gin.Context) {
 
 	log.Debug("User name [%v]", username)
 
-	u, err := db.FindUser(username)
+	u := new(db.User)
+	err = u.Find(username)
 	if err != nil {
 		log.Warn("用户不存在")
 		c.JSON(http.StatusNotFound, gin.H{

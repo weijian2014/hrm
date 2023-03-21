@@ -60,7 +60,9 @@ func main() {
 	log.LoggerInit(common.JsonConfigs.LogLevel, common.JsonConfigs.LogRoll, common.JsonConfigs.LogFullPathName)
 	log.System("Log init ok")
 
-	r := gin.Default()
+	gin.SetMode(gin.ReleaseMode)
+	r := gin.New()
+	// r.Use(ginI18n.Localize())
 	handler.Init(r)
 
 	// router := httprouter.New()
@@ -82,5 +84,5 @@ func main() {
 
 	log.System("HRM system listen on %v", common.JsonConfigs.ServerListenHost)
 	log.System("Json config from %v:\n%+v\n\n", common.FlagInfos.ConfigFileFullPath, common.JsonConfigs)
-	log.Error("%v", r.Run(common.JsonConfigs.ServerListenHost))
+	log.Fatal("%v", r.Run(common.JsonConfigs.ServerListenHost))
 }

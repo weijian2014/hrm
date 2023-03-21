@@ -12,17 +12,26 @@ type User struct {
 	gorm.Model
 }
 
-func FindUser(key interface{}) (*User, error) {
+func (u *User) Find(key interface{}) error {
 	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	u := new(User)
 	r := db.First(u, "name = ?", key)
 	if r.Error != nil {
-		return nil, r.Error
+		return r.Error
 	}
 
-	return u, nil
+	return nil
+}
+
+func (u *User) Update(key interface{}) error {
+
+	return nil
+}
+
+func (u *User) Delete(key interface{}) error {
+
+	return nil
 }
