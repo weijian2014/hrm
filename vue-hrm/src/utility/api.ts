@@ -12,11 +12,11 @@ interface LoginResponseData {
    token: string
    token_header: string
 }
+
 export const loginApi = (
    data: LoginRequest
 ): PromiseResponse<LoginResponseData> => request.post("/user/login", data)
 
 //
-interface InfoResponseData {}
-export const getUserInfo = (): PromiseResponse<InfoResponseData> =>
+export const getUserInfo = (): PromiseResponse<string> =>
    request.get("/user/info")

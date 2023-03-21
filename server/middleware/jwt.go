@@ -61,6 +61,7 @@ func JwtAuthenticator(c *gin.Context) {
 		return
 	}
 
+	log.Debug("signToken=[%v]", signToken)
 	ht := strings.Split(signToken, " ")
 	if len(ht) != 2 || ht[0] != TokenHeader {
 		log.Warn("非法token")

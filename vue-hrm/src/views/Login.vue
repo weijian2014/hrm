@@ -21,16 +21,26 @@
 
 <script setup lang="ts">
 import { ref, reactive, toRefs } from "vue"
-import type { FormInstance, FormRules } from "element-plus"
+import { useRouter } from "vue-router"
 import { loginApi, getUserInfo } from "@/utility/api"
+import { useMainStore } from "@/store/index"
+import { storeToRefs } from "pinia"
+
+// 获取当前项目的路由对象
+let router = useRouter()
+
+// 使用pinia的main存储
+const main = useMainStore()
+// 对pinia中main存储的对象进行解构, 使之成为响应式对象
+const { data, roles, menus } = storeToRefs(main)
 
 // el-form组件对象, 自动关联到el-form组件
 const ruleFormRef = ref()
 
 const state = reactive({
    ruleForm: {
-      username: "",
-      password: "",
+      username: "admin",
+      password: "123456",
    },
 })
 
@@ -80,12 +90,23 @@ const loginFn = () => {
             .then((res) => {
                if (res.code === 200) {
                   console.log(res)
-                  // 先存储token, 可以存到cookie中, https://github.com/js-cookie/js-cookie
+                  // 先存储token
                   localStorage.setItem(
                      "token",
                      res.data.token_header + " " + res.data.token
                   )
-                  getUserInfo().then((res) => {})
+                  // 再获取用户信息
+                  getUserInfo()
+                     .then((res) => {
+                        if (res.code === 200) {
+                           console.log(res)
+                           data.value = res.data
+                           router.push("/home")
+                        }
+                     })
+                     .catch((res) => {
+                        console.log(res)
+                     })
                }
             })
             .catch((res) => {
