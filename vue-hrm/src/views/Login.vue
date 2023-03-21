@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import { ref, reactive, toRefs } from "vue"
 import type { FormInstance, FormRules } from "element-plus"
-import { loginApi } from "@/utility/api"
+import { loginApi, getUserInfo } from "@/utility/api"
 
 // el-form组件对象, 自动关联到el-form组件
 const ruleFormRef = ref()
@@ -76,15 +76,21 @@ const loginFn = () => {
          loginApi({
             username: ruleForm.value.username,
             password: ruleForm.value.password,
-         }).then((res) => {
-            if (res.code === 200) {
-               // 先存储token, 可以存到cookie中, https://github.com/js-cookie/js-cookie
-               localStorage.setItem(
-                  "token",
-                  res.data.tokenHead + res.data.token
-               )
-            }
          })
+            .then((res) => {
+               if (res.code === 200) {
+                  console.log(res)
+                  // 先存储token, 可以存到cookie中, https://github.com/js-cookie/js-cookie
+                  localStorage.setItem(
+                     "token",
+                     res.data.token_header + " " + res.data.token
+                  )
+                  getUserInfo().then((res) => {})
+               }
+            })
+            .catch((res) => {
+               console.log(res)
+            })
       })
       .catch(() => {
          console.log("输入规则校验不通过")

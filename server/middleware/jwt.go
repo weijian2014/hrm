@@ -3,6 +3,7 @@ package middleware
 import (
 	"hrm/log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -60,8 +61,20 @@ func JwtAuthenticator(c *gin.Context) {
 		return
 	}
 
+	ht := strings.Split(signToken, " ")
+	if len(ht) != 2 || ht[0] != TokenHeader {
+		log.Warn("非法token")
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"code":    http.StatusUnauthorized,
+			"message": "非法token",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+
 	// 校验token
-	username, err := IsTokenValid(signToken)
+	username, err := IsTokenValid(ht[1])
 	if err != nil {
 		log.Warn("非法token")
 		c.JSON(http.StatusUnauthorized, gin.H{

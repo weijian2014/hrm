@@ -1,17 +1,22 @@
 import request from "./request"
+import type { ApiResponse } from "./common"
 
-// 登录返回token
-interface LoginData {
+type PromiseResponse<T> = Promise<ApiResponse<T>>
+
+//
+interface LoginRequest {
    username: string
    password: string
 }
-interface LoginRes {
-   code: number
-   message: string
-   data: {
-      token: string
-      tokenHead: string
-   }
+interface LoginResponseData {
+   token: string
+   token_header: string
 }
-export const loginApi = (data: LoginData): Promise<LoginRes> =>
-   request.post("/user/login", data)
+export const loginApi = (
+   data: LoginRequest
+): PromiseResponse<LoginResponseData> => request.post("/user/login", data)
+
+//
+interface InfoResponseData {}
+export const getUserInfo = (): PromiseResponse<InfoResponseData> =>
+   request.get("/user/info")
