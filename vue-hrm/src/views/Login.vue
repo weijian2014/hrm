@@ -79,6 +79,10 @@ const loginFn = () => {
          }).then((res) => {
             if (res.code === 200) {
                // 先存储token, 可以存到cookie中, https://github.com/js-cookie/js-cookie
+               localStorage.setItem(
+                  "token",
+                  res.data.tokenHead + res.data.token
+               )
             }
          })
       })

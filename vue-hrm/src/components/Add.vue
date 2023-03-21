@@ -4,7 +4,7 @@
       <el-dialog
          v-model="dialogVisible"
          :title="employee?.name ? '修改' : '新增'"
-         width="35%"
+         width="45%"
          draggable
          :close-on-press-escape="isEscapeClose"
          :show-close="isShowClose"
@@ -30,7 +30,10 @@
                </el-col>
                <el-col :span="8">
                   <el-form-item label="生日" prop="birthday">
-                     <el-date-picker v-model="form.birthday" type="date" placeholder="" />
+                     <el-date-picker
+                        v-model="form.birthday"
+                        type="date"
+                        placeholder="" />
                   </el-form-item>
                </el-col>
             </el-row>
@@ -99,12 +102,20 @@
             <el-row class="ml-3">
                <el-col :span="10">
                   <el-form-item label="身份证" prop="identifier">
-                     <el-input v-model="form.identifier" :formatter="identifierFormatter" placeholder=""> </el-input>
+                     <el-input
+                        v-model="form.identifier"
+                        :formatter="identifierFormatter"
+                        placeholder="">
+                     </el-input>
                   </el-form-item>
                </el-col>
                <el-col :span="8" class="ml-5">
                   <el-form-item label="电话" prop="phone">
-                     <el-input v-model="form.phone" :formatter="phoneFormatter" placeholder=""> </el-input>
+                     <el-input
+                        v-model="form.phone"
+                        :formatter="phoneFormatter"
+                        placeholder="">
+                     </el-input>
                   </el-form-item>
                </el-col>
             </el-row>
@@ -117,7 +128,10 @@
                </el-col>
                <el-col :span="10" class="ml-5">
                   <el-form-item label="参加工作时间" prop="first_work_time">
-                     <el-date-picker v-model="form.first_work_time" type="date" placeholder="" />
+                     <el-date-picker
+                        v-model="form.first_work_time"
+                        type="date"
+                        placeholder="" />
                   </el-form-item>
                </el-col>
             </el-row>
@@ -136,14 +150,20 @@
                </el-col>
                <el-col :span="8" class="mx-5">
                   <el-form-item label="工资" prop="salary">
-                     <el-input v-model="form.salary" :formatter="salaryFormatter" placeholder="">
+                     <el-input
+                        v-model="form.salary"
+                        :formatter="salaryFormatter"
+                        placeholder="">
                         <template #append>¥</template>
                      </el-input>
                   </el-form-item>
                </el-col>
                <el-col :span="8">
                   <el-form-item label="保安证" prop="security_card">
-                     <el-input v-model="form.security_card" :formatter="securityCardFormatter" placeholder="">
+                     <el-input
+                        v-model="form.security_card"
+                        :formatter="securityCardFormatter"
+                        placeholder="">
                      </el-input>
                   </el-form-item>
                </el-col>

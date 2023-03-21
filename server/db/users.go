@@ -6,10 +6,10 @@ import (
 )
 
 type User struct {
+	gorm.Model
 	Name     string
 	Password string
 	Data     string
-	gorm.Model
 }
 
 func (u *User) Find(key interface{}) error {

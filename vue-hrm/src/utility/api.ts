@@ -7,11 +7,11 @@ interface LoginData {
 }
 interface LoginRes {
    code: number
+   message: string
    data: {
       token: string
       tokenHead: string
    }
-   message: string
 }
 export const loginApi = (data: LoginData): Promise<LoginRes> =>
-   request.post("/acount/login", data)
+   request.post("/user/login", data)

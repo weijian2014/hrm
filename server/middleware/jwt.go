@@ -1,13 +1,17 @@
-package token
+package middleware
 
 import (
+	"hrm/log"
+	"net/http"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
 
 var (
-	signKey = []byte("Copyright © 2023 HRM")
+	signKey     = []byte("Copyright © 2023 HRM")
+	TokenHeader = "hrm"
 )
 
 func GenerateToken(userName string) (string, error) {
@@ -40,4 +44,39 @@ func IsTokenValid(token string) (string, error) {
 	} else {
 		return "", err
 	}
+}
+
+func JwtAuthenticator(c *gin.Context) {
+	// 从请求头中取出
+	signToken := c.Request.Header.Get("Authorization")
+	if signToken == "" {
+		log.Warn("请求未认证, 请在HTTP请求头中携带Key为Authorization的token")
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"code":    http.StatusUnauthorized,
+			"message": "请求未认证, 请在HTTP请求头中携带Key为Authorization的token",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+
+	// 校验token
+	username, err := IsTokenValid(signToken)
+	if err != nil {
+		log.Warn("非法token")
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"code":    http.StatusUnauthorized,
+			"message": "非法token",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+
+	// 将用户的id放在到请求的上下文中
+	c.Set("username", username)
+
+	// 后续的处理函数可以用过c.Get("username")来获取当前请求的username
+	c.Next()
+
 }

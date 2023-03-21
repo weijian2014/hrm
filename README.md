@@ -1,7 +1,7 @@
 # 系统概述
 
--  前端 Node.js18 + Vite4 + Vue3 + WindiCSS + Element Plus + TypeScript + Axios
--  后端 Golang + Sqlite + Restful API
+- 前端 Node.js18 + Vite4 + Vue3 + WindiCSS + Element Plus + TypeScript + Axios
+- 后端 Golang + Sqlite + Restful API
 
 # 后端
 
@@ -40,40 +40,40 @@ go build .
 
 ## Windows 下 golang 使用 sqlite
 
--  开发环境需要安装 GCC, 因为 go 在编译 github.com/mattn/go-sqlite3(sqlite 数据库驱动)需要 CGO_ENABLED=1
--  [MingGW](https://github.com/niXman/mingw-builds-binaries) 有 MinGWX64 的安装器和整个离线包在 Releases 中
-   https://www.mingw-w64.org/ 下载安装对应操作系统位的 mingw 或者其它 Windows 上的 GCC
-   配置 gcc 的 bin 到 PATH
-   配置 CGO_ENABLED=1 到系统环境
+- 开发环境需要安装 GCC, 因为 go 在编译 github.com/mattn/go-sqlite3(sqlite 数据库驱动)需要 CGO_ENABLED=1
+- [MingGW](https://github.com/niXman/mingw-builds-binaries) 有 MinGWX64 的安装器和整个离线包在 Releases 中
+  https://www.mingw-w64.org/ 下载安装对应操作系统位的 mingw 或者其它 Windows 上的 GCC
+  配置 gcc 的 bin 到 PATH
+  配置 CGO_ENABLED=1 到系统环境
 
 ## 使用 sqlite
 
--  golang 交叉编译 go-sqlite3 后就可以单独使用了, 不需要 sqlite-dll-win64-x64(本体)和 sqlite-tools-win32-x86(命令行工具)
--  https://sqlite.org/download.html 下载 sqlite-dll-win64-x64(本体)和 sqlite-tools-win32-x86(命令行工具), 放在任意目录下
-   打开 cmd,切换到安装的目录,执行`sqlite test.db`可以在当前创建数据库文件,然后就可以把 test.db 放到工程中单独使用了
--  [SQLiteStudio](https://sqlitestudio.pl/)
+- golang 交叉编译 go-sqlite3 后就可以单独使用了, 不需要 sqlite-dll-win64-x64(本体)和 sqlite-tools-win32-x86(命令行工具)
+- https://sqlite.org/download.html 下载 sqlite-dll-win64-x64(本体)和 sqlite-tools-win32-x86(命令行工具), 放在任意目录下
+  打开 cmd,切换到安装的目录,执行`sqlite test.db`可以在当前创建数据库文件,然后就可以把 test.db 放到工程中单独使用了
+- [SQLiteStudio](https://sqlitestudio.pl/)
 
 # 前端
 
 ### Node.js 最好使用 LTS 版本, 可以使用 nvm 对 node.js 版本进行管理
 
--  [Node.js](https://nodejs.org/zh-cn/) 后端使用 Libuv, C++编写, npm 是前端包管理工具, 安装 node 会自动安装 npm
--  [pnpm](https://nodejs.org/zh-cn/), pnpm 是 npm 改进版本
--  [Vue3](https://cn.vuejs.org/) 比 Vue2 更快
--  [Vite](https://cn.vitejs.dev/) 是比 Webpack 更快更先进的前端项目构建工具
--  TypeScript 是 JavaScript 的超集, 支持面向对象的特性
--  [Element Plus](https://element-plus.gitee.io/zh-CN/guide/installation.html) 是基于 Vue3 的 UI 库
--  [Vue-Router](https://router.vuejs.org/zh/installation.html)
--  [WindiCSS](https://cn.windicss.org/integrations/vite.html) SCSS
--  [Axios](http://axios-js.com/)
+- [Node.js](https://nodejs.org/zh-cn/) 后端使用 Libuv, C++编写, npm 是前端包管理工具, 安装 node 会自动安装 npm
+- [pnpm](https://nodejs.org/zh-cn/), pnpm 是 npm 改进版本
+- [Vue3](https://cn.vuejs.org/) 比 Vue2 更快
+- [Vite](https://cn.vitejs.dev/) 是比 Webpack 更快更先进的前端项目构建工具
+- TypeScript 是 JavaScript 的超集, 支持面向对象的特性
+- [Element Plus](https://element-plus.gitee.io/zh-CN/guide/installation.html) 是基于 Vue3 的 UI 库
+- [Vue-Router](https://router.vuejs.org/zh/installation.html)
+- [WindiCSS](https://cn.windicss.org/integrations/vite.html) SCSS
+- [Axios](http://axios-js.com/)
 
 ### VScode 开发需要安装插件
 
--  Live Server
--  Prettier - Code formatter
--  Vue Language Features (Volar)
--  TypeScript Vue Plugin (Volar)
--  WindiCSS IntelliSense
+- Live Server
+- Prettier - Code formatter
+- Vue Language Features (Volar)
+- TypeScript Vue Plugin (Volar)
+- WindiCSS IntelliSense
 
 ### 项目初始化
 
@@ -103,6 +103,9 @@ npm install
 # 安装完成配置已经自动增加
 npm install vue-router -S
 
+# Pinia, https://pinia.web3doc.top/, https://github.com/vuejs/pinia
+npm install pinia
+
 # 自动导入模块插件, 使用element-plus的按需引入需要这两个插件
 npm install -D unplugin-vue-components unplugin-auto-import
 
@@ -119,6 +122,11 @@ npm i -D vite-plugin-windicss windicss
 
 # 安装axios, http://axios-js.com/
 npm install axios
+
+# js-cookie, https://github.com/js-cookie/js-cookie
+npm i js-cookie
+
+
 ```
 
 ### 将项目运行起来

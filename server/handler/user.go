@@ -3,7 +3,7 @@ package handler
 import (
 	"hrm/db"
 	"hrm/log"
-	"hrm/token"
+	"hrm/middleware"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -27,7 +27,9 @@ type loginRequest struct {
 func registerUserRouter(r *gin.Engine) {
 	userRouter := r.Group("/user")
 	userRouter.POST("login", login)
-	userRouter.GET("info", info)
+
+	// 该接口登陆后才能访问,加中间件
+	userRouter.GET("info", middleware.JwtAuthenticator, info)
 }
 
 func login(c *gin.Context) {
@@ -35,6 +37,7 @@ func login(c *gin.Context) {
 	if err := c.ShouldBindJSON(lr); err != nil {
 		log.Warn("请求数据格式错误")
 		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    http.StatusBadRequest,
 			"message": "请求数据格式错误",
 			"data":    "",
 		})
@@ -47,6 +50,7 @@ func login(c *gin.Context) {
 	if err != nil || u.Password != lr.Password {
 		log.Warn("用户名或者密码不正确")
 		c.JSON(http.StatusNotFound, gin.H{
+			"code":    http.StatusNotFound,
 			"message": "用户名或者密码不正确",
 			"data":    "",
 		})
@@ -54,10 +58,11 @@ func login(c *gin.Context) {
 	}
 
 	log.Debug("Find user in database, [%v]", u)
-	token, err := token.GenerateToken(lr.UserName)
+	token, err := middleware.GenerateToken(lr.UserName)
 	if err != nil {
 		log.Warn("系统无法生成token")
 		c.JSON(http.StatusInternalServerError, gin.H{
+			"code":    http.StatusInternalServerError,
 			"message": "系统无法生成token",
 			"data":    "",
 		})
@@ -67,49 +72,42 @@ func login(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
+		"code":    http.StatusOK,
 		"message": "ok",
 		"data": gin.H{
-			"token_header": "hrm",
+			"token_header": middleware.TokenHeader,
 			"token":        token,
 		},
 	})
 }
 
 func info(c *gin.Context) {
-	tk := c.Request.Header.Get("Authorization")
-	if len(tk) == 0 {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"message": "请求未认证, 请在HTTP请求头中携带Key为Authorization的token",
-			"data":    "",
-		})
-		return
-	}
-
-	username, err := token.IsTokenValid(tk)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"message": "非法token",
-			"data":    "",
-		})
-		return
-	}
-
-	log.Debug("User name [%v]", username)
-
-	u := new(db.User)
-	err = u.Find(username)
-	if err != nil {
-		log.Warn("用户不存在")
-		c.JSON(http.StatusNotFound, gin.H{
+	username, isExists := c.Get("username")
+	if !isExists {
+		c.JSON(http.StatusNoContent, gin.H{
+			"code":    http.StatusNoContent,
 			"message": "用户不存在",
 			"data":    "",
 		})
+		c.Abort()
 		return
 	}
 
-	log.Debug("Find user in database, [%v]", u)
+	u := new(db.User)
+	err := u.Find(username)
+	if err != nil {
+		log.Warn("用户不存")
+		c.JSON(http.StatusNoContent, gin.H{
+			"code":    http.StatusNoContent,
+			"message": "用户不存在",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{
+		"code":    http.StatusOK,
 		"message": "用户合法",
 		"data":    u.Data,
 	})

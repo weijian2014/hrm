@@ -1,4 +1,5 @@
 import { createApp } from "vue"
+import { createPinia } from "pinia"
 import App from "./App.vue"
 import router from "./router/index"
 // import ElementPlus from "element-plus"
@@ -6,6 +7,7 @@ import router from "./router/index"
 import axios from "axios"
 import "virtual:windi.css"
 
+const pinia = createPinia()
 const app = createApp(App)
 app.config.globalProperties.$http = axios
 
@@ -15,4 +17,4 @@ app.config.globalProperties.$http = axios
 //    app.component(key, component)
 // }
 // app.use(ElementPlus, { locale })
-app.use(router).mount("#app")
+app.use(router).use(pinia).mount("#app")

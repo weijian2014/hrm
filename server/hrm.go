@@ -9,6 +9,7 @@ import (
 	"hrm/db"
 	"hrm/handler"
 	"hrm/log"
+	"hrm/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -60,8 +61,9 @@ func main() {
 	log.LoggerInit(common.JsonConfigs.LogLevel, common.JsonConfigs.LogRoll, common.JsonConfigs.LogFullPathName)
 	log.System("Log init ok")
 
-	gin.SetMode(gin.ReleaseMode)
-	r := gin.New()
+	// gin.SetMode(gin.ReleaseMode)
+	r := gin.Default()
+	r.Use(middleware.Cors())
 	// r.Use(ginI18n.Localize())
 	handler.Init(r)
 

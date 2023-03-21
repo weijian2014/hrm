@@ -1,12 +1,11 @@
 import axios from "axios"
 
 const instance = axios.create({
-   baseURL: "http://0.0.0.0:8080/api/v1",
+   baseURL: "http://0.0.0.0:8080",
    timeout: 15000,
 })
 
 // 请求拦截器
-
 instance.interceptors.request.use(
    (config) => {
       return config
