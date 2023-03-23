@@ -126,6 +126,10 @@ npm install axios
 # js-cookie, https://github.com/js-cookie/js-cookie
 npm i js-cookie
 
+# 更新package.json中的依赖
+npm outdated
+npm i -g npm-check-updates
+ncu -u
 
 ```
 
