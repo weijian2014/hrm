@@ -26,27 +26,29 @@ func Init(adminUsername, adminPassword string) error {
 		fmt.Printf("Database [%v] has been removed\n", DatabaseFullPath)
 	}
 
-	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
+	_, err = gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
 	if err != nil {
 		return err
 	}
 	fmt.Printf("Database [%v] has been created\n", DatabaseFullPath)
 
-	// 根据User结构体，自动创建表结构, 表名为users
-	if err = db.AutoMigrate(&User{}); err != nil {
+	u := &User{
+		Name:     adminUsername,
+		Password: adminPassword,
+		Data:     "json data",
+	}
+
+	err = u.CreateTable()
+	if err != nil {
 		return err
 	}
-	fmt.Printf("Table [users] has been created in [%v]\n", DatabaseFullPath)
+	fmt.Printf("Table name [users] has been created\n")
 
-	// 插入记录
+	err = u.Insert()
 	if err != nil {
-		panic(err)
+		return err
 	}
-	r := db.Create(&User{Name: adminUsername, Password: adminPassword, Data: "json data"})
-	if r.Error != nil {
-		return r.Error
-	}
-	fmt.Printf("Table [users] insert row[%v, %v, %v]\n", adminUsername, adminPassword, "json data")
+	fmt.Printf("Inserted row[%v] into table [users]\n", u)
 
 	return nil
 }
