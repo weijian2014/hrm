@@ -5,27 +5,27 @@ import (
 	"gorm.io/gorm"
 )
 
-func (m *Menu) CreateTable() error {
+func (rm *RoleMenu) CreateTable() error {
 	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
 	if err != nil {
 		return err
 	}
 
-	// 根据Menu结构体，自动创建表结构, 表名为menus
-	if err = db.AutoMigrate(m); err != nil {
+	// 表名为role_menus
+	if err = db.AutoMigrate(rm); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (m *Menu) Find() error {
+func (rm *RoleMenu) Find() error {
 	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
 	if err != nil {
 		return err
 	}
 
-	ret := db.First(m, "name = ?", m.Name)
+	ret := db.First(rm, "menu_id = ?", rm.MenuId)
 	if ret.Error != nil {
 		return ret.Error
 	}
@@ -33,13 +33,13 @@ func (m *Menu) Find() error {
 	return nil
 }
 
-func (m *Menu) Insert() error {
+func (rm *RoleMenu) Insert() error {
 	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
 	if err != nil {
 		return err
 	}
 
-	ret := db.Create(m)
+	ret := db.Create(rm)
 	if ret.Error != nil {
 		return ret.Error
 	}
@@ -47,13 +47,13 @@ func (m *Menu) Insert() error {
 	return nil
 }
 
-func (m *Menu) Update() error {
+func (rm *RoleMenu) Update() error {
 	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
 	if err != nil {
 		return err
 	}
 
-	ret := db.Model(m).Update("name", m.Name)
+	ret := db.Model(rm).Update("menu_id", rm.MenuId)
 	if ret.Error != nil {
 		return ret.Error
 	}
@@ -61,13 +61,13 @@ func (m *Menu) Update() error {
 	return nil
 }
 
-func (m *Menu) Delete() error {
+func (rm *RoleMenu) Delete() error {
 	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
 	if err != nil {
 		return err
 	}
 
-	ret := db.Unscoped().Where("id = ?", m.Id).Delete(m)
+	ret := db.Model(rm).Delete("menu_id", rm.MenuId)
 	if ret.Error != nil {
 		return ret.Error
 	}

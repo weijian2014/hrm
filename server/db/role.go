@@ -68,7 +68,7 @@ func (r *Role) Delete() error {
 		return err
 	}
 
-	ret := db.Model(r).Delete("name", r.Name)
+	ret := db.Unscoped().Where("id = ?", r.Id).Delete(r)
 	if ret.Error != nil {
 		return ret.Error
 	}

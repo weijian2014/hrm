@@ -1,34 +1,32 @@
 package db
 
-import "gorm.io/gorm"
-
 type User struct {
-	gorm.Model
+	Id       uint64
 	Name     string
 	Password string
 	Data     string
 }
 
 type Role struct {
-	gorm.Model
+	Id   uint64
 	Name string
 }
 
 type Menu struct {
-	gorm.Model
+	Id   uint64
 	Name string
 	Url  string
 }
 
 type UserRole struct {
-	gorm.Model
-	UserId uint
-	RoleId uint
+	Id     uint64
+	UserId uint64
+	RoleId uint64
 }
 
 type RoleMenu struct {
-	gorm.Model
-	RoleId   uint
-	MenuId   uint
-	ParentId uint // 子菜单
+	Id       uint64
+	RoleId   uint64
+	MenuId   uint64
+	ParentId uint64 // 子菜单
 }

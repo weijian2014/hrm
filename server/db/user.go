@@ -1,6 +1,8 @@
 package db
 
 import (
+	"fmt"
+
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -67,10 +69,15 @@ func (u *User) Delete() error {
 		return err
 	}
 
-	ret := db.Model(u).Delete("name", u.Name)
+	ret := db.Unscoped().Where("id = ?", u.Id).Delete(u)
 	if ret.Error != nil {
 		return ret.Error
 	}
 
 	return nil
+}
+
+func (u *User) BeforeDelete(tx *gorm.DB) (err error) {
+	fmt.Printf("======================BeforeDelete, [%v]", u)
+	return
 }

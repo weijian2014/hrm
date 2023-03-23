@@ -1,0 +1,49 @@
+[
+  {
+    "_id": "cdae26c3-85a4-4404-82cb-75c2a2370f79",
+    "colId": "history",
+    "containerId": "",
+    "name": "http://0.0.0.0:8080/user/login",
+    "url": "http://0.0.0.0:8080/user/1",
+    "method": "DELETE",
+    "sortNum": 0,
+    "created": "2023-03-23T14:36:03.475Z",
+    "modified": "2023-03-23T15:12:34.565Z",
+    "headers": [
+      {
+        "name": "Content-Type",
+        "value": "application/json"
+      },
+      {
+        "name": "Authorization",
+        "value": "hrm eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJDb3B5cmlnaHQgwqkgMjAyMyBIUk0gQWRtaW4iLCJzdWIiOiJDb3B5cmlnaHQgwqkgMjAyMyBIUk0gVG9rZW4gR2VuZXJhdGUiLCJhdWQiOlsiSFJNIHVzZXIiXSwiZXhwIjoxNjc5NjcwNzI0LCJuYmYiOjE2Nzk1ODQzMjQsImlhdCI6MTY3OTU4NDMyNCwianRpIjoiYWRtaW4ifQ.0OQtcoJhdEU1HfsbFw-CyXaVQwRDEN7grbUMmMJJxgY"
+      }
+    ],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "52a21e32-a243-4abd-95d6-6417bc033f74",
+    "colId": "history",
+    "containerId": "",
+    "name": "http://0.0.0.0:8080/user/login",
+    "url": "http://0.0.0.0:8080/user/login",
+    "method": "POST",
+    "sortNum": 0,
+    "created": "2023-03-23T14:36:57.496Z",
+    "modified": "2023-03-23T14:36:57.496Z",
+    "headers": [
+      {
+        "name": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"123456\"\n}",
+      "form": []
+    },
+    "tests": []
+  }
+]

@@ -5,6 +5,7 @@ import (
 	"hrm/log"
 	"hrm/middleware"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -30,6 +31,7 @@ func registerUserRouter(r *gin.Engine) {
 
 	// 该接口登陆后才能访问,加中间件
 	userRouter.GET("info", middleware.JwtAuthenticator, info)
+	userRouter.DELETE(":id", middleware.JwtAuthenticator, del)
 }
 
 func login(c *gin.Context) {
@@ -54,6 +56,7 @@ func login(c *gin.Context) {
 			"message": "用户名或者密码不正确",
 			"data":    "",
 		})
+		c.Abort()
 		return
 	}
 
@@ -66,6 +69,7 @@ func login(c *gin.Context) {
 			"message": "系统无法生成token",
 			"data":    "",
 		})
+		c.Abort()
 		return
 	} else {
 		log.Debug("Generate token [%v] for username [%v]", token, lr.UserName)
@@ -109,6 +113,38 @@ func info(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
 		"message": "用户合法",
+		"data":    u.Data,
+	})
+}
+
+func del(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "请求数据格式错误",
+			"data":    "",
+		})
+		c.Abort()
+	}
+	log.Debug("Delete id [%v]", id)
+
+	u := &db.User{Id: id}
+	err = u.Delete()
+	if err != nil {
+		log.Warn("用户不存")
+		c.JSON(http.StatusNoContent, gin.H{
+			"code":    http.StatusNoContent,
+			"message": "用户不存在",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":    http.StatusOK,
+		"message": "删除成功",
 		"data":    u.Data,
 	})
 }
