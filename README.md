@@ -127,9 +127,10 @@ npm install axios
 npm i js-cookie
 
 # 更新package.json中的依赖
-npm outdated
-npm i -g npm-check-updates
-ncu -u
+npm outdated               # 列出需要升级的包
+npm i -g npm-check-updates # 安装更新组件
+ncu -u                     # 更新package.json
+npm i                      # 安装更新后的包
 
 ```
 

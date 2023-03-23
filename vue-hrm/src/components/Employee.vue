@@ -3,13 +3,23 @@
       <el-row class="my-2">
          <!-- 表头工具 -->
          <el-col :span="12">
-            <el-button :icon="Plus" type="primary" @click="handleAdd">新增</el-button>
+            <el-button :icon="Plus" type="primary" @click="handleAdd"
+               >新增</el-button
+            >
             <el-button :icon="Upload" type="primary">导入</el-button>
-            <el-button :icon="Download" :disabled="isDisabled" type="primary">导出</el-button>
-            <el-button :icon="Delete" :disabled="isDisabled" type="danger">删除</el-button>
+            <el-button :icon="Download" :disabled="isDisabled" type="primary"
+               >导出</el-button
+            >
+            <el-button :icon="Delete" :disabled="isDisabled" type="danger"
+               >删除</el-button
+            >
          </el-col>
          <el-col :span="6">
-            <el-input v-model="inputValue" class="w-88" placeholder="" clearable>
+            <el-input
+               v-model="inputValue"
+               class="w-88"
+               placeholder=""
+               clearable>
                <template #prepend>模糊搜索</template>
                <template #prefix>
                   <el-icon class="el-input__icon"><search /></el-icon>
@@ -17,14 +27,21 @@
             </el-input>
          </el-col>
          <el-col :span="6">
-            <el-dropdown split-button :hide-on-click="false" class="mr-3" type="primary" @click="handleDropdownClick">
+            <el-dropdown
+               split-button
+               :hide-on-click="false"
+               class="mr-3"
+               type="primary"
+               @click="handleDropdownClick">
                列
                <template #dropdown>
                   <el-dropdown-menu>
                      <el-dropdown-item v-for="(column, index) in tableColumns"
-                        ><el-checkbox :key="column.prop" :checked="column.visible">{{
-                           column.label
-                        }}</el-checkbox></el-dropdown-item
+                        ><el-checkbox
+                           :key="column.prop"
+                           :checked="column.visible"
+                           >{{ column.label }}</el-checkbox
+                        ></el-dropdown-item
                      >
                   </el-dropdown-menu>
                </template>
@@ -48,7 +65,9 @@
          :height="tableSettings?.table_settings.height"
          :table-layout="tableLayout"
          :empty-text="tableSettings?.table_settings.empty_text"
-         :highlight-current-row="tableSettings?.table_settings.highlight_current_row"
+         :highlight-current-row="
+            tableSettings?.table_settings.highlight_current_row
+         "
          :row-key="tableSettings?.table_settings.row_key"
          :default-sort="{ prop: 'name', order: 'descending' }"
          @selection-change="handleSelectChange"
@@ -65,13 +84,29 @@
             :index="index"></el-table-column>
          <el-table-column width="140" label="操作" align="center">
             <template #default="scope">
-               <el-button size="small" type="primary" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
-               <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+               <el-button
+                  size="small"
+                  type="primary"
+                  @click="handleEdit(scope.$index, scope.row)"
+                  >修改</el-button
+               >
+               <el-button
+                  size="small"
+                  type="danger"
+                  @click="handleDelete(scope.$index, scope.row)"
+                  >删除</el-button
+               >
             </template>
          </el-table-column>
       </el-table>
    </div>
-   <AddVue :isShow="isShow" :id="id" :employee="employee" @save="handleSave" @cancel="handleCancel"> </AddVue>
+   <AddVue
+      :isShow="isShow"
+      :id="id"
+      :employee="employee"
+      @save="handleSave"
+      @cancel="handleCancel">
+   </AddVue>
 </template>
 
 <script lang="ts" setup>
