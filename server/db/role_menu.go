@@ -67,7 +67,7 @@ func (rm *RoleMenu) Delete() error {
 		return err
 	}
 
-	ret := db.Model(rm).Delete("menu_id", rm.MenuId)
+	ret := db.Unscoped().Where("role_id = ? or menu_id = ? ?", rm.RoleId, rm.MenuId).Delete(rm)
 	if ret.Error != nil {
 		return ret.Error
 	}

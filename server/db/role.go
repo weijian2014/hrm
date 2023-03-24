@@ -75,3 +75,23 @@ func (r *Role) Delete() error {
 
 	return nil
 }
+
+func (r *Role) BeforeDelete(tx *gorm.DB) error {
+	ur := UserRole{
+		RoleId: r.Id,
+	}
+	err := ur.Delete()
+	if err != nil {
+		return err
+	}
+
+	rm := RoleMenu{
+		RoleId: r.Id,
+	}
+	err = rm.Delete()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

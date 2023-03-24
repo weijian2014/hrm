@@ -67,7 +67,7 @@ func (ur *UserRole) Delete() error {
 		return err
 	}
 
-	ret := db.Model(ur).Delete("user_id", ur.UserId)
+	ret := db.Unscoped().Where("user_id = ? or role_id = ?", ur.UserId, ur.RoleId).Delete(ur)
 	if ret.Error != nil {
 		return ret.Error
 	}

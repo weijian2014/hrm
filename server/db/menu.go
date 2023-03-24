@@ -74,3 +74,15 @@ func (m *Menu) Delete() error {
 
 	return nil
 }
+
+func (m *Menu) BeforeDelete(tx *gorm.DB) error {
+	rm := RoleMenu{
+		MenuId: m.Id,
+	}
+
+	err := rm.Delete()
+	if err != nil {
+		return err
+	}
+	return nil
+}
