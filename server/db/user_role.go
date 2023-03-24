@@ -1,6 +1,8 @@
 package db
 
 import (
+	"hrm/log"
+
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -72,5 +74,6 @@ func (ur *UserRole) Delete() error {
 		return ret.Error
 	}
 
+	log.Debug("Delete userId[%v] or roleId[%v] form table user_roles", ur.UserId, ur.RoleId)
 	return nil
 }

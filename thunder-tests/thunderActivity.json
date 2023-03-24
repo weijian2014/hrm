@@ -8,7 +8,7 @@
     "method": "DELETE",
     "sortNum": 0,
     "created": "2023-03-23T14:36:03.475Z",
-    "modified": "2023-03-24T01:03:11.375Z",
+    "modified": "2023-03-24T12:04:25.600Z",
     "headers": [
       {
         "name": "Content-Type",
@@ -16,7 +16,7 @@
       },
       {
         "name": "Authorization",
-        "value": "hrm eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJDb3B5cmlnaHQgwqkgMjAyMyBIUk0gQWRtaW4iLCJzdWIiOiJDb3B5cmlnaHQgwqkgMjAyMyBIUk0gVG9rZW4gR2VuZXJhdGUiLCJhdWQiOlsiSFJNIHVzZXIiXSwiZXhwIjoxNjc5NzA2MTgxLCJuYmYiOjE2Nzk2MTk3ODEsImlhdCI6MTY3OTYxOTc4MSwianRpIjoiYWRtaW4ifQ.tK3xgl9qXL7v5qpIL_dPwotyqSuLM2o3DOnme6Zv7Ms"
+        "value": "hrm eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJDb3B5cmlnaHQgwqkgMjAyMyBIUk0gQWRtaW4iLCJzdWIiOiJDb3B5cmlnaHQgwqkgMjAyMyBIUk0gVG9rZW4gR2VuZXJhdGUiLCJhdWQiOlsiSFJNIHVzZXIiXSwiZXhwIjoxNjc5NzQ1ODU3LCJuYmYiOjE2Nzk2NTk0NTcsImlhdCI6MTY3OTY1OTQ1NywianRpIjoiYWRtaW4ifQ._hwT_s_XJUar7aLHklY5x2A_JvuSkpxaGcOx4bIveuo"
       }
     ],
     "params": [],
@@ -26,7 +26,7 @@
     "_id": "52a21e32-a243-4abd-95d6-6417bc033f74",
     "colId": "history",
     "containerId": "",
-    "name": "http://0.0.0.0:8080/user/login",
+    "name": "login",
     "url": "http://0.0.0.0:8080/user/login",
     "method": "POST",
     "sortNum": 0,
