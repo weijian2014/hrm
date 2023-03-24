@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"hrm/db"
 	"hrm/log"
 	"hrm/middleware"
@@ -15,26 +16,18 @@ type loginRequest struct {
 	Password string `xml:"password" json:"password" description:"登录的密码"`
 }
 
-// type loginResponse struct {
-// 	TokenHeader string `xml:"token_header" json:"token_header" description:"登录成功生成的令牌头"`
-// 	Token       string `xml:"token" json:"token" description:"登录成功生成的令牌"`
-// }
-
-// type userInfoResponse struct {
-// 	TokenHeader string `xml:"token_header" json:"token_header" description:"登录成功生成的令牌头"`
-// 	Token       string `xml:"token" json:"token" description:"登录成功生成的令牌"`
-// }
-
 func registerUserRouter(r *gin.Engine) {
 	userRouter := r.Group("/user")
-	userRouter.POST("login", login)
+	userRouter.POST("login", userLogin)
 
-	// 该接口登陆后才能访问,加中间件
-	userRouter.GET("info", middleware.JwtAuthenticator, info)
-	userRouter.DELETE(":id", middleware.JwtAuthenticator, del)
+	// 以下接口登陆后才能访问, 加中间件
+	userRouter.GET("info", middleware.JwtAuthenticator, userInfo)
+	userRouter.POST("add", middleware.JwtAuthenticator, userAdd)
+	userRouter.PUT("update", middleware.JwtAuthenticator, userUpdate)
+	userRouter.DELETE(":id", middleware.JwtAuthenticator, userDel)
 }
 
-func login(c *gin.Context) {
+func userLogin(c *gin.Context) {
 	lr := new(loginRequest)
 	if err := c.ShouldBindJSON(lr); err != nil {
 		log.Warn("请求数据格式错误")
@@ -43,13 +36,13 @@ func login(c *gin.Context) {
 			"message": "请求数据格式错误",
 			"data":    "",
 		})
+		c.Abort()
 		return
 	}
 	log.Debug("Login request data [%v]", lr)
 
 	u := &db.User{Name: lr.UserName}
-	err := u.Find()
-	if err != nil || u.Password != lr.Password {
+	if err := u.Find(); err != nil || u.Password != lr.Password {
 		log.Warn("用户名或者密码不正确")
 		c.JSON(http.StatusNotFound, gin.H{
 			"code":    http.StatusNotFound,
@@ -85,7 +78,7 @@ func login(c *gin.Context) {
 	})
 }
 
-func info(c *gin.Context) {
+func userInfo(c *gin.Context) {
 	username, isExists := c.Get("username")
 	if !isExists {
 		c.JSON(http.StatusNoContent, gin.H{
@@ -98,9 +91,8 @@ func info(c *gin.Context) {
 	}
 
 	u := &db.User{Name: username.(string)}
-	err := u.Find()
-	if err != nil {
-		log.Warn("用户不存")
+	if err := u.Find(); err != nil {
+		log.Warn("用户不存在")
 		c.JSON(http.StatusNoContent, gin.H{
 			"code":    http.StatusNoContent,
 			"message": "用户不存在",
@@ -117,7 +109,96 @@ func info(c *gin.Context) {
 	})
 }
 
-func del(c *gin.Context) {
+func userAdd(c *gin.Context) {
+	lr := new(loginRequest)
+	if err := c.ShouldBindJSON(lr); err != nil {
+		log.Warn("请求数据格式错误")
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "请求数据格式错误",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+	log.Debug("userAdd request data [%v]", lr)
+
+	// todo verify the username have add user permission
+
+	u := &db.User{Name: lr.UserName, Password: lr.Password}
+	if err := u.Insert(); err != nil {
+		log.Warn("用户增加出错, %v", err)
+		c.JSON(http.StatusNotAcceptable, gin.H{
+			"code":    http.StatusNotAcceptable,
+			"message": fmt.Sprintf("用户增加出错, %v", err),
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":    http.StatusOK,
+		"message": "用户增加成功",
+		"data":    "",
+	})
+}
+
+func userUpdate(c *gin.Context) {
+	username, isExists := c.Get("username")
+	if !isExists {
+		c.JSON(http.StatusNoContent, gin.H{
+			"code":    http.StatusNoContent,
+			"message": "用户不存在",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+
+	lr := new(loginRequest)
+	if err := c.ShouldBindJSON(lr); err != nil {
+		log.Warn("请求数据格式错误")
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "请求数据格式错误",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+
+	if username != "admin" || lr.UserName != username.(string) {
+		log.Warn("非超级管理员只能修改自己的密码")
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "非超级管理员只能修改自己的密码",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+
+	u := &db.User{Name: lr.UserName, Password: lr.Password}
+	if err := u.Update(); err != nil {
+		log.Warn("密码修改失败")
+		c.JSON(http.StatusNotModified, gin.H{
+			"code":    http.StatusNotModified,
+			"message": "密码修改失败",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":    http.StatusOK,
+		"message": "密码修改成功",
+		"data":    u.Data,
+	})
+}
+
+func userDel(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -126,13 +207,13 @@ func del(c *gin.Context) {
 			"data":    "",
 		})
 		c.Abort()
+		return
 	}
 	log.Debug("Delete id [%v]", id)
 
 	u := &db.User{Id: id}
-	err = u.Delete()
-	if err != nil {
-		log.Warn("用户不存")
+	if err = u.Delete(); err != nil {
+		log.Warn("用户不存在")
 		c.JSON(http.StatusNoContent, gin.H{
 			"code":    http.StatusNoContent,
 			"message": "用户不存在",
@@ -144,7 +225,7 @@ func del(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"message": "删除成功",
+		"message": "用户删除成功",
 		"data":    u.Data,
 	})
 }

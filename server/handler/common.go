@@ -6,9 +6,6 @@ import (
 
 func Init(r *gin.Engine) {
 	registerUserRouter(r)
+	registerRoleRouter(r)
+	registerMenuRouter(r)
 }
-
-// type responseData[T interface{}] struct {
-// 	Message string `xml:"message" json:"message" description:"消息"`
-// 	Data    *T     `xml:"data" json:"data" description:"数据"`
-// }
