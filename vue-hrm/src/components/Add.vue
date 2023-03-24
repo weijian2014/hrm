@@ -2,10 +2,10 @@
    <div class="container">
       <!-- 当点击对话框右上角关闭时, 向外部发送canel事件 -->
       <el-dialog
-         v-model="dialogVisible"
-         :title="employee?.name ? '修改' : '新增'"
          width="45%"
          draggable
+         v-model="dialogVisible"
+         :title="dialogTitle"
          :close-on-press-escape="isEscapeClose"
          :show-close="isShowClose"
          :close-on-click-modal="isClickModalToClose">
@@ -330,6 +330,7 @@ const securityCardFormatter = (value: string | number) => {
 const props = defineProps({
    isShow: Boolean,
    id: Number,
+   title: String,
    employee: Employee,
 })
 
@@ -376,6 +377,8 @@ watch(
 
 // 当props.isShow变化时会传递给dialogVisible, 而dialogVisible被绑定给了el-dialog, 从而达到外部控制显示隐藏el-dialog的目的
 const dialogVisible = computed(() => props.isShow)
+
+const dialogTitle = computed(() => props.title)
 
 const handleSave = () => {
    // 向外发送save(保存)事件

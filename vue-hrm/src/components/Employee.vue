@@ -103,6 +103,7 @@
    <AddVue
       :isShow="isShow"
       :id="id"
+      :title="title"
       :employee="employee"
       @save="handleSave"
       @cancel="handleCancel">
@@ -110,7 +111,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue"
+import { ref, reactive, computed } from "vue"
 import Employee from "@/class/Employee"
 import AddVue from "@/components/Add.vue"
 import { Upload, Download, Delete, Plus, Search } from "@element-plus/icons-vue"
@@ -127,7 +128,8 @@ const tableLayout = computed(() => {
 })
 
 ////// 表格
-
+// el-table组件对象, 自动关联到el-table组件
+const tableRef = ref()
 const selections = ref<Employee[]>()
 const isDisabled = ref(true)
 const handleSelectChange = (rows: Employee[]) => {
@@ -137,30 +139,34 @@ const handleSelectChange = (rows: Employee[]) => {
 }
 
 const handleRowClick = (row: Employee) => {
-   console.log("handleRowClick", row)
-}
-
-const handleEdit = (index: number, row: Employee | undefined) => {
-   console.log(index, row)
-   id.value = index
-   employee.value = row
-   isShow.value = true
-}
-
-const handleDelete = (index: number, row: Employee) => {
-   console.log(index, row)
+   // console.log("handleRowClick", row)
 }
 
 // 向AddVue组件传值 -- 只传isShow
 const handleAdd = () => {
    console.log("新增")
+   title.value = "新增"
    employee.value = new Employee()
    isShow.value = true
+}
+
+const handleEdit = (index: number, row: Employee | undefined) => {
+   console.log(index, row)
+   id.value = index
+   title.value = "修改"
+   employee.value = row
+   isShow.value = true
+}
+
+const handleDelete = (index: number, row: Employee) => {
+   console.log("handleDelete", index, row)
+   tableData.slice(index, 1)
 }
 
 ////// Add组件
 const isShow = ref(false)
 const id = ref(0)
+const title = ref("查看")
 const employee = ref<Employee>()
 
 // AddVue组件发送的保存事件
@@ -478,7 +484,7 @@ const tableColumns = [
    },
 ]
 
-const tableData = [
+const tableData = reactive([
    {
       id: 1,
       name: "李四",
@@ -979,5 +985,5 @@ const tableData = [
       current_address: "广西省桂林市七星区五象街道18号",
       comments: "有此情况需要了解",
    },
-]
+])
 </script>
