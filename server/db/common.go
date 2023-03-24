@@ -84,6 +84,14 @@ func Init(adminUsername, adminPassword string) error {
 			Url:  "url",
 		},
 		{
+			Name: "招聘管理",
+			Url:  "url",
+		},
+		{
+			Name: "休假管理",
+			Url:  "url",
+		},
+		{
 			Name: "系统管理",
 			Url:  "url",
 		},
@@ -136,8 +144,18 @@ func Init(adminUsername, adminPassword string) error {
 			ParentId: 0,
 		},
 		{
+			RoleId:   1,
+			MenuId:   3,
+			ParentId: 0,
+		},
+		{
+			RoleId:   1,
+			MenuId:   4,
+			ParentId: 0,
+		},
+		{
 			RoleId:   2,
-			MenuId:   1,
+			MenuId:   3,
 			ParentId: 0,
 		},
 	}
