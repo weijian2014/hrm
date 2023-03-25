@@ -126,7 +126,7 @@ const state = reactive<{
    tableSettings: TableSettings
    tableColumns: TableColumn[]
    paginationSettings: PaginationSettings
-   tableData: {}[]
+   tableData: Employee[]
 }>({
    // 表格
    isButtonDisabled: true, // 是否禁用表头的修改和删除按钮
