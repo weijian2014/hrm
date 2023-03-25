@@ -1,7 +1,7 @@
 <template>
    <div class="container" style="margin: auto">
+      <!-- 表头工具 -->
       <el-row class="my-2">
-         <!-- 表头工具 -->
          <el-col :span="12">
             <el-button :icon="Plus" type="primary" @click="handleAdd"
                >新增</el-button
@@ -101,17 +101,16 @@
       </el-table>
    </div>
    <AddVue
-      :isShow="isShow"
-      :id="id"
-      :title="title"
-      :employee="employee"
+      v-model:isShow="isShow"
+      v-model:title="title"
+      v-model:employee="employee"
       @save="handleSave"
       @cancel="handleCancel">
    </AddVue>
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, computed } from "vue"
+import { ref, reactive, computed, watch } from "vue"
 import Employee from "@/class/Employee"
 import AddVue from "@/components/Add.vue"
 import { Upload, Download, Delete, Plus, Search } from "@element-plus/icons-vue"
@@ -152,7 +151,6 @@ const handleAdd = () => {
 
 const handleEdit = (index: number, row: Employee | undefined) => {
    console.log(index, row)
-   id.value = index
    title.value = "修改"
    employee.value = row
    isShow.value = true
@@ -160,19 +158,18 @@ const handleEdit = (index: number, row: Employee | undefined) => {
 
 const handleDelete = (index: number, row: Employee) => {
    console.log("handleDelete", index, row)
-   tableData.slice(index, 1)
+   tableData.splice(index, 1)
 }
 
 ////// Add组件
 const isShow = ref(false)
-const id = ref(0)
 const title = ref("查看")
 const employee = ref<Employee>()
 
 // AddVue组件发送的保存事件
 const handleSave = (message: string) => {
+   console.log("handleSave", message, employee)
    isShow.value = false
-   console.log("handleSave", message)
    ElMessage.success(message)
 }
 

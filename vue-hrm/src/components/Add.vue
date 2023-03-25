@@ -3,9 +3,10 @@
       <!-- 当点击对话框右上角关闭时, 向外部发送canel事件 -->
       <el-dialog
          width="45%"
+         center
          draggable
          v-model="dialogVisible"
-         :title="dialogTitle"
+         :title="title"
          :close-on-press-escape="isEscapeClose"
          :show-close="isShowClose"
          :close-on-click-modal="isClickModalToClose">
@@ -311,28 +312,38 @@ const postOptions = [
 ]
 
 const phoneFormatter = (value: string | number) => {
-   console.log("phoneFormatter", value, form)
+   console.log("phoneFormatter", value)
 }
 
 const salaryFormatter = (value: string | number) => {
-   console.log("salaryFormatter", value, form)
+   console.log("salaryFormatter", value)
 }
 
 const identifierFormatter = (value: string | number) => {
-   console.log("identifierFormatter", value, form)
+   console.log("identifierFormatter", value)
 }
 
 const securityCardFormatter = (value: string | number) => {
-   console.log("securityCardFormatter", value, form)
+   console.log("securityCardFormatter", value)
 }
 
 // defineProps定义了当前组件的属性, 外部组件使用当前组件可以绑定传递进来
-const props = defineProps({
-   isShow: Boolean,
-   id: Number,
-   title: String,
-   employee: Employee,
-})
+// withDefaults是TS特有的函数
+
+const props = withDefaults(
+   // defineProps两种写法都可以
+   defineProps<{
+      isShow: Boolean
+      title: String
+      employee: Employee
+   }>(),
+   {
+      // 默认值
+      isShow: () => false,
+      title: () => "新增",
+      employee: () => new Employee(),
+   }
+)
 
 // defineEmits定义了当前组件的事件, 可以向外部发送(通知外部组件)
 const emits = defineEmits(["save", "cancel"])
@@ -341,8 +352,10 @@ const form = ref<Employee>(new Employee())
 
 // 是否按ESC关闭
 const isEscapeClose = ref<boolean>(false)
+
 // 是否显示右上角的关闭
 const isShowClose = ref<boolean>(false)
+
 // 是否可以通过点击 modal 关闭 Dialog (对话框以外的任意位置)
 const isClickModalToClose = ref<boolean>(false)
 
@@ -377,8 +390,6 @@ watch(
 
 // 当props.isShow变化时会传递给dialogVisible, 而dialogVisible被绑定给了el-dialog, 从而达到外部控制显示隐藏el-dialog的目的
 const dialogVisible = computed(() => props.isShow)
-
-const dialogTitle = computed(() => props.title)
 
 const handleSave = () => {
    // 向外发送save(保存)事件
