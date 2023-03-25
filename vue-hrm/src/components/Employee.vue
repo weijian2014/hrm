@@ -101,16 +101,16 @@
       </el-table>
    </div>
    <AddVue
-      v-model:isShow="isShow"
-      v-model:title="title"
-      v-model:employee="employee"
+      :isShow="isShow"
+      :title="title"
+      :employee="employee"
       @save="handleSave"
       @cancel="handleCancel">
    </AddVue>
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, computed, watch } from "vue"
+import { ref, reactive, computed } from "vue"
 import Employee from "@/class/Employee"
 import AddVue from "@/components/Add.vue"
 import { Upload, Download, Delete, Plus, Search } from "@element-plus/icons-vue"
@@ -141,7 +141,7 @@ const handleRowClick = (row: Employee) => {
    // console.log("handleRowClick", row)
 }
 
-// 向AddVue组件传值 -- 只传isShow
+// 向AddVue组件传值
 const handleAdd = () => {
    console.log("新增")
    title.value = "新增"
@@ -168,8 +168,8 @@ const employee = ref<Employee>()
 
 // AddVue组件发送的保存事件
 const handleSave = (message: string) => {
-   console.log("handleSave", message, employee)
    isShow.value = false
+   console.log("handleSave", message, employee)
    ElMessage.success(message)
 }
 

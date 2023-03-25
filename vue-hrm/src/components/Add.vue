@@ -15,12 +15,12 @@
             <el-row class="ml-6">
                <el-col :span="6">
                   <el-form-item label="姓名" prop="name">
-                     <el-input v-model="form.name"> </el-input>
+                     <el-input v-model="employee.name"> </el-input>
                   </el-form-item>
                </el-col>
                <el-col :span="6" class="mx-5">
                   <el-form-item label="性别" prop="gender">
-                     <el-select v-model="form.gender" placeholder="">
+                     <el-select v-model="employee.gender" placeholder="">
                         <el-option
                            v-for="item in genderOptions"
                            :key="item.value"
@@ -32,7 +32,7 @@
                <el-col :span="8">
                   <el-form-item label="生日" prop="birthday">
                      <el-date-picker
-                        v-model="form.birthday"
+                        v-model="employee.birthday"
                         type="date"
                         placeholder="" />
                   </el-form-item>
@@ -42,14 +42,14 @@
             <el-row class="ml-6">
                <el-col :span="6">
                   <el-form-item label="身高" prop="height">
-                     <el-input v-model="form.height" placeholder="">
+                     <el-input v-model="employee.height" placeholder="">
                         <template #append>cm</template>
                      </el-input></el-form-item
                   >
                </el-col>
                <el-col :span="6" class="mx-5">
                   <el-form-item label="体重" prop="weight">
-                     <el-input v-model="form.weight" placeholder="">
+                     <el-input v-model="employee.weight" placeholder="">
                         <template #append>kg</template>
                      </el-input></el-form-item
                   >
@@ -59,7 +59,7 @@
             <el-row class="ml-3">
                <el-col :span="20">
                   <el-form-item label="现住址" prop="current_address">
-                     <el-input v-model="form.current_address"> </el-input>
+                     <el-input v-model="employee.current_address"> </el-input>
                   </el-form-item>
                </el-col>
             </el-row>
@@ -67,7 +67,9 @@
             <el-row>
                <el-col :span="8">
                   <el-form-item label="政治面貌" prop="political_status">
-                     <el-select v-model="form.political_status" placeholder="">
+                     <el-select
+                        v-model="employee.political_status"
+                        placeholder="">
                         <el-option
                            v-for="item in politicalStatusOptions"
                            :key="item.value"
@@ -78,7 +80,7 @@
                </el-col>
                <el-col :span="6" class="mx-5">
                   <el-form-item label="学历" prop="degree">
-                     <el-select v-model="form.degree" placeholder="">
+                     <el-select v-model="employee.degree" placeholder="">
                         <el-option
                            v-for="item in degreeOptions"
                            :key="item.value"
@@ -89,7 +91,9 @@
                </el-col>
                <el-col :span="6">
                   <el-form-item label="社保" prop="social_security">
-                     <el-select v-model="form.social_security" placeholder="">
+                     <el-select
+                        v-model="employee.social_security"
+                        placeholder="">
                         <el-option
                            v-for="item in socialSecurityOptions"
                            :key="item.value"
@@ -104,7 +108,7 @@
                <el-col :span="10">
                   <el-form-item label="身份证" prop="identifier">
                      <el-input
-                        v-model="form.identifier"
+                        v-model="employee.identifier"
                         :formatter="identifierFormatter"
                         placeholder="">
                      </el-input>
@@ -113,7 +117,7 @@
                <el-col :span="8" class="ml-5">
                   <el-form-item label="电话" prop="phone">
                      <el-input
-                        v-model="form.phone"
+                        v-model="employee.phone"
                         :formatter="phoneFormatter"
                         placeholder="">
                      </el-input>
@@ -124,13 +128,13 @@
             <el-row class="ml-3">
                <el-col :span="10">
                   <el-form-item label="原单位" prop="former_employer">
-                     <el-input v-model="form.former_employer"> </el-input>
+                     <el-input v-model="employee.former_employer"> </el-input>
                   </el-form-item>
                </el-col>
                <el-col :span="10" class="ml-5">
                   <el-form-item label="参加工作时间" prop="first_work_time">
                      <el-date-picker
-                        v-model="form.first_work_time"
+                        v-model="employee.first_work_time"
                         type="date"
                         placeholder="" />
                   </el-form-item>
@@ -140,7 +144,7 @@
             <el-row class="ml-6">
                <el-col :span="6">
                   <el-form-item label="岗位" prop="post">
-                     <el-select v-model="form.post" placeholder="">
+                     <el-select v-model="employee.post" placeholder="">
                         <el-option
                            v-for="item in postOptions"
                            :key="item.value"
@@ -152,7 +156,7 @@
                <el-col :span="8" class="mx-5">
                   <el-form-item label="工资" prop="salary">
                      <el-input
-                        v-model="form.salary"
+                        v-model="employee.salary"
                         :formatter="salaryFormatter"
                         placeholder="">
                         <template #append>¥</template>
@@ -162,7 +166,7 @@
                <el-col :span="8">
                   <el-form-item label="保安证" prop="security_card">
                      <el-input
-                        v-model="form.security_card"
+                        v-model="employee.security_card"
                         :formatter="securityCardFormatter"
                         placeholder="">
                      </el-input>
@@ -173,7 +177,7 @@
                <el-col :span="20">
                   <el-form-item label="备注" prop="comments">
                      <el-input
-                        v-model="form.comments"
+                        v-model="employee.comments"
                         maxlength="800"
                         placeholder="填写了解的情况"
                         show-word-limit
@@ -193,8 +197,56 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue"
+import { ref, toRef, watch } from "vue"
 import Employee from "../class/Employee"
+
+// defineProps定义了当前组件的属性, 外部组件使用当前组件可以绑定传递进来
+// withDefaults是TS特有的函数
+const props = withDefaults(
+   // defineProps两种写法都可以
+   defineProps<{
+      isShow: Boolean
+      title: String
+      employee: Employee
+   }>(),
+   {
+      // 默认值
+      isShow: () => false,
+      title: () => "新增",
+      employee: () => new Employee(),
+   }
+)
+
+// defineEmits定义了当前组件的事件, 可以向外部发送(通知外部组件)
+const emits = defineEmits(["save", "cancel"])
+
+// 是否按ESC关闭
+const isEscapeClose = ref<boolean>(false)
+
+// 是否显示右上角的关闭
+const isShowClose = ref<boolean>(false)
+
+// 是否可以通过点击 modal 关闭 Dialog (对话框以外的任意位置)
+const isClickModalToClose = ref<boolean>(false)
+
+// 当props.isShow变化时会传递给dialogVisible, 而dialogVisible被绑定给了el-dialog, 从而达到外部控制显示隐藏el-dialog的目的
+let dialogVisible = ref(false)
+watch(
+   () => props.isShow,
+   (newValue) => {
+      dialogVisible.value = newValue as boolean
+   }
+)
+
+const handleSave = () => {
+   // 向外发送save(保存)事件
+   emits("save", "保存成功")
+}
+
+const handleCancel = () => {
+   // 向外发送cancel(取消)事件
+   emits("cancel", "已取消")
+}
 
 const genderOptions = [
    {
@@ -326,79 +378,33 @@ const identifierFormatter = (value: string | number) => {
 const securityCardFormatter = (value: string | number) => {
    console.log("securityCardFormatter", value)
 }
-
-// defineProps定义了当前组件的属性, 外部组件使用当前组件可以绑定传递进来
-// withDefaults是TS特有的函数
-
-const props = withDefaults(
-   // defineProps两种写法都可以
-   defineProps<{
-      isShow: Boolean
-      title: String
-      employee: Employee
-   }>(),
-   {
-      // 默认值
-      isShow: () => false,
-      title: () => "新增",
-      employee: () => new Employee(),
-   }
-)
-
-// defineEmits定义了当前组件的事件, 可以向外部发送(通知外部组件)
-const emits = defineEmits(["save", "cancel"])
-
-const form = ref<Employee>(new Employee())
-
-// 是否按ESC关闭
-const isEscapeClose = ref<boolean>(false)
-
-// 是否显示右上角的关闭
-const isShowClose = ref<boolean>(false)
-
-// 是否可以通过点击 modal 关闭 Dialog (对话框以外的任意位置)
-const isClickModalToClose = ref<boolean>(false)
-
 // 当props中的employee变化到newEmployee时, 给form赋值, 而form被绑定给了el-form, 从而达到外部传送值给el-form的目的
-watch(
-   () => props.employee,
-   (newEmployee) => {
-      if (newEmployee) {
-         form.value = {
-            id: newEmployee.id,
-            name: newEmployee.name,
-            gender: newEmployee.gender,
-            birthday: newEmployee.birthday,
-            first_work_time: newEmployee.first_work_time,
-            salary: newEmployee.salary,
-            post: newEmployee.post,
-            social_security: newEmployee.social_security,
-            phone: newEmployee.phone,
-            former_employer: newEmployee.former_employer,
-            height: newEmployee.height,
-            weight: newEmployee.weight,
-            degree: newEmployee.degree,
-            political_status: newEmployee.political_status,
-            identifier: newEmployee.identifier,
-            security_card: newEmployee.security_card,
-            current_address: newEmployee.current_address,
-            comments: newEmployee.comments,
-         }
-      }
-   }
-)
-
-// 当props.isShow变化时会传递给dialogVisible, 而dialogVisible被绑定给了el-dialog, 从而达到外部控制显示隐藏el-dialog的目的
-const dialogVisible = computed(() => props.isShow)
-
-const handleSave = () => {
-   // 向外发送save(保存)事件
-   emits("save", "保存成功")
-}
-
-const handleCancel = () => {
-   // 向外发送cancel(取消)事件
-   emits("cancel", "已取消")
-}
+// watch(
+//    () => props.employee,
+//    (newEmployee) => {
+//       if (newEmployee) {
+//          form.value = {
+//             id: newEmployee.id,
+//             name: newEmployee.name,
+//             gender: newEmployee.gender,
+//             birthday: newEmployee.birthday,
+//             first_work_time: newEmployee.first_work_time,
+//             salary: newEmployee.salary,
+//             post: newEmployee.post,
+//             social_security: newEmployee.social_security,
+//             phone: newEmployee.phone,
+//             former_employer: newEmployee.former_employer,
+//             height: newEmployee.height,
+//             weight: newEmployee.weight,
+//             degree: newEmployee.degree,
+//             political_status: newEmployee.political_status,
+//             identifier: newEmployee.identifier,
+//             security_card: newEmployee.security_card,
+//             current_address: newEmployee.current_address,
+//             comments: newEmployee.comments,
+//          }
+//       }
+//    }
+// )
 </script>
 <style lang="scss" scoped></style>
