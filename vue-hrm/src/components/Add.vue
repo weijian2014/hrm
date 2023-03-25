@@ -198,35 +198,32 @@
 </template>
 
 <script setup lang="ts">
-import { watch, reactive, toRefs, toRaw } from "vue"
-import Employee from "../class/Employee"
+import { watch, reactive, toRefs } from "vue"
 
 // defineProps定义了当前组件的属性, 外部组件使用当前组件可以绑定传递进来
-// withDefaults是TS特有的函数
-const props = withDefaults(
-   defineProps<{
-      isShow: Boolean
-      title: String
-      formData: Employee
-   }>(),
-   {
-      // 默认值
-      isShow: () => false,
-      title: () => "新增",
-      formData: () => new Employee(),
-   }
-)
+const props = defineProps<{
+   isShow: boolean
+   title: string
+   formData: Employee
+}>()
 
 // defineEmits定义了当前组件的事件, 可以向外部发送(通知外部组件)
 const emits = defineEmits(["save", "cancel"])
 
-const state = reactive({
+const state = reactive<{
+   isEscapeClose: boolean
+   isShowClose: boolean
+   isClickModalToClose: boolean
+   dialogVisible: boolean
+   formLabelWidth: string
+   rawFormData: Employee
+}>({
    isEscapeClose: false, // 是否按ESC关闭
    isShowClose: false, // 是否显示右上角的关闭
    isClickModalToClose: false, // 是否可以通过点击 modal 关闭 Dialog (对话框以外的任意位置)
    dialogVisible: false, // 是否显示对话框
    formLabelWidth: "10px",
-   rawFormData: new Employee(),
+   rawFormData: {} as Employee,
 })
 
 // 解构

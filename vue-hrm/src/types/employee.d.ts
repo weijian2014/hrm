@@ -1,4 +1,4 @@
-export default class Employee {
+interface Employee {
    id: number = 0
    name: string = ""
    gender: string = ""

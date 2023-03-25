@@ -63,15 +63,13 @@
          ref="tableRef"
          style="width: 100%"
          :data="tableData"
-         :border="tableSettings?.table_settings.border"
-         :fit="tableSettings?.table_settings.fit"
-         :height="tableSettings?.table_settings.height"
+         :border="tableSettings.border"
+         :fit="tableSettings.fit"
+         :height="tableSettings.height"
          :table-layout="tableLayout"
-         :empty-text="tableSettings?.table_settings.empty_text"
-         :highlight-current-row="
-            tableSettings?.table_settings.highlight_current_row
-         "
-         :row-key="tableSettings?.table_settings.row_key"
+         :empty-text="tableSettings.empty_text"
+         :highlight-current-row="tableSettings.highlight_current_row"
+         :row-key="tableSettings.row_key"
          :default-sort="{ prop: 'name', order: 'descending' }"
          @selection-change="handleSelectChange"
          @row-click="handleRowClick">
@@ -83,7 +81,6 @@
             :label="column.label"
             :sortable="column.sortable"
             :align="column.align"
-            :min-width="column.minWidth"
             :index="index"></el-table-column>
          <el-table-column width="140" label="操作" align="center">
             <template #default="scope">
@@ -114,11 +111,23 @@
 
 <script lang="ts" setup>
 import { reactive, computed, toRefs } from "vue"
-import Employee from "@/class/Employee"
 import AddVue from "@/components/Add.vue"
 import { Upload, Download, Delete, Plus, Search } from "@element-plus/icons-vue"
 
-const state = reactive({
+const state = reactive<{
+   isButtonDisabled: boolean
+   zoomValue: boolean
+   inputValue: string
+   tableRef: {}
+   selections: []
+   isShow: boolean
+   title: string
+   rowData: Employee
+   tableSettings: TableSettings
+   tableColumns: TableColumn[]
+   paginationSettings: PaginationSettings
+   tableData: {}[]
+}>({
    // 表格
    isButtonDisabled: true, // 是否禁用表头的修改和删除按钮
    zoomValue: true, // 开关控制的表格样式
@@ -128,155 +137,16 @@ const state = reactive({
    // Add组件属性
    isShow: false,
    title: "查看",
-   rowData: new Employee(),
+   rowData: {} as Employee,
    // 表格数据
    tableSettings: {
-      table_settings: {
-         border: true,
-         fit: true,
-         highlight_current_row: true,
-         height: 500,
-         empty_text: "N/A",
-         table_layout: "auto",
-         row_key: "id",
-      },
-      table_columns: [
-         {
-            prop: "id",
-            label: "序号",
-            visible: false,
-            sortable: false,
-            align: "center",
-         },
-         {
-            prop: "name",
-            label: "姓名",
-            visible: true,
-            sortable: true,
-            align: "center",
-         },
-         {
-            prop: "gender",
-            label: "性别",
-            visible: true,
-            sortable: true,
-            align: "center",
-         },
-         {
-            prop: "birthday",
-            label: "生日",
-            visible: true,
-            sortable: true,
-            align: "center",
-         },
-         {
-            prop: "first_work_time",
-            label: "参加工作时间",
-            visible: true,
-            sortable: true,
-            align: "center",
-         },
-         {
-            prop: "salary",
-            label: "工资",
-            visible: true,
-            sortable: true,
-            align: "center",
-         },
-         {
-            prop: "post",
-            label: "岗位",
-            visible: true,
-            sortable: true,
-            align: "center",
-         },
-         {
-            prop: "social_security",
-            label: "社保",
-            visible: true,
-            sortable: true,
-            align: "center",
-         },
-         {
-            prop: "phone",
-            label: "电话",
-            visible: true,
-            sortable: true,
-            align: "center",
-         },
-         {
-            prop: "former_employer",
-            label: "原单位",
-            visible: true,
-            sortable: true,
-            align: "center",
-         },
-         {
-            prop: "height",
-            label: "身高",
-            visible: true,
-            sortable: true,
-            align: "center",
-         },
-         {
-            prop: "weight",
-            label: "体重",
-            visible: true,
-            sortable: true,
-            align: "center",
-         },
-         {
-            prop: "degree",
-            label: "学历",
-            visible: true,
-            sortable: true,
-            align: "center",
-         },
-         {
-            prop: "political_status",
-            label: "政治面貌",
-            visible: true,
-            sortable: true,
-            align: "center",
-         },
-         {
-            prop: "identifier",
-            label: "身份证",
-            visible: false,
-            sortable: false,
-            align: "center",
-         },
-         {
-            prop: "security_card",
-            label: "保安证",
-            visible: false,
-            sortable: false,
-            align: "center",
-         },
-         {
-            prop: "current_address",
-            label: "现住址",
-            visible: false,
-            sortable: false,
-            align: "left",
-         },
-         {
-            prop: "comments",
-            label: "备注",
-            visible: false,
-            sortable: false,
-            align: "left",
-         },
-      ],
-      pagination_settings: {
-         layout: "->, total, sizes, prev, pager, next",
-         prev_text: "上一页",
-         next_text: "下一页",
-         page_sizes: [10, 20, 30, 40, 50, 100],
-         default_page_size: 10,
-         default_current_page: 1,
-         hide_on_single_page: false,
-      },
+      border: true,
+      fit: true,
+      highlight_current_row: true,
+      height: 500,
+      empty_text: "N/A",
+      table_layout: "auto",
+      row_key: "id",
    },
    tableColumns: [
       {
@@ -285,7 +155,6 @@ const state = reactive({
          visible: false,
          sortable: false,
          align: "center",
-         minWidth: 18,
       },
       {
          prop: "name",
@@ -293,7 +162,6 @@ const state = reactive({
          visible: true,
          sortable: true,
          align: "center",
-         minWidth: 18,
       },
       {
          prop: "gender",
@@ -301,7 +169,6 @@ const state = reactive({
          visible: true,
          sortable: true,
          align: "center",
-         minWidth: 18,
       },
       {
          prop: "birthday",
@@ -309,7 +176,6 @@ const state = reactive({
          visible: true,
          sortable: true,
          align: "center",
-         minWidth: 30,
       },
       {
          prop: "first_work_time",
@@ -317,7 +183,6 @@ const state = reactive({
          visible: true,
          sortable: true,
          align: "center",
-         minWidth: 30,
       },
       {
          prop: "salary",
@@ -325,7 +190,6 @@ const state = reactive({
          visible: true,
          sortable: true,
          align: "center",
-         minWidth: 18,
       },
       {
          prop: "post",
@@ -333,7 +197,6 @@ const state = reactive({
          visible: true,
          sortable: true,
          align: "center",
-         minWidth: 18,
       },
       {
          prop: "social_security",
@@ -341,7 +204,6 @@ const state = reactive({
          visible: true,
          sortable: true,
          align: "center",
-         minWidth: 18,
       },
       {
          prop: "phone",
@@ -349,7 +211,6 @@ const state = reactive({
          visible: true,
          sortable: true,
          align: "center",
-         minWidth: 30,
       },
       {
          prop: "former_employer",
@@ -357,7 +218,6 @@ const state = reactive({
          visible: true,
          sortable: true,
          align: "center",
-         minWidth: 18,
       },
       {
          prop: "height",
@@ -365,7 +225,6 @@ const state = reactive({
          visible: true,
          sortable: true,
          align: "center",
-         minWidth: 18,
       },
       {
          prop: "weight",
@@ -373,7 +232,6 @@ const state = reactive({
          visible: true,
          sortable: true,
          align: "center",
-         minWidth: 18,
       },
       {
          prop: "degree",
@@ -381,7 +239,6 @@ const state = reactive({
          visible: true,
          sortable: true,
          align: "center",
-         minWidth: 18,
       },
       {
          prop: "political_status",
@@ -389,7 +246,6 @@ const state = reactive({
          visible: true,
          sortable: true,
          align: "center",
-         minWidth: 18,
       },
       {
          prop: "identifier",
@@ -397,7 +253,6 @@ const state = reactive({
          visible: false,
          sortable: false,
          align: "center",
-         minWidth: 18,
       },
       {
          prop: "security_card",
@@ -405,7 +260,6 @@ const state = reactive({
          visible: false,
          sortable: false,
          align: "center",
-         minWidth: 18,
       },
       {
          prop: "current_address",
@@ -413,7 +267,6 @@ const state = reactive({
          visible: false,
          sortable: false,
          align: "left",
-         minWidth: 18,
       },
       {
          prop: "comments",
@@ -421,9 +274,17 @@ const state = reactive({
          visible: false,
          sortable: false,
          align: "left",
-         minWidth: 18,
       },
    ],
+   paginationSettings: {
+      layout: "->, total, sizes, prev, pager, next",
+      prev_text: "上一页",
+      next_text: "下一页",
+      page_sizes: [10, 20, 30, 40, 50, 100],
+      default_page_size: 10,
+      default_current_page: 1,
+      hide_on_single_page: false,
+   },
    tableData: [
       {
          id: 1,
@@ -965,8 +826,8 @@ const handleRowClick = (row: Employee) => {
 // 向AddVue组件传值
 const handleAdd = () => {
    console.log("新增")
-   rowData.value = new Employee()
    title.value = "新增"
+   rowData.value = {} as Employee
    isShow.value = true
 }
 
