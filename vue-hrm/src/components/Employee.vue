@@ -113,7 +113,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, computed, toRefs } from "vue"
+import { reactive, computed, toRefs } from "vue"
 import Employee from "@/class/Employee"
 import AddVue from "@/components/Add.vue"
 import { Upload, Download, Delete, Plus, Search } from "@element-plus/icons-vue"
