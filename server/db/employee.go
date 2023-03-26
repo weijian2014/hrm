@@ -43,6 +43,21 @@ func (e *Employee) CreateTable() error {
 	return nil
 }
 
+func SelectAllEmployee() (*[]Employee, error) {
+	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
+	if err != nil {
+		return nil, err
+	}
+
+	employees := new([]Employee)
+	result := db.Find(employees)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return employees, nil
+}
+
 func (e *Employee) Find() error {
 	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
 	if err != nil {
