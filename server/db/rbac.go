@@ -2,14 +2,6 @@ package db
 
 import "time"
 
-type User struct {
-	Id        uint64    `json:"id" description:"用户ID"`
-	Name      string    `json:"username" description:"用户名"`
-	Password  string    `json:"password" description:"密码"`
-	Data      string    `json:"data" description:"用户数据"`
-	UpdatedAt time.Time `json:"update_at" description:"更新时间"`
-}
-
 type Role struct {
 	Id        uint64    `json:"id" description:"角色ID"`
 	Name      string    `json:"name" description:"角色名"`

@@ -4,11 +4,11 @@
     "colId": "history",
     "containerId": "",
     "name": "delete user",
-    "url": "http://0.0.0.0:8080/user/1",
+    "url": "http://0.0.0.0:8080/user/2",
     "method": "DELETE",
     "sortNum": 0,
     "created": "2023-03-23T14:36:03.475Z",
-    "modified": "2023-03-24T12:04:25.600Z",
+    "modified": "2023-03-26T14:47:18.176Z",
     "headers": [
       {
         "name": "Content-Type",
@@ -16,7 +16,7 @@
       },
       {
         "name": "Authorization",
-        "value": "hrm eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJDb3B5cmlnaHQgwqkgMjAyMyBIUk0gQWRtaW4iLCJzdWIiOiJDb3B5cmlnaHQgwqkgMjAyMyBIUk0gVG9rZW4gR2VuZXJhdGUiLCJhdWQiOlsiSFJNIHVzZXIiXSwiZXhwIjoxNjc5NzQ1ODU3LCJuYmYiOjE2Nzk2NTk0NTcsImlhdCI6MTY3OTY1OTQ1NywianRpIjoiYWRtaW4ifQ._hwT_s_XJUar7aLHklY5x2A_JvuSkpxaGcOx4bIveuo"
+        "value": "hrm eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJDb3B5cmlnaHQgwqkgMjAyMyBIUk0gQWRtaW4iLCJzdWIiOiJDb3B5cmlnaHQgwqkgMjAyMyBIUk0gVG9rZW4gR2VuZXJhdGUiLCJhdWQiOlsiSFJNIHVzZXIiXSwiZXhwIjoxNjc5OTI4NDE3LCJuYmYiOjE2Nzk4NDIwMTcsImlhdCI6MTY3OTg0MjAxNywianRpIjoiYWRtaW4ifQ.VbEa5KRlRXh5d1sO1cTssMo5bkNGfqrDJ4B5EWHI9J4"
       }
     ],
     "params": [],
@@ -69,11 +69,11 @@
     "method": "GET",
     "sortNum": 0,
     "created": "2023-03-26T08:48:48.185Z",
-    "modified": "2023-03-26T08:49:01.688Z",
+    "modified": "2023-03-26T13:34:13.632Z",
     "headers": [
       {
         "name": "Authorization",
-        "value": "hrm eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJDb3B5cmlnaHQgwqkgMjAyMyBIUk0gQWRtaW4iLCJzdWIiOiJDb3B5cmlnaHQgwqkgMjAyMyBIUk0gVG9rZW4gR2VuZXJhdGUiLCJhdWQiOlsiSFJNIHVzZXIiXSwiZXhwIjoxNjc5OTA2ODc0LCJuYmYiOjE2Nzk4MjA0NzQsImlhdCI6MTY3OTgyMDQ3NCwianRpIjoiYWRtaW4ifQ.oUKf8Wib9EGnp8vX8ypZcqMvGuzVpE3mAtdBj1QuQzo"
+        "value": "hrm eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJDb3B5cmlnaHQgwqkgMjAyMyBIUk0gQWRtaW4iLCJzdWIiOiJDb3B5cmlnaHQgwqkgMjAyMyBIUk0gVG9rZW4gR2VuZXJhdGUiLCJhdWQiOlsiSFJNIHVzZXIiXSwiZXhwIjoxNjc5OTI0MDM4LCJuYmYiOjE2Nzk4Mzc2MzgsImlhdCI6MTY3OTgzNzYzOCwianRpIjoiYWRtaW4ifQ.hsVcNpE5m9u_EIMMLhaBWb_MPmYgUlVF7Q2LFmYbVaQ"
       }
     ],
     "params": [],

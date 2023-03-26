@@ -32,15 +32,6 @@ type Gen struct {
 	Addr   string
 }
 
-func getDb() *gorm.DB {
-	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
-	if err != nil {
-		fmt.Printf("Can not open sqlite database[%v], err[%v]", DatabaseFullPath, err)
-		return nil
-	}
-	return db
-}
-
 func Init(adminUsername, adminPassword string) error {
 	// 数据库文件存在时, 将删除
 	_, err := os.Stat(DatabaseFullPath)
@@ -53,19 +44,26 @@ func Init(adminUsername, adminPassword string) error {
 		fmt.Printf("Database [%v] has been removed\n", DatabaseFullPath)
 	}
 
-	db := getDb()
+	db, err := getDb()
+	if err != nil {
+		return err
+	}
 
 	// 表users
 	users := []User{
 		{
-			Name:     adminUsername,
-			Password: adminPassword,
-			Data:     "json data",
+			Ulr: UserLoginRequest{
+				Name:     adminUsername,
+				Password: adminPassword,
+			},
+			Data: "json data",
 		},
 		{
-			Name:     "test",
-			Password: "123456",
-			Data:     "json data",
+			Ulr: UserLoginRequest{
+				Name:     "test",
+				Password: "123456",
+			},
+			Data: "json data",
 		},
 	}
 	err = db.AutoMigrate(&User{})
@@ -414,4 +412,88 @@ func Init(adminUsername, adminPassword string) error {
 	fmt.Printf("Inserted rows into table [employee_pagination_settings]\n")
 
 	return nil
+}
+
+func SelectAll(dst interface{}) error {
+	db, err := getDb()
+	if err != nil {
+		return err
+	}
+
+	result := db.Find(dst)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}
+
+func First(dst interface{}, condition string, value ...interface{}) error {
+	db, err := getDb()
+	if err != nil {
+		return err
+	}
+
+	result := db.First(dst, condition, value)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+func Insert(dst interface{}) error {
+	db, err := getDb()
+	if err != nil {
+		return err
+	}
+
+	result := db.Create(dst)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+func Update(dst interface{}, fieldsOnlyUpdate ...interface{}) error {
+	db, err := getDb()
+	if err != nil {
+		return err
+	}
+
+	var result *gorm.DB
+	if fieldsOnlyUpdate == nil {
+		// 更新整行所有列
+		result = db.Save(dst)
+	} else {
+		// 只更新fieldsOnlyUpdate列
+		result = db.Model(dst).Select(fieldsOnlyUpdate).Updates(dst)
+	}
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}
+
+func Delete(dst interface{}, condition string, value ...interface{}) error {
+	db, err := getDb()
+	if err != nil {
+		return err
+	}
+
+	ret := db.Unscoped().Where(condition, value).Delete(dst)
+	if ret.Error != nil {
+		return ret.Error
+	}
+
+	return nil
+}
+
+func getDb() (*gorm.DB, error) {
+	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
+	if err != nil {
+		return nil, err
+	}
+	return db, nil
 }
