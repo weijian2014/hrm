@@ -44,12 +44,13 @@ func Init(adminUsername, adminPassword string) error {
 		fmt.Printf("Database [%v] has been removed\n", DatabaseFullPath)
 	}
 
-	_, err = gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
 	if err != nil {
 		return err
 	}
 	fmt.Printf("Database [%v] has been created\n", DatabaseFullPath)
 
+	//
 	users := []User{
 		{
 			Name:     adminUsername,
@@ -96,6 +97,7 @@ func Init(adminUsername, adminPassword string) error {
 		fmt.Printf("Inserted row[%v] into table [roles]\n", r)
 	}
 
+	//
 	menus := []Menu{
 		{
 			Name: "员工管理",
@@ -127,6 +129,7 @@ func Init(adminUsername, adminPassword string) error {
 		fmt.Printf("Inserted row[%v] into table [menus]\n", m)
 	}
 
+	//
 	ur := []UserRole{
 		{
 			UserId: 1,
@@ -150,6 +153,7 @@ func Init(adminUsername, adminPassword string) error {
 		fmt.Printf("Inserted row[%v] into table [userroles]\n", item)
 	}
 
+	//
 	rm := []RoleMenu{
 		{
 			RoleId:   1,
@@ -190,6 +194,7 @@ func Init(adminUsername, adminPassword string) error {
 		fmt.Printf("Inserted row[%v] into table [role_menus]\n", item)
 	}
 
+	//
 	var employee [100]Employee
 	for i := range employee {
 		r, err := http.Get(api)
@@ -238,7 +243,6 @@ func Init(adminUsername, adminPassword string) error {
 		employee[i].Comments = g.Bank + " " + g.Email
 		// fmt.Printf("employee=[%v]\n", employee[i])
 	}
-
 	err = employee[0].CreateTable()
 	if err != nil {
 		return err
@@ -251,6 +255,169 @@ func Init(adminUsername, adminPassword string) error {
 		}
 		fmt.Printf("Inserted row[%v] into table [employees]\n", e)
 	}
+
+	//
+	et := &EmployeeTableSetting{
+		Border:              true,
+		Fit:                 true,
+		HighlightCurrentRow: true,
+		Height:              500,
+		TableLayout:         "auto",
+		EmptyText:           "N/A",
+		RowKey:              "id",
+	}
+	// 表名employee_table_settings
+	if err = db.AutoMigrate(et); err != nil {
+		return err
+	}
+	fmt.Printf("Table name [employee_table_settings] has been created\n")
+	ret := db.Create(et)
+	if ret.Error != nil {
+		return ret.Error
+	}
+	fmt.Printf("Inserted row[%v] into table [employee_table_settings]\n", et)
+
+	//
+	ecs := []EmployeeColum{{
+		Prop:     "id",
+		Label:    "序号",
+		Visible:  false,
+		Sortable: false,
+		Align:    "center",
+	}, {
+		Prop:     "name",
+		Label:    "姓名",
+		Visible:  true,
+		Sortable: true,
+		Align:    "center",
+	}, {
+		Prop:     "gender",
+		Label:    "性别",
+		Visible:  true,
+		Sortable: true,
+		Align:    "center",
+	}, {
+		Prop:     "birthday",
+		Label:    "生日",
+		Visible:  true,
+		Sortable: true,
+		Align:    "center",
+	}, {
+		Prop:     "first_work_time",
+		Label:    "参加工作时间",
+		Visible:  true,
+		Sortable: true,
+		Align:    "center",
+	}, {
+		Prop:     "salary",
+		Label:    "工资",
+		Visible:  true,
+		Sortable: true,
+		Align:    "center",
+	}, {
+		Prop:     "post",
+		Label:    "岗位",
+		Visible:  true,
+		Sortable: true,
+		Align:    "center",
+	}, {
+		Prop:     "social_security",
+		Label:    "社保",
+		Visible:  true,
+		Sortable: true,
+		Align:    "center",
+	}, {
+		Prop:     "phone",
+		Label:    "电话",
+		Visible:  true,
+		Sortable: false,
+		Align:    "center",
+	}, {
+		Prop:     "former_employer",
+		Label:    "原单位",
+		Visible:  true,
+		Sortable: false,
+		Align:    "center",
+	}, {
+		Prop:     "height",
+		Label:    "身高",
+		Visible:  true,
+		Sortable: true,
+		Align:    "center",
+	}, {
+		Prop:     "weight",
+		Label:    "体重",
+		Visible:  true,
+		Sortable: true,
+		Align:    "center",
+	}, {
+		Prop:     "degree",
+		Label:    "学历",
+		Visible:  true,
+		Sortable: true,
+		Align:    "center",
+	}, {
+		Prop:     "political_status",
+		Label:    "政治面貌",
+		Visible:  true,
+		Sortable: true,
+		Align:    "center",
+	}, {
+		Prop:     "identifier",
+		Label:    "身份证",
+		Visible:  true,
+		Sortable: false,
+		Align:    "center",
+	}, {
+		Prop:     "security_card",
+		Label:    "保安证",
+		Visible:  true,
+		Sortable: false,
+		Align:    "center",
+	}, {
+		Prop:     "current_address",
+		Label:    "现住址",
+		Visible:  true,
+		Sortable: false,
+		Align:    "left",
+	}, {
+		Prop:     "comments",
+		Label:    "备注",
+		Visible:  true,
+		Sortable: false,
+		Align:    "left",
+	},
+	}
+	// 表名employee_colums
+	if err = db.AutoMigrate(&EmployeeColum{}); err != nil {
+		return err
+	}
+	fmt.Printf("Table name [employee_colums] has been created\n")
+	// 批量插入
+	db.Create(&ecs)
+	fmt.Printf("Inserted rows into table [employee_colums]\n")
+
+	//
+	eps := &EmployeePaginationSetting{
+		Layout:             "->, total, sizes, prev, pager, next",
+		PrevText:           "上一页",
+		NextText:           "下一页",
+		PageSizes:          []int32{10, 20, 30, 40, 50, 100},
+		DefaultPageSize:    10,
+		DefaultCurrentPage: 1,
+		HideOnSinglePage:   false,
+		UpdatedAt:          time.Now(),
+	}
+	// 表名employee_pagination_settings
+	if err = db.AutoMigrate(eps); err != nil {
+		return err
+	}
+	fmt.Printf("Table name [employee_pagination_settings] has been created\n")
+	ret = db.Create(eps)
+	if ret.Error != nil {
+		return ret.Error
+	}
+	fmt.Printf("Inserted row[%v] into table [employee_pagination_settings]\n", eps)
 
 	return nil
 }
