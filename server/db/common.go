@@ -32,6 +32,15 @@ type Gen struct {
 	Addr   string
 }
 
+func getDb() *gorm.DB {
+	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
+	if err != nil {
+		fmt.Printf("Can not open sqlite database[%v], err[%v]", DatabaseFullPath, err)
+		return nil
+	}
+	return db
+}
+
 func Init(adminUsername, adminPassword string) error {
 	// 数据库文件存在时, 将删除
 	_, err := os.Stat(DatabaseFullPath)
@@ -44,13 +53,9 @@ func Init(adminUsername, adminPassword string) error {
 		fmt.Printf("Database [%v] has been removed\n", DatabaseFullPath)
 	}
 
-	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
-	if err != nil {
-		return err
-	}
-	fmt.Printf("Database [%v] has been created\n", DatabaseFullPath)
+	db := getDb()
 
-	//
+	// 表users
 	users := []User{
 		{
 			Name:     adminUsername,
@@ -63,19 +68,18 @@ func Init(adminUsername, adminPassword string) error {
 			Data:     "json data",
 		},
 	}
-	err = users[0].CreateTable()
+	err = db.AutoMigrate(&User{})
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Table name [users] has been created\n")
-	for _, u := range users {
-		err = u.Insert()
-		if err != nil {
-			return err
-		}
-		fmt.Printf("Inserted row[%v] into table [users]\n", u)
+	fmt.Printf("Table [users] has been created\n")
+	ret := db.Create(&users)
+	if ret.Error != nil {
+		return ret.Error
 	}
+	fmt.Printf("Inserted rows into table [users]\n")
 
+	// 表roles
 	roles := []Role{
 		{
 			Name: "超级管理员",
@@ -84,20 +88,18 @@ func Init(adminUsername, adminPassword string) error {
 			Name: "普通员工",
 		},
 	}
-	err = roles[0].CreateTable()
+	err = db.AutoMigrate(&Role{})
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Table name [roles] has been created\n")
-	for _, r := range roles {
-		err = r.Insert()
-		if err != nil {
-			return err
-		}
-		fmt.Printf("Inserted row[%v] into table [roles]\n", r)
+	fmt.Printf("Table [roles] has been created\n")
+	ret = db.Create(&roles)
+	if ret.Error != nil {
+		return ret.Error
 	}
+	fmt.Printf("Inserted rows into table [roles]\n")
 
-	//
+	// 表menus
 	menus := []Menu{
 		{
 			Name: "员工管理",
@@ -116,21 +118,19 @@ func Init(adminUsername, adminPassword string) error {
 			Url:  "url",
 		},
 	}
-	err = menus[0].CreateTable()
+	err = db.AutoMigrate(&Menu{})
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Table name [menus] has been created\n")
-	for _, m := range menus {
-		err = m.Insert()
-		if err != nil {
-			return err
-		}
-		fmt.Printf("Inserted row[%v] into table [menus]\n", m)
+	fmt.Printf("Table [menus] has been created\n")
+	ret = db.Create(&menus)
+	if ret.Error != nil {
+		return ret.Error
 	}
+	fmt.Printf("Inserted rows into table [menus]\n")
 
-	//
-	ur := []UserRole{
+	// 表user_roles
+	urs := []UserRole{
 		{
 			UserId: 1,
 			RoleId: 1,
@@ -140,21 +140,19 @@ func Init(adminUsername, adminPassword string) error {
 			RoleId: 2,
 		},
 	}
-	err = ur[0].CreateTable()
+	err = db.AutoMigrate(&UserRole{})
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Table name [userroles] has been created\n")
-	for _, item := range ur {
-		err = item.Insert()
-		if err != nil {
-			return err
-		}
-		fmt.Printf("Inserted row[%v] into table [userroles]\n", item)
+	fmt.Printf("Table [user_roles] has been created\n")
+	ret = db.Create(&urs)
+	if ret.Error != nil {
+		return ret.Error
 	}
+	fmt.Printf("Inserted rows into table [user_roles]\n")
 
-	//
-	rm := []RoleMenu{
+	// 表role_menus
+	rms := []RoleMenu{
 		{
 			RoleId:   1,
 			MenuId:   1,
@@ -181,22 +179,20 @@ func Init(adminUsername, adminPassword string) error {
 			ParentId: 0,
 		},
 	}
-	err = rm[0].CreateTable()
+	err = db.AutoMigrate(&RoleMenu{})
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Table name [role_menus] has been created\n")
-	for _, item := range rm {
-		err = item.Insert()
-		if err != nil {
-			return err
-		}
-		fmt.Printf("Inserted row[%v] into table [role_menus]\n", item)
+	fmt.Printf("Table [role_menus] has been created\n")
+	ret = db.Create(&rms)
+	if ret.Error != nil {
+		return ret.Error
 	}
+	fmt.Printf("Inserted rows into table [role_menus]\n")
 
-	//
-	var employee [100]Employee
-	for i := range employee {
+	// 表employees
+	var employees [100]Employee
+	for i := range employees {
 		r, err := http.Get(api)
 		if err != nil {
 			return err
@@ -213,50 +209,48 @@ func Init(adminUsername, adminPassword string) error {
 			return err
 		}
 
-		employee[i].Name = g.Name
+		employees[i].Name = g.Name
 		if i%2 == 0 {
-			employee[i].Gender = "男"
+			employees[i].Gender = "男"
 		} else {
-			employee[i].Gender = "女"
+			employees[i].Gender = "女"
 		}
 
 		// 20~55岁
 		age := rand.Intn(55-20) + 20
-		employee[i].Birthday = time.Now().AddDate(-age, 0, 0)
-		employee[i].FirstWorkTime = time.Now().AddDate(-(age - 20), 0, 0)
-		employee[i].Salary = uint64(age * 200)
+		employees[i].Birthday = time.Now().AddDate(-age, 0, 0)
+		employees[i].FirstWorkTime = time.Now().AddDate(-(age - 20), 0, 0)
+		employees[i].Salary = uint64(age * 200)
 		posts := []string{"保安", "消防", "前台", "后勤", "保洁", "经理", "财务", "行政"}
-		employee[i].Post = posts[rand.Intn(len(posts))]
+		employees[i].Post = posts[rand.Intn(len(posts))]
 		ss := []string{"有", "无"}
-		employee[i].SocialSecurity = ss[rand.Intn(len(ss))]
-		employee[i].Phone = fmt.Sprintf("138%v%v", rand.Intn(9999-1000)+1000, rand.Intn(9999-1000)+1000)
-		employee[i].FormerEmployer = fmt.Sprintf("原单位%v-%v", i, g.Email)
-		employee[i].Height = uint64(rand.Intn(220-150) + 150)
-		employee[i].Weight = uint64(rand.Intn(120-45) + 45)
+		employees[i].SocialSecurity = ss[rand.Intn(len(ss))]
+		employees[i].Phone = fmt.Sprintf("138%v%v", rand.Intn(9999-1000)+1000, rand.Intn(9999-1000)+1000)
+		employees[i].FormerEmployer = fmt.Sprintf("原单位%v-%v", i, g.Email)
+		employees[i].Height = uint64(rand.Intn(220-150) + 150)
+		employees[i].Weight = uint64(rand.Intn(120-45) + 45)
 		d := []string{"小学", "初中", "高中", "中专", "大专", "专升本", "本科", "研究生", "博士", "博士后"}
-		employee[i].Degree = d[rand.Intn(len(d))]
+		employees[i].Degree = d[rand.Intn(len(d))]
 		ps := []string{"群众", "无党派人士", "民主党派成员", "共青团员", "党员"}
-		employee[i].PoliticalStatus = ps[rand.Intn(len(ps))]
-		employee[i].Identifier = fmt.Sprintf("%v%v%v", g.IdNo[0:6], employee[i].Birthday.Format("20060102"), g.IdNo[14:])
-		employee[i].SecurityCard = strconv.Itoa(rand.Intn(99999999-10000000) + 10000000)
-		employee[i].CurrentAddress = g.Addr
-		employee[i].Comments = g.Bank + " " + g.Email
-		// fmt.Printf("employee=[%v]\n", employee[i])
+		employees[i].PoliticalStatus = ps[rand.Intn(len(ps))]
+		employees[i].Identifier = fmt.Sprintf("%v%v%v", g.IdNo[0:6], employees[i].Birthday.Format("20060102"), g.IdNo[14:])
+		employees[i].SecurityCard = strconv.Itoa(rand.Intn(99999999-10000000) + 10000000)
+		employees[i].CurrentAddress = g.Addr
+		employees[i].Comments = g.Bank + " " + g.Email
+		// fmt.Printf("employee=[%v]\n", employees[i])
 	}
-	err = employee[0].CreateTable()
+	err = db.AutoMigrate(&Employee{})
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Table name [employees] has been created\n")
-	for _, e := range employee {
-		err = e.Insert()
-		if err != nil {
-			return err
-		}
-		fmt.Printf("Inserted row[%v] into table [employees]\n", e)
+	fmt.Printf("Table [employees] has been created\n")
+	ret = db.Create(&employees)
+	if ret.Error != nil {
+		return ret.Error
 	}
+	fmt.Printf("Inserted rows into table [employees]\n")
 
-	//
+	// 表employee_table_settings
 	et := &EmployeeTableSetting{
 		Border:              true,
 		Fit:                 true,
@@ -267,17 +261,17 @@ func Init(adminUsername, adminPassword string) error {
 		RowKey:              "id",
 	}
 	// 表名employee_table_settings
-	if err = db.AutoMigrate(et); err != nil {
+	if err = db.AutoMigrate(&EmployeeTableSetting{}); err != nil {
 		return err
 	}
-	fmt.Printf("Table name [employee_table_settings] has been created\n")
-	ret := db.Create(et)
+	fmt.Printf("Table [employee_table_settings] has been created\n")
+	ret = db.Create(et)
 	if ret.Error != nil {
 		return ret.Error
 	}
-	fmt.Printf("Inserted row[%v] into table [employee_table_settings]\n", et)
+	fmt.Printf("Inserted rows into table [employee_table_settings]\n")
 
-	//
+	// 表employee_colums
 	ecs := []EmployeeColum{{
 		Prop:     "id",
 		Label:    "序号",
@@ -388,16 +382,17 @@ func Init(adminUsername, adminPassword string) error {
 		Align:    "left",
 	},
 	}
-	// 表名employee_colums
 	if err = db.AutoMigrate(&EmployeeColum{}); err != nil {
 		return err
 	}
-	fmt.Printf("Table name [employee_colums] has been created\n")
-	// 批量插入
-	db.Create(&ecs)
+	fmt.Printf("Table [employee_colums] has been created\n")
+	ret = db.Create(&ecs)
+	if ret.Error != nil {
+		return ret.Error
+	}
 	fmt.Printf("Inserted rows into table [employee_colums]\n")
 
-	//
+	// 表名employee_pagination_settings
 	eps := &EmployeePaginationSetting{
 		Layout:             "->, total, sizes, prev, pager, next",
 		PrevText:           "上一页",
@@ -408,16 +403,15 @@ func Init(adminUsername, adminPassword string) error {
 		HideOnSinglePage:   false,
 		UpdatedAt:          time.Now(),
 	}
-	// 表名employee_pagination_settings
 	if err = db.AutoMigrate(eps); err != nil {
 		return err
 	}
-	fmt.Printf("Table name [employee_pagination_settings] has been created\n")
+	fmt.Printf("Table [employee_pagination_settings] has been created\n")
 	ret = db.Create(eps)
 	if ret.Error != nil {
 		return ret.Error
 	}
-	fmt.Printf("Inserted row[%v] into table [employee_pagination_settings]\n", eps)
+	fmt.Printf("Inserted rows into table [employee_pagination_settings]\n")
 
 	return nil
 }
