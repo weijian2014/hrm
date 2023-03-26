@@ -11,7 +11,7 @@ func (u *User) CreateTable() error {
 		return err
 	}
 
-	// 根据User结构体，自动创建表结构, 表名为users
+	// 表名为users
 	if err = db.AutoMigrate(u); err != nil {
 		return err
 	}

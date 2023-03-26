@@ -11,7 +11,7 @@ func (r *Role) CreateTable() error {
 		return err
 	}
 
-	// 根据Role结构体，自动创建表结构, 表名为roles
+	// 表名为roles
 	if err = db.AutoMigrate(r); err != nil {
 		return err
 	}

@@ -1,9 +1,15 @@
 package db
 
 import (
+	"encoding/json"
 	"fmt"
 	"hrm/common"
+	"io/ioutil"
+	"math/rand"
+	"net/http"
 	"os"
+	"strconv"
+	"time"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -12,7 +18,19 @@ import (
 var (
 	DatabaseName     = "hrm.db"
 	DatabaseFullPath = common.CurrDir + "/" + DatabaseName
+
+	// test
+	api = "http://0.0.0.0:7070/api"
 )
+
+type Gen struct {
+	Name   string
+	Mobile string
+	IdNo   string
+	Bank   string
+	Email  string
+	Addr   string
+}
 
 func Init(adminUsername, adminPassword string) error {
 	// 数据库文件存在时, 将删除
@@ -170,6 +188,68 @@ func Init(adminUsername, adminPassword string) error {
 			return err
 		}
 		fmt.Printf("Inserted row[%v] into table [role_menus]\n", item)
+	}
+
+	var employee [100]Employee
+	for i := range employee {
+		r, err := http.Get(api)
+		if err != nil {
+			return err
+		}
+
+		data, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			return err
+		}
+		// fmt.Printf("data=[%v]\n", string(data))
+
+		var g Gen
+		if err = json.Unmarshal(data, &g); err != nil {
+			return err
+		}
+
+		employee[i].Name = g.Name
+		if i%2 == 0 {
+			employee[i].Gender = "男"
+		} else {
+			employee[i].Gender = "女"
+		}
+
+		// 20~55岁
+		age := rand.Intn(55-20) + 20
+		employee[i].Birthday = time.Now().AddDate(-age, 0, 0)
+		employee[i].FirstWorkTime = time.Now().AddDate(-(age - 20), 0, 0)
+		employee[i].Salary = uint64(age * 200)
+		posts := []string{"保安", "消防", "前台", "后勤", "保洁", "经理", "财务", "行政"}
+		employee[i].Post = posts[rand.Intn(len(posts))]
+		ss := []string{"有", "无"}
+		employee[i].SocialSecurity = ss[rand.Intn(len(ss))]
+		employee[i].Phone = fmt.Sprintf("138%v%v", rand.Intn(9999-1000)+1000, rand.Intn(9999-1000)+1000)
+		employee[i].FormerEmployer = fmt.Sprintf("原单位%v-%v", i, g.Email)
+		employee[i].Height = uint64(rand.Intn(220-150) + 150)
+		employee[i].Weight = uint64(rand.Intn(120-45) + 45)
+		d := []string{"小学", "初中", "高中", "中专", "大专", "专升本", "本科", "研究生", "博士", "博士后"}
+		employee[i].Degree = d[rand.Intn(len(d))]
+		ps := []string{"群众", "无党派人士", "民主党派成员", "共青团员", "党员"}
+		employee[i].PoliticalStatus = ps[rand.Intn(len(ps))]
+		employee[i].Identifier = fmt.Sprintf("%v%v%v", g.IdNo[0:6], employee[i].Birthday.Format("20060102"), g.IdNo[14:])
+		employee[i].SecurityCard = strconv.Itoa(rand.Intn(99999999-10000000) + 10000000)
+		employee[i].CurrentAddress = g.Addr
+		employee[i].Comments = g.Bank + " " + g.Email
+		// fmt.Printf("employee=[%v]\n", employee[i])
+	}
+
+	err = employee[0].CreateTable()
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Table name [employees] has been created\n")
+	for _, e := range employee {
+		err = e.Insert()
+		if err != nil {
+			return err
+		}
+		fmt.Printf("Inserted row[%v] into table [employees]\n", e)
 	}
 
 	return nil

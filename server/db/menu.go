@@ -11,7 +11,7 @@ func (m *Menu) CreateTable() error {
 		return err
 	}
 
-	// 根据Menu结构体，自动创建表结构, 表名为menus
+	// 表名为menus
 	if err = db.AutoMigrate(m); err != nil {
 		return err
 	}
