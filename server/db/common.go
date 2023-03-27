@@ -414,48 +414,89 @@ func Init(adminUsername, adminPassword string) error {
 	return nil
 }
 
-func SelectAll(dst interface{}) error {
+func CreateTable(dst ...interface{}) error {
 	db, err := getDb()
 	if err != nil {
 		return err
 	}
 
-	result := db.Find(dst)
-	if result.Error != nil {
-		return result.Error
-	}
-
-	return nil
+	return db.AutoMigrate(dst...)
 }
 
-func First(dst interface{}, condition interface{}, value ...interface{}) error {
+// 查找表中满足conds的所有行
+func SelectAll(output interface{}, conds ...interface{}) error {
 	db, err := getDb()
 	if err != nil {
 		return err
 	}
 
-	result := db.First(dst, condition, value)
-	if result.Error != nil {
-		return result.Error
-	}
-	return nil
+	result := db.Find(output, conds)
+	return result.Error
 }
 
-// dst 可以是数组, 实现批量插入
-func Insert(dst interface{}) error {
+// 获取表中满足conds的主键升序的第一条记录
+// 找不到记录时返回 ErrRecordNotFound 错误
+func First(output interface{}, conds ...interface{}) error {
 	db, err := getDb()
 	if err != nil {
 		return err
 	}
 
-	result := db.Create(dst)
-	if result.Error != nil {
-		return result.Error
+	result := db.First(output, conds)
+	return result.Error
+}
+
+// 获取表中满足conds的主键降序的最后一条记录
+// 找不到记录时返回 ErrRecordNotFound 错误
+func Last(output interface{}, conds ...interface{}) error {
+	db, err := getDb()
+	if err != nil {
+		return err
 	}
-	return nil
+
+	result := db.Last(output, conds)
+	return result.Error
+}
+
+// 获取没有指定排序字段的第一条记录
+// 找不到记录时返回 ErrRecordNotFound 错误
+func Take(output interface{}, conds ...interface{}) error {
+	db, err := getDb()
+	if err != nil {
+		return err
+	}
+
+	result := db.Take(output, conds)
+	return result.Error
+}
+
+// 根据conds查找
+// 找不到记录时不返回错误
+// limit 为限制获取的行数, -1表示不限制
+func Find(output interface{}, limit int, conds ...interface{}) error {
+	db, err := getDb()
+	if err != nil {
+		return err
+	}
+
+	result := db.Limit(limit).Find(output, conds)
+	return result.Error
+}
+
+// output 可以是数组, 实现批量插入
+// 插入成功后output会返回行的主键值
+func Insert(output interface{}) error {
+	db, err := getDb()
+	if err != nil {
+		return err
+	}
+
+	result := db.Create(output)
+	return result.Error
 }
 
 // 更新整行所有列
+// Save() 不要和 Model()一起使用
 func UpdateRow(dst interface{}) error {
 	db, err := getDb()
 	if err != nil {
@@ -463,11 +504,7 @@ func UpdateRow(dst interface{}) error {
 	}
 
 	result := db.Save(dst)
-	if result.Error != nil {
-		return result.Error
-	}
-
-	return nil
+	return result.Error
 }
 
 // 更新单个列
@@ -478,11 +515,7 @@ func UpdateSingleColumn(dst interface{}, column string, value interface{}) error
 	}
 
 	result := db.Model(dst).Update(column, value)
-	if result.Error != nil {
-		return result.Error
-	}
-
-	return nil
+	return result.Error
 }
 
 // 更新指定列
@@ -493,25 +526,19 @@ func UpdateColumns(dst interface{}, columnsOnlyUpdate interface{}) error {
 	}
 
 	result := db.Model(dst).Select(columnsOnlyUpdate).Updates(dst)
-	if result.Error != nil {
-		return result.Error
-	}
-
-	return nil
+	return result.Error
 }
 
-func Delete(dst interface{}, condition string, value ...interface{}) error {
+// 永久删除(非软删除)满足条件的行
+func Delete(dst interface{}, conds ...interface{}) error {
 	db, err := getDb()
 	if err != nil {
 		return err
 	}
 
-	ret := db.Unscoped().Where(condition, value).Delete(dst)
-	if ret.Error != nil {
-		return ret.Error
-	}
-
-	return nil
+	// Unscoped() 永久删除
+	result := db.Unscoped().Delete(dst, conds)
+	return result.Error
 }
 
 func getDb() (*gorm.DB, error) {

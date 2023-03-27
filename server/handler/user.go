@@ -37,7 +37,7 @@ func userLogin(c *gin.Context) {
 	log.Debug("Login request data [%v]", lr)
 
 	user := new(db.User)
-	err := db.First(user, "name = ?", lr.Name)
+	err := db.Take(user, "name = ?", lr.Name)
 	if err != nil || user.Ulr.Password != lr.Password {
 		log.Warn("用户名或者密码不正确")
 		c.JSON(http.StatusNotFound, gin.H{
@@ -86,11 +86,8 @@ func userInfo(c *gin.Context) {
 		return
 	}
 
-	user := &db.User{
-		Ulr: db.UserLoginRequest{
-			Name: username.(string),
-		}}
-	if err := db.First(user, "name = ?", user.Ulr.Name); err != nil {
+	user := new(db.User)
+	if err := db.Take(user, "name = ?", username); err != nil {
 		log.Warn("用户不存在")
 		c.JSON(http.StatusNoContent, gin.H{
 			"code":    http.StatusNoContent,
@@ -124,14 +121,9 @@ func userAdd(c *gin.Context) {
 
 	// todo verify the username have add user permission
 
-	user := &db.User{
-		Ulr: db.UserLoginRequest{
-			Name:     ulr.Name,
-			Password: ulr.Password,
-		}}
-
 	// 检查用户已存在
-	if err := db.First(user, "name = ?", user.Ulr.Name); err == nil {
+	user := new(db.User)
+	if err := db.Take(user, "name = ?", ulr.Name); err == nil {
 		log.Warn("用户增加出错, 用户名已存在")
 		c.JSON(http.StatusForbidden, gin.H{
 			"code":    http.StatusForbidden,
@@ -142,6 +134,8 @@ func userAdd(c *gin.Context) {
 		return
 	}
 
+	user.Ulr.Name = ulr.Name
+	user.Ulr.Password = ulr.Password
 	if err := db.Insert(user); err != nil {
 		log.Warn("用户增加出错, %v", err)
 		c.JSON(http.StatusNotAcceptable, gin.H{
