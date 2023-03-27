@@ -1,0 +1,70 @@
+@host = 0.0.0.0:8080
+
+### Admin登录
+# @name adminLogin
+@adminToken = {{adminLogin.response.body.$.data.token_header}} {{adminLogin.response.body.$.data.token}}
+POST http://{{host}}/user/login
+Content-Type: application/json
+
+{
+   "username": "admin",
+   "password": "123456"
+}
+
+### test用户登录
+# @name testLogin
+@testToken = {{testLogin.response.body.$.data.token_header}} {{testLogin.response.body.$.data.token}}
+POST http://{{host}}/user/login
+Content-Type: application/json
+
+{
+   "username": "test",
+   "password": "123456"
+}
+
+### 获取登录用户信息
+# @name getLoginUserInfo
+GET http://{{host}}/user/info
+Content-Type: application/json
+Authorization: {{testToken}}
+
+
+### 增加weijian用户
+# @name addWeijianUser
+@weijianUserId = {{addWeijianUser.response.body.$.data.id}}
+POST http://{{host}}/user/add
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+{
+   "username": "weijian",
+   "password": "123456"
+}
+
+### 修改weijian密码
+# @name updateWeijianUser
+PUT http://{{host}}/user/update
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+{
+   "id": {{weijianUserId}},
+   "username": "weijian",
+   "password": "12345678"
+}
+
+### weijian用户登录
+# @name weijianLogin
+@weijianToken = {{weijianLogin.response.body.$.data.token_header}} {{weijianLogin.response.body.$.data.token}}
+POST http://{{host}}/user/login
+Content-Type: application/json
+
+{
+   "username": "weijian",
+   "password": "12345678"
+}
+
+### 删除weijian用户
+DELETE http://{{host}}/user/{{weijianUserId}}
+Content-Type: application/json
+Authorization: {{adminToken}}

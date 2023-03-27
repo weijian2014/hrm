@@ -16,7 +16,7 @@ func registerUserRouter(r *gin.Engine) {
 	userRouter.POST("login", userLogin)
 
 	// 以下接口登陆后才能访问, 加中间件
-	// userRouter.GET("info", middleware.JwtAuthenticator, userInfo)
+	userRouter.GET("info", middleware.JwtAuthenticator, userInfo)
 	userRouter.POST("add", middleware.JwtAuthenticator, userAdd)
 	userRouter.PUT("update", middleware.JwtAuthenticator, userUpdate)
 	userRouter.DELETE(":id", middleware.JwtAuthenticator, userDel)
@@ -129,6 +129,19 @@ func userAdd(c *gin.Context) {
 			Name:     ulr.Name,
 			Password: ulr.Password,
 		}}
+
+	// 检查用户已存在
+	if err := db.First(user, "name = ?", user.Ulr.Name); err == nil {
+		log.Warn("用户增加出错, 用户名已存在")
+		c.JSON(http.StatusForbidden, gin.H{
+			"code":    http.StatusForbidden,
+			"message": "用户增加出错, 用户名已存在",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+
 	if err := db.Insert(user); err != nil {
 		log.Warn("用户增加出错, %v", err)
 		c.JSON(http.StatusNotAcceptable, gin.H{
@@ -143,7 +156,10 @@ func userAdd(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
 		"message": "用户增加成功",
-		"data":    "",
+		"data": gin.H{
+			"id":       user.Id,
+			"username": user.Ulr.Name,
+		},
 	})
 }
 
@@ -171,7 +187,8 @@ func userUpdate(c *gin.Context) {
 		return
 	}
 
-	if username != "admin" || uur.Name != username.(string) {
+	log.Debug("login user[%v], userUpdate request[%v]", username.(string), uur)
+	if username != "admin" && uur.Name != username.(string) {
 		log.Warn("非超级管理员只能修改自己的密码")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code":    http.StatusBadRequest,
@@ -189,8 +206,8 @@ func userUpdate(c *gin.Context) {
 			Password: uur.Password,
 		}}
 
-	if err := db.Update(user, "password"); err != nil {
-		log.Warn("密码修改失败")
+	if err := db.UpdateSingleField(user, "password", user.Ulr.Password); err != nil {
+		log.Warn("密码修改失败, err[%v]", err)
 		c.JSON(http.StatusNotModified, gin.H{
 			"code":    http.StatusNotModified,
 			"message": "密码修改失败",

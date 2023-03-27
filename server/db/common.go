@@ -467,9 +467,25 @@ func Update(dst interface{}, fieldsOnlyUpdate ...interface{}) error {
 		result = db.Save(dst)
 	} else {
 		// 只更新fieldsOnlyUpdate列
+		// fixme
 		result = db.Model(dst).Select(fieldsOnlyUpdate).Updates(dst)
 	}
 
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}
+
+// 更新单个列
+func UpdateSingleField(dst interface{}, field string, value string) error {
+	db, err := getDb()
+	if err != nil {
+		return err
+	}
+
+	result := db.Model(dst).Update(field, value)
 	if result.Error != nil {
 		return result.Error
 	}
