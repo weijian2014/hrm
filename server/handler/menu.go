@@ -34,8 +34,8 @@ type menuUpdateRequest struct {
 }
 
 func menuAdd(c *gin.Context) {
-	mar := new(menuAddRequest)
-	if err := c.ShouldBindJSON(mar); err != nil {
+	r := new(menuAddRequest)
+	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code":    http.StatusBadRequest,
@@ -45,12 +45,12 @@ func menuAdd(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	log.Debug("menuAdd request data [%v]", mar)
+	log.Debug("menuAdd request data [%v]", r)
 
 	menu := &db.Menu{
-		Name:     mar.Name,
-		Url:      mar.Url,
-		ParentId: mar.ParentId,
+		Name:     r.Name,
+		Url:      r.Url,
+		ParentId: r.ParentId,
 	}
 	if err := db.Insert(menu); err != nil {
 		log.Warn("菜单增加失败, %v", err)
@@ -71,8 +71,8 @@ func menuAdd(c *gin.Context) {
 }
 
 func menuUpdate(c *gin.Context) {
-	mur := new(menuUpdateRequest)
-	if err := c.ShouldBindJSON(mur); err != nil {
+	r := new(menuUpdateRequest)
+	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code":    http.StatusBadRequest,
@@ -82,9 +82,9 @@ func menuUpdate(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	log.Debug("menuUpdate request data [%v]", mur)
+	log.Debug("menuUpdate request data [%v]", r)
 
-	menu := &db.Menu{Id: mur.Id, Name: mur.Name, Url: mur.Url, ParentId: mur.ParentId}
+	menu := &db.Menu{Id: r.Id, Name: r.Name, Url: r.Url, ParentId: r.ParentId}
 	if err := db.UpdateRow(menu); err != nil {
 		log.Warn("菜单更新失败, %v", err)
 		c.JSON(http.StatusNotAcceptable, gin.H{

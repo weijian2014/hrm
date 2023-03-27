@@ -22,11 +22,11 @@ Content-Type: application/json
    "password": "123456"
 }
 
-### 获取登录用户信息
-# @name getLoginUserInfo
+### 获取Admin登录用户信息
+# @name getAdminLoginUserInfo
 GET http://{{host}}/user/info
 Content-Type: application/json
-Authorization: {{testToken}}
+Authorization: {{adminToken}}
 
 
 ### 增加weijian用户

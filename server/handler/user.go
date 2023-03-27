@@ -23,8 +23,8 @@ func registerUserRouter(r *gin.Engine) {
 }
 
 func userLogin(c *gin.Context) {
-	lr := new(db.UserLoginRequest)
-	if err := c.ShouldBindJSON(lr); err != nil {
+	r := new(db.UserLoginRequest)
+	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code":    http.StatusBadRequest,
@@ -34,11 +34,11 @@ func userLogin(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	log.Debug("Login request data [%v]", lr)
+	log.Debug("Login request data [%v]", r)
 
 	user := new(db.User)
-	err := db.Take(user, "name = ?", lr.Name)
-	if err != nil || user.Ulr.Password != lr.Password {
+	err := db.Take(user, "name = ?", r.Name)
+	if err != nil || user.Ulr.Password != r.Password {
 		log.Warn("用户名或者密码不正确")
 		c.JSON(http.StatusNotFound, gin.H{
 			"code":    http.StatusNotFound,
@@ -50,7 +50,7 @@ func userLogin(c *gin.Context) {
 	}
 
 	log.Debug("Find user in database, [%v]", user)
-	token, err := middleware.GenerateToken(lr.Name)
+	token, err := middleware.GenerateToken(r.Name)
 	if err != nil {
 		log.Warn("系统无法生成token")
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -61,7 +61,7 @@ func userLogin(c *gin.Context) {
 		c.Abort()
 		return
 	} else {
-		log.Debug("Generate token [%v] for username [%v]", token, lr.Name)
+		log.Debug("Generate token [%v] for username [%v]", token, r.Name)
 	}
 
 	c.JSON(http.StatusOK, gin.H{

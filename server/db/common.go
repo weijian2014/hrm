@@ -436,37 +436,37 @@ func SelectAll(output interface{}, conds ...interface{}) error {
 
 // 获取表中满足conds的主键升序的第一条记录
 // 找不到记录时返回 ErrRecordNotFound 错误
-func First(output interface{}, conds ...interface{}) error {
+func First(output interface{}, query interface{}, args ...interface{}) error {
 	db, err := getDb()
 	if err != nil {
 		return err
 	}
 
-	result := db.First(output, conds)
+	result := db.Where(query, args...).First(output)
 	return result.Error
 }
 
 // 获取表中满足conds的主键降序的最后一条记录
 // 找不到记录时返回 ErrRecordNotFound 错误
-func Last(output interface{}, conds ...interface{}) error {
+func Last(output interface{}, query interface{}, args ...interface{}) error {
 	db, err := getDb()
 	if err != nil {
 		return err
 	}
 
-	result := db.Last(output, conds)
+	result := db.Where(query, args...).Last(output)
 	return result.Error
 }
 
 // 获取没有指定排序字段的第一条记录
 // 找不到记录时返回 ErrRecordNotFound 错误
-func Take(output interface{}, conds ...interface{}) error {
+func Take(output interface{}, query interface{}, args ...interface{}) error {
 	db, err := getDb()
 	if err != nil {
 		return err
 	}
 
-	result := db.Take(output, conds)
+	result := db.Where(query, args...).Take(output)
 	return result.Error
 }
 
@@ -480,7 +480,11 @@ func Find(output interface{}, limit int, conds ...interface{}) error {
 	}
 
 	result := db.Limit(limit).Find(output, conds)
-	return result.Error
+	if limit == 1 && result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	} else {
+		return result.Error
+	}
 }
 
 // output 可以是数组, 实现批量插入

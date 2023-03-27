@@ -11,6 +11,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type roleAddRequest struct {
+	Name string `xml:"role_name" json:"role_name" description:"角色名"`
+}
+
+type roleUpdateRequest struct {
+	Id   uint64 `xml:"role_id" json:"role_id" description:"角色ID"`
+	Name string `xml:"role_name" json:"role_name" description:"角色名"`
+}
+
 func registerRoleRouter(r *gin.Engine) {
 	roleRouter := r.Group("/role")
 
@@ -20,18 +29,9 @@ func registerRoleRouter(r *gin.Engine) {
 	roleRouter.DELETE(":id", middleware.JwtAuthenticator, roleDel)
 }
 
-type roleAddRequest struct {
-	RoleName string `xml:"role_name" json:"role_name" description:"角色名"`
-}
-
-type roleUpdateRequest struct {
-	RoleId   uint64 `xml:"role_id" json:"role_id" description:"角色ID"`
-	RoleName string `xml:"role_name" json:"role_name" description:"角色名"`
-}
-
 func roleAdd(c *gin.Context) {
-	rar := new(roleAddRequest)
-	if err := c.ShouldBindJSON(rar); err != nil {
+	r := new(roleAddRequest)
+	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code":    http.StatusBadRequest,
@@ -41,9 +41,9 @@ func roleAdd(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	log.Debug("roleAdd request data [%v]", rar)
+	log.Debug("roleAdd request data [%v]", r)
 
-	role := &db.Role{Name: rar.RoleName}
+	role := &db.Role{Name: r.Name}
 	if err := db.Insert(role); err != nil {
 		log.Warn("角色增加失败, %v", err)
 		c.JSON(http.StatusNotAcceptable, gin.H{
@@ -63,8 +63,8 @@ func roleAdd(c *gin.Context) {
 }
 
 func roleUpdate(c *gin.Context) {
-	rur := new(roleUpdateRequest)
-	if err := c.ShouldBindJSON(rur); err != nil {
+	r := new(roleUpdateRequest)
+	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code":    http.StatusBadRequest,
@@ -74,9 +74,9 @@ func roleUpdate(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	log.Debug("roleUpdate request data [%v]", rur)
+	log.Debug("roleUpdate request data [%v]", r)
 
-	role := &db.Role{Id: rur.RoleId, Name: rur.RoleName}
+	role := &db.Role{Id: r.Id, Name: r.Name}
 	if err := db.UpdateRow(role); err != nil {
 		log.Warn("角色更新失败, %v", err)
 		c.JSON(http.StatusNotAcceptable, gin.H{
