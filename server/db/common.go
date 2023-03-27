@@ -441,6 +441,7 @@ func First(dst interface{}, condition string, value ...interface{}) error {
 	return nil
 }
 
+// dst 可以是数组, 实现批量插入
 func Insert(dst interface{}) error {
 	db, err := getDb()
 	if err != nil {

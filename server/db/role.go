@@ -1,94 +1,33 @@
 package db
 
 import (
-	"gorm.io/driver/sqlite"
+	"time"
+
 	"gorm.io/gorm"
 )
 
-func (r *Role) CreateTable() error {
-	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
-	if err != nil {
-		return err
-	}
-
-	// 表名为roles
-	if err = db.AutoMigrate(r); err != nil {
-		return err
-	}
-
-	return nil
+type RoleRequest struct {
 }
 
-func (r *Role) Find() error {
-	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
-	if err != nil {
-		return err
-	}
-
-	ret := db.First(r, "name = ?", r.Name)
-	if ret.Error != nil {
-		return ret.Error
-	}
-
-	return nil
-}
-
-func (r *Role) Insert() error {
-	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
-	if err != nil {
-		return err
-	}
-
-	// 插入记录
-	ret := db.Create(r)
-	if ret.Error != nil {
-		return ret.Error
-	}
-
-	return nil
-}
-
-func (r *Role) Update() error {
-	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
-	if err != nil {
-		return err
-	}
-
-	ret := db.Model(r).Update("name", r.Name)
-	if ret.Error != nil {
-		return ret.Error
-	}
-
-	return nil
-}
-
-func (r *Role) Delete() error {
-	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
-	if err != nil {
-		return err
-	}
-
-	ret := db.Unscoped().Where("id = ?", r.Id).Delete(r)
-	if ret.Error != nil {
-		return ret.Error
-	}
-
-	return nil
+type Role struct {
+	Id        uint64    `json:"id" description:"角色ID"`
+	Name      string    `json:"name" description:"角色名"`
+	UpdatedAt time.Time `json:"updated_at" description:"更新时间"`
 }
 
 func (r *Role) BeforeDelete(tx *gorm.DB) error {
-	ur := UserRole{
+	ur := &UserRole{
 		RoleId: r.Id,
 	}
-	err := ur.Delete()
+	err := Delete(ur, "role_id = ?", ur.RoleId)
 	if err != nil {
 		return err
 	}
 
-	rm := RoleMenu{
+	rm := &RoleMenu{
 		RoleId: r.Id,
 	}
-	err = rm.Delete()
+	err = Delete(rm, "role_id = ?", rm.RoleId)
 	if err != nil {
 		return err
 	}

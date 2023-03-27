@@ -9,6 +9,6 @@ func init() {
 }
 
 func Test_Default(t *testing.T) {
-	ps := new(PaginationSettings)
+	ps := new(EmployeePaginationSetting)
 	t.Logf("ok, [%v]", ps)
 }

@@ -21,14 +21,16 @@ func registerMenuRouter(r *gin.Engine) {
 }
 
 type menuAddRequest struct {
-	MenuName string `xml:"menu_name" json:"menu_name" description:"菜单名"`
+	Name     string `xml:"menu_name" json:"menu_name" description:"菜单名"`
+	Url      string `xml:"menu_url" json:"menu_url" description:"菜单链接"`
+	ParentId uint64 `xml:"menu_parent_id" json:"menu_parent_id" description:"菜单的父级菜单ID"`
 }
 
 type menuUpdateRequest struct {
-	MenuId       uint64 `xml:"menu_id" json:"menu_id" description:"菜单ID"`
-	MenuName     string `xml:"menu_name" json:"menu_name" description:"菜单名"`
-	MenuUrl      string `xml:"menu_url" json:"menu_url" description:"菜单链接"`
-	MenuParentId uint64 `xml:"menu_parent_id" json:"menu_parent_id" description:"菜单的父级菜单ID"`
+	Id       uint64 `xml:"menu_id" json:"menu_id" description:"菜单ID"`
+	Name     string `xml:"menu_name" json:"menu_name" description:"菜单名"`
+	Url      string `xml:"menu_url" json:"menu_url" description:"菜单链接"`
+	ParentId uint64 `xml:"menu_parent_id" json:"menu_parent_id" description:"菜单的父级菜单ID"`
 }
 
 func menuAdd(c *gin.Context) {
@@ -45,8 +47,12 @@ func menuAdd(c *gin.Context) {
 	}
 	log.Debug("menuAdd request data [%v]", mar)
 
-	m := &db.Menu{Name: mar.MenuName}
-	if err := m.Insert(); err != nil {
+	menu := &db.Menu{
+		Name:     mar.Name,
+		Url:      mar.Url,
+		ParentId: mar.ParentId,
+	}
+	if err := db.Insert(menu); err != nil {
 		log.Warn("菜单增加失败, %v", err)
 		c.JSON(http.StatusNotAcceptable, gin.H{
 			"code":    http.StatusNotAcceptable,
@@ -78,8 +84,8 @@ func menuUpdate(c *gin.Context) {
 	}
 	log.Debug("menuUpdate request data [%v]", mur)
 
-	m := &db.Menu{Id: mur.MenuId, Name: mur.MenuName, Url: mur.MenuUrl, ParentId: mur.MenuParentId}
-	if err := m.Update(); err != nil {
+	menu := &db.Menu{Id: mur.Id, Name: mur.Name, Url: mur.Url, ParentId: mur.ParentId}
+	if err := db.Update(menu, "name", "url", "parent_id"); err != nil {
 		log.Warn("菜单更新失败, %v", err)
 		c.JSON(http.StatusNotAcceptable, gin.H{
 			"code":    http.StatusNotAcceptable,
@@ -109,8 +115,8 @@ func menuDel(c *gin.Context) {
 	}
 	log.Debug("menuDel id [%v]", id)
 
-	m := &db.Menu{Id: id}
-	err = m.Delete()
+	menu := &db.Menu{Id: id}
+	err = db.Delete(menu, "id = ?", menu.Id)
 	if err != nil {
 		log.Warn("菜单删除失败")
 		c.JSON(http.StatusNoContent, gin.H{

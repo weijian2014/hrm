@@ -43,8 +43,8 @@ func roleAdd(c *gin.Context) {
 	}
 	log.Debug("roleAdd request data [%v]", rar)
 
-	r := &db.Role{Name: rar.RoleName}
-	if err := r.Insert(); err != nil {
+	role := &db.Role{Name: rar.RoleName}
+	if err := db.Insert(role); err != nil {
 		log.Warn("角色增加失败, %v", err)
 		c.JSON(http.StatusNotAcceptable, gin.H{
 			"code":    http.StatusNotAcceptable,
@@ -76,8 +76,8 @@ func roleUpdate(c *gin.Context) {
 	}
 	log.Debug("roleUpdate request data [%v]", rur)
 
-	r := &db.Role{Id: rur.RoleId, Name: rur.RoleName}
-	if err := r.Update(); err != nil {
+	role := &db.Role{Id: rur.RoleId, Name: rur.RoleName}
+	if err := db.Update(role, "name"); err != nil {
 		log.Warn("角色更新失败, %v", err)
 		c.JSON(http.StatusNotAcceptable, gin.H{
 			"code":    http.StatusNotAcceptable,
@@ -107,8 +107,8 @@ func roleDel(c *gin.Context) {
 	}
 	log.Debug("roleDel id [%v]", id)
 
-	r := &db.Role{Id: id}
-	err = r.Delete()
+	role := &db.Role{Id: id}
+	err = db.Delete(role, "id = ?", role.Id)
 	if err != nil {
 		log.Warn("角色删除失败")
 		c.JSON(http.StatusNoContent, gin.H{
@@ -123,6 +123,6 @@ func roleDel(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
 		"message": "角色删除成功",
-		"data":    r.Id,
+		"data":    role.Id,
 	})
 }

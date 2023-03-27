@@ -4,31 +4,7 @@ import (
 	"time"
 
 	"github.com/lib/pq"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
-
-type Employee struct {
-	Id              uint64    `json:"id" description:"用户ID"`
-	Name            string    `json:"name" description:"姓名"`
-	Gender          string    `json:"gender" description:"性别"`
-	Birthday        time.Time `json:"birthday" description:"出生日期"`
-	FirstWorkTime   time.Time `json:"first_work_time" description:"参加工作时间"`
-	Salary          uint64    `json:"salary" description:"工资"`
-	Post            string    `json:"post" description:"岗位"`
-	SocialSecurity  string    `json:"social_security" description:"社保"`
-	Phone           string    `json:"phone" description:"电话"`
-	FormerEmployer  string    `json:"former_employer" description:"原单位"`
-	Height          uint64    `json:"height" description:"身高"`
-	Weight          uint64    `json:"weight" description:"体重"`
-	Degree          string    `json:"degree" description:"学历"`
-	PoliticalStatus string    `json:"political_status" description:"政治面貌"`
-	Identifier      string    `json:"identifier" description:"身份证"`
-	SecurityCard    string    `json:"security_card" description:"保安证"`
-	CurrentAddress  string    `json:"current_address" description:"现住址"`
-	Comments        string    `json:"comments" description:"备注"`
-	UpdatedAt       time.Time `json:"update_at" description:"更新时间"`
-}
 
 type EmployeeTableSetting struct {
 	Border              bool      `json:"border" description:"是否带有纵向边框"`
@@ -61,92 +37,24 @@ type EmployeePaginationSetting struct {
 	UpdatedAt          time.Time     `json:"update_at" description:"更新时间"`
 }
 
-func (e *Employee) CreateTable() error {
-	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
-	if err != nil {
-		return err
-	}
-
-	// 表名为employees
-	if err = db.AutoMigrate(e); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func SelectAllEmployee() (*[]Employee, error) {
-	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
-	if err != nil {
-		return nil, err
-	}
-
-	employees := new([]Employee)
-	result := db.Find(employees)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-
-	return employees, nil
-}
-
-func (e *Employee) Find() error {
-	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
-	if err != nil {
-		return err
-	}
-
-	ret := db.First(e, "name = ?", e.Name)
-	if ret.Error != nil {
-		return ret.Error
-	}
-
-	return nil
-}
-
-func (e *Employee) Insert() error {
-	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
-	if err != nil {
-		return err
-	}
-
-	// 插入记录
-	ret := db.Create(e)
-	if ret.Error != nil {
-		return ret.Error
-	}
-
-	return nil
-}
-
-func (e *Employee) Update() error {
-	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
-	if err != nil {
-		return err
-	}
-
-	ret := db.Model(e).Update("name", e.Name)
-	if ret.Error != nil {
-		return ret.Error
-	}
-
-	return nil
-}
-
-func (e *Employee) Delete() error {
-	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
-	if err != nil {
-		return err
-	}
-
-	ret := db.Unscoped().Where("id = ?", e.Id).Delete(e)
-	if ret.Error != nil {
-		return ret.Error
-	}
-
-	return nil
-}
-
-func (e *Employee) BeforeDelete(tx *gorm.DB) error {
-	return nil
+type Employee struct {
+	Id              uint64    `json:"id" description:"用户ID"`
+	Name            string    `json:"name" description:"姓名"`
+	Gender          string    `json:"gender" description:"性别"`
+	Birthday        time.Time `json:"birthday" description:"出生日期"`
+	FirstWorkTime   time.Time `json:"first_work_time" description:"参加工作时间"`
+	Salary          uint64    `json:"salary" description:"工资"`
+	Post            string    `json:"post" description:"岗位"`
+	SocialSecurity  string    `json:"social_security" description:"社保"`
+	Phone           string    `json:"phone" description:"电话"`
+	FormerEmployer  string    `json:"former_employer" description:"原单位"`
+	Height          uint64    `json:"height" description:"身高"`
+	Weight          uint64    `json:"weight" description:"体重"`
+	Degree          string    `json:"degree" description:"学历"`
+	PoliticalStatus string    `json:"political_status" description:"政治面貌"`
+	Identifier      string    `json:"identifier" description:"身份证"`
+	SecurityCard    string    `json:"security_card" description:"保安证"`
+	CurrentAddress  string    `json:"current_address" description:"现住址"`
+	Comments        string    `json:"comments" description:"备注"`
+	UpdatedAt       time.Time `json:"update_at" description:"更新时间"`
 }

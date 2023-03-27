@@ -1,86 +1,25 @@
 package db
 
 import (
-	"gorm.io/driver/sqlite"
+	"time"
+
 	"gorm.io/gorm"
 )
 
-func (m *Menu) CreateTable() error {
-	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
-	if err != nil {
-		return err
-	}
-
-	// 表名为menus
-	if err = db.AutoMigrate(m); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Menu) Find() error {
-	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
-	if err != nil {
-		return err
-	}
-
-	ret := db.First(m, "name = ?", m.Name)
-	if ret.Error != nil {
-		return ret.Error
-	}
-
-	return nil
-}
-
-func (m *Menu) Insert() error {
-	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
-	if err != nil {
-		return err
-	}
-
-	ret := db.Create(m)
-	if ret.Error != nil {
-		return ret.Error
-	}
-
-	return nil
-}
-
-func (m *Menu) Update() error {
-	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
-	if err != nil {
-		return err
-	}
-
-	ret := db.Model(m).Update("name", m.Name)
-	if ret.Error != nil {
-		return ret.Error
-	}
-
-	return nil
-}
-
-func (m *Menu) Delete() error {
-	db, err := gorm.Open(sqlite.Open(DatabaseFullPath), &gorm.Config{})
-	if err != nil {
-		return err
-	}
-
-	ret := db.Unscoped().Where("id = ?", m.Id).Delete(m)
-	if ret.Error != nil {
-		return ret.Error
-	}
-
-	return nil
+type Menu struct {
+	Id        uint64    `json:"id" description:"菜单ID"`
+	Name      string    `json:"name" description:"菜单名"`
+	Url       string    `json:"url" description:"菜单链接"`
+	ParentId  uint64    `json:"parent_id" description:"菜单的父级菜单ID"`
+	UpdatedAt time.Time `json:"update_at" description:"更新时间"`
 }
 
 func (m *Menu) BeforeDelete(tx *gorm.DB) error {
-	rm := RoleMenu{
+	rm := &RoleMenu{
 		MenuId: m.Id,
 	}
 
-	err := rm.Delete()
+	err := Delete(rm, "menu_id = ?", rm.MenuId)
 	if err != nil {
 		return err
 	}

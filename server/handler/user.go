@@ -74,36 +74,39 @@ func userLogin(c *gin.Context) {
 	})
 }
 
-// func userInfo(c *gin.Context) {
-// 	username, isExists := c.Get("username")
-// 	if !isExists {
-// 		c.JSON(http.StatusNoContent, gin.H{
-// 			"code":    http.StatusNoContent,
-// 			"message": "用户不存在",
-// 			"data":    "",
-// 		})
-// 		c.Abort()
-// 		return
-// 	}
+func userInfo(c *gin.Context) {
+	username, isExists := c.Get("username")
+	if !isExists {
+		c.JSON(http.StatusNoContent, gin.H{
+			"code":    http.StatusNoContent,
+			"message": "用户不存在",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
 
-// 	u := &db.User{Name: username.(string)}
-// 	if err := u.Find(); err != nil {
-// 		log.Warn("用户不存在")
-// 		c.JSON(http.StatusNoContent, gin.H{
-// 			"code":    http.StatusNoContent,
-// 			"message": "用户不存在",
-// 			"data":    "",
-// 		})
-// 		c.Abort()
-// 		return
-// 	}
+	user := &db.User{
+		Ulr: db.UserLoginRequest{
+			Name: username.(string),
+		}}
+	if err := db.First(user, "name = ?", user.Ulr.Name); err != nil {
+		log.Warn("用户不存在")
+		c.JSON(http.StatusNoContent, gin.H{
+			"code":    http.StatusNoContent,
+			"message": "用户不存在",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
 
-// 	c.JSON(http.StatusOK, gin.H{
-// 		"code":    http.StatusOK,
-// 		"message": "用户合法",
-// 		"data":    u.Data,
-// 	})
-// }
+	c.JSON(http.StatusOK, gin.H{
+		"code":    http.StatusOK,
+		"message": "用户合法",
+		"data":    user.Data,
+	})
+}
 
 func userAdd(c *gin.Context) {
 	ulr := new(db.UserLoginRequest)
@@ -120,8 +123,6 @@ func userAdd(c *gin.Context) {
 	log.Debug("userAdd request data [%v]", ulr)
 
 	// todo verify the username have add user permission
-
-	// u := &db.User{Name: lr.UserName, Password: lr.Password}
 
 	user := &db.User{
 		Ulr: db.UserLoginRequest{

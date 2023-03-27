@@ -59,7 +59,7 @@ func employeeAdd(c *gin.Context) {
 	}
 	log.Debug("employeeAdd request data [%v]", e)
 
-	if err := e.Insert(); err != nil {
+	if err := db.Insert(e); err != nil {
 		log.Warn("职工增加失败, %v", err)
 		c.JSON(http.StatusNotAcceptable, gin.H{
 			"code":    http.StatusNotAcceptable,
@@ -91,7 +91,7 @@ func employeeUpdate(c *gin.Context) {
 	}
 	log.Debug("employeeUpdate request data [%v]", e)
 
-	if err := e.Update(); err != nil {
+	if err := db.Update(e); err != nil {
 		log.Warn("职工更新失败, %v", err)
 		c.JSON(http.StatusNotAcceptable, gin.H{
 			"code":    http.StatusNotAcceptable,
@@ -122,7 +122,7 @@ func employeeDel(c *gin.Context) {
 	log.Debug("employeeDel id [%v]", id)
 
 	m := &db.Employee{Id: id}
-	err = m.Delete()
+	err = db.Delete(m, "id = ?", m.Id)
 	if err != nil {
 		log.Warn("职工删除失败")
 		c.JSON(http.StatusNoContent, gin.H{
