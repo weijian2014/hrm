@@ -77,7 +77,7 @@ func roleUpdate(c *gin.Context) {
 	log.Debug("roleUpdate request data [%v]", rur)
 
 	role := &db.Role{Id: rur.RoleId, Name: rur.RoleName}
-	if err := db.Update(role, "name"); err != nil {
+	if err := db.UpdateRow(role); err != nil {
 		log.Warn("角色更新失败, %v", err)
 		c.JSON(http.StatusNotAcceptable, gin.H{
 			"code":    http.StatusNotAcceptable,

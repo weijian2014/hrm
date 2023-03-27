@@ -91,7 +91,7 @@ func employeeUpdate(c *gin.Context) {
 	}
 	log.Debug("employeeUpdate request data [%v]", e)
 
-	if err := db.Update(e); err != nil {
+	if err := db.UpdateRow(e); err != nil {
 		log.Warn("职工更新失败, %v", err)
 		c.JSON(http.StatusNotAcceptable, gin.H{
 			"code":    http.StatusNotAcceptable,

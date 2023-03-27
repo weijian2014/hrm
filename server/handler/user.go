@@ -206,7 +206,7 @@ func userUpdate(c *gin.Context) {
 			Password: uur.Password,
 		}}
 
-	if err := db.UpdateSingleField(user, "password", user.Ulr.Password); err != nil {
+	if err := db.UpdateSingleColumn(user, "password", user.Ulr.Password); err != nil {
 		log.Warn("密码修改失败, err[%v]", err)
 		c.JSON(http.StatusNotModified, gin.H{
 			"code":    http.StatusNotModified,

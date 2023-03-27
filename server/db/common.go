@@ -428,7 +428,7 @@ func SelectAll(dst interface{}) error {
 	return nil
 }
 
-func First(dst interface{}, condition string, value ...interface{}) error {
+func First(dst interface{}, condition interface{}, value ...interface{}) error {
 	db, err := getDb()
 	if err != nil {
 		return err
@@ -455,22 +455,14 @@ func Insert(dst interface{}) error {
 	return nil
 }
 
-func Update(dst interface{}, fieldsOnlyUpdate ...interface{}) error {
+// 更新整行所有列
+func UpdateRow(dst interface{}) error {
 	db, err := getDb()
 	if err != nil {
 		return err
 	}
 
-	var result *gorm.DB
-	if fieldsOnlyUpdate == nil {
-		// 更新整行所有列
-		result = db.Save(dst)
-	} else {
-		// 只更新fieldsOnlyUpdate列
-		// fixme
-		result = db.Model(dst).Select(fieldsOnlyUpdate).Updates(dst)
-	}
-
+	result := db.Save(dst)
 	if result.Error != nil {
 		return result.Error
 	}
@@ -479,13 +471,28 @@ func Update(dst interface{}, fieldsOnlyUpdate ...interface{}) error {
 }
 
 // 更新单个列
-func UpdateSingleField(dst interface{}, field string, value string) error {
+func UpdateSingleColumn(dst interface{}, column string, value interface{}) error {
 	db, err := getDb()
 	if err != nil {
 		return err
 	}
 
-	result := db.Model(dst).Update(field, value)
+	result := db.Model(dst).Update(column, value)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}
+
+// 更新指定列
+func UpdateColumns(dst interface{}, columnsOnlyUpdate interface{}) error {
+	db, err := getDb()
+	if err != nil {
+		return err
+	}
+
+	result := db.Model(dst).Select(columnsOnlyUpdate).Updates(dst)
 	if result.Error != nil {
 		return result.Error
 	}

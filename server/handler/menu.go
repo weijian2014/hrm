@@ -85,7 +85,7 @@ func menuUpdate(c *gin.Context) {
 	log.Debug("menuUpdate request data [%v]", mur)
 
 	menu := &db.Menu{Id: mur.Id, Name: mur.Name, Url: mur.Url, ParentId: mur.ParentId}
-	if err := db.Update(menu, "name", "url", "parent_id"); err != nil {
+	if err := db.UpdateRow(menu); err != nil {
 		log.Warn("菜单更新失败, %v", err)
 		c.JSON(http.StatusNotAcceptable, gin.H{
 			"code":    http.StatusNotAcceptable,
