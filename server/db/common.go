@@ -44,11 +44,6 @@ func Init(adminUsername, adminPassword string) error {
 		fmt.Printf("Database [%v] has been removed\n", DatabaseFullPath)
 	}
 
-	db, err := getDb()
-	if err != nil {
-		return err
-	}
-
 	// 表users
 	users := []User{
 		{
@@ -62,14 +57,14 @@ func Init(adminUsername, adminPassword string) error {
 			Data:     "json data",
 		},
 	}
-	err = db.AutoMigrate(&User{})
+	err = CreateTable(&User{})
 	if err != nil {
 		return err
 	}
 	fmt.Printf("Table [users] has been created\n")
-	ret := db.Create(&users)
-	if ret.Error != nil {
-		return ret.Error
+	err = Insert(&users)
+	if err != nil {
+		return err
 	}
 	fmt.Printf("Inserted rows into table [users]\n")
 
@@ -82,14 +77,14 @@ func Init(adminUsername, adminPassword string) error {
 			Name: "普通员工",
 		},
 	}
-	err = db.AutoMigrate(&Role{})
+	err = CreateTable(&Role{})
 	if err != nil {
 		return err
 	}
 	fmt.Printf("Table [roles] has been created\n")
-	ret = db.Create(&roles)
-	if ret.Error != nil {
-		return ret.Error
+	err = Insert(&roles)
+	if err != nil {
+		return err
 	}
 	fmt.Printf("Inserted rows into table [roles]\n")
 
@@ -112,14 +107,14 @@ func Init(adminUsername, adminPassword string) error {
 			Url:  "url",
 		},
 	}
-	err = db.AutoMigrate(&Menu{})
+	err = CreateTable(&Menu{})
 	if err != nil {
 		return err
 	}
 	fmt.Printf("Table [menus] has been created\n")
-	ret = db.Create(&menus)
-	if ret.Error != nil {
-		return ret.Error
+	err = Insert(&menus)
+	if err != nil {
+		return err
 	}
 	fmt.Printf("Inserted rows into table [menus]\n")
 
@@ -134,14 +129,14 @@ func Init(adminUsername, adminPassword string) error {
 			RoleId: 2,
 		},
 	}
-	err = db.AutoMigrate(&UserRole{})
+	err = CreateTable(&UserRole{})
 	if err != nil {
 		return err
 	}
 	fmt.Printf("Table [user_roles] has been created\n")
-	ret = db.Create(&urs)
-	if ret.Error != nil {
-		return ret.Error
+	err = Insert(&urs)
+	if err != nil {
+		return err
 	}
 	fmt.Printf("Inserted rows into table [user_roles]\n")
 
@@ -173,14 +168,14 @@ func Init(adminUsername, adminPassword string) error {
 			ParentId: 0,
 		},
 	}
-	err = db.AutoMigrate(&RoleMenu{})
+	err = CreateTable(&RoleMenu{})
 	if err != nil {
 		return err
 	}
 	fmt.Printf("Table [role_menus] has been created\n")
-	ret = db.Create(&rms)
-	if ret.Error != nil {
-		return ret.Error
+	err = Insert(&rms)
+	if err != nil {
+		return err
 	}
 	fmt.Printf("Inserted rows into table [role_menus]\n")
 
@@ -233,14 +228,14 @@ func Init(adminUsername, adminPassword string) error {
 		employees[i].Comments = g.Bank + " " + g.Email
 		// fmt.Printf("employee=[%v]\n", employees[i])
 	}
-	err = db.AutoMigrate(&Employee{})
+	err = CreateTable(&Employee{})
 	if err != nil {
 		return err
 	}
 	fmt.Printf("Table [employees] has been created\n")
-	ret = db.Create(&employees)
-	if ret.Error != nil {
-		return ret.Error
+	err = Insert(&employees)
+	if err != nil {
+		return err
 	}
 	fmt.Printf("Inserted rows into table [employees]\n")
 
@@ -255,13 +250,13 @@ func Init(adminUsername, adminPassword string) error {
 		RowKey:              "id",
 	}
 	// 表名employee_table_settings
-	if err = db.AutoMigrate(&EmployeeTableSetting{}); err != nil {
+	if err = CreateTable(&EmployeeTableSetting{}); err != nil {
 		return err
 	}
 	fmt.Printf("Table [employee_table_settings] has been created\n")
-	ret = db.Create(et)
-	if ret.Error != nil {
-		return ret.Error
+	err = Insert(et)
+	if err != nil {
+		return err
 	}
 	fmt.Printf("Inserted rows into table [employee_table_settings]\n")
 
@@ -376,13 +371,13 @@ func Init(adminUsername, adminPassword string) error {
 		Align:    "left",
 	},
 	}
-	if err = db.AutoMigrate(&EmployeeColum{}); err != nil {
+	if err = CreateTable(&EmployeeColum{}); err != nil {
 		return err
 	}
 	fmt.Printf("Table [employee_colums] has been created\n")
-	ret = db.Create(&ecs)
-	if ret.Error != nil {
-		return ret.Error
+	err = Insert(&ecs)
+	if err != nil {
+		return err
 	}
 	fmt.Printf("Inserted rows into table [employee_colums]\n")
 
@@ -397,13 +392,13 @@ func Init(adminUsername, adminPassword string) error {
 		HideOnSinglePage:   false,
 		UpdatedAt:          time.Now(),
 	}
-	if err = db.AutoMigrate(eps); err != nil {
+	if err = CreateTable(eps); err != nil {
 		return err
 	}
 	fmt.Printf("Table [employee_pagination_settings] has been created\n")
-	ret = db.Create(eps)
-	if ret.Error != nil {
-		return ret.Error
+	err = Insert(eps)
+	if err != nil {
+		return err
 	}
 	fmt.Printf("Inserted rows into table [employee_pagination_settings]\n")
 
@@ -508,13 +503,14 @@ func UpdateSingleColumn(dst interface{}, column string, value interface{}) error
 }
 
 // 更新指定列
-func UpdateColumns(dst interface{}, columnsOnlyUpdate interface{}) error {
+// columnsUpdate可以是[]string
+func UpdateColumns(dst interface{}, columnsUpdate interface{}) error {
 	db, err := getDb()
 	if err != nil {
 		return err
 	}
 
-	result := db.Model(dst).Select(columnsOnlyUpdate).Updates(dst)
+	result := db.Model(dst).Select(columnsUpdate).Updates(dst)
 	return result.Error
 }
 

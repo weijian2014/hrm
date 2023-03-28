@@ -23,7 +23,7 @@ func registerEmployeeRouter(r *gin.Engine) {
 
 func employeeList(c *gin.Context) {
 	employees := new([]db.Employee)
-	err := db.SelectAll(employees)
+	err := db.Find(employees, -1)
 	if err != nil {
 		log.Warn("职工信息获取失败, %v", err)
 		c.JSON(http.StatusNotFound, gin.H{
