@@ -405,6 +405,7 @@ func Init(adminUsername, adminPassword string) error {
 	return nil
 }
 
+// 表存在时先删除原来的表
 func CreateTable(dst ...interface{}) error {
 	db, err := getDb()
 	if err != nil {

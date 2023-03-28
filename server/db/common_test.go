@@ -90,7 +90,7 @@ func Test_CreateTable(t *testing.T) {
 	}
 	t.Logf("Create table [roles, menus, employees] ok")
 
-	// 重复创建, 先删除原来的表
+	// 表存在时先删除原来的表
 	err = CreateTable(role)
 	if err != nil {
 		t.Error(err)
