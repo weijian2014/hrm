@@ -22,8 +22,19 @@ func registerUserRouter(r *gin.Engine) {
 	userRouter.DELETE(":id", middleware.JwtAuthenticator, userDel)
 }
 
+type userLoginRequest struct {
+	Name     string `json:"username" description:"登录的用户名"`
+	Password string `json:"password" description:"登录的密码"`
+}
+
+type userUpdateRequest struct {
+	Id       uint64 `json:"id" description:"用户ID"`
+	Name     string `json:"username" description:"登录的用户名"`
+	Password string `json:"password" description:"登录的密码"`
+}
+
 func userLogin(c *gin.Context) {
-	r := new(db.UserLoginRequest)
+	r := new(userLoginRequest)
 	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -38,7 +49,7 @@ func userLogin(c *gin.Context) {
 
 	user := new(db.User)
 	err := db.Take(user, "name = ?", r.Name)
-	if err != nil || user.Ulr.Password != r.Password {
+	if err != nil || user.Password != r.Password {
 		log.Warn("用户名或者密码不正确")
 		c.JSON(http.StatusNotFound, gin.H{
 			"code":    http.StatusNotFound,
@@ -106,7 +117,7 @@ func userInfo(c *gin.Context) {
 }
 
 func userAdd(c *gin.Context) {
-	ulr := new(db.UserLoginRequest)
+	ulr := new(userLoginRequest)
 	if err := c.ShouldBindJSON(ulr); err != nil {
 		log.Warn("请求数据格式错误")
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -134,8 +145,8 @@ func userAdd(c *gin.Context) {
 		return
 	}
 
-	user.Ulr.Name = ulr.Name
-	user.Ulr.Password = ulr.Password
+	user.Name = ulr.Name
+	user.Password = ulr.Password
 	if err := db.Insert(user); err != nil {
 		log.Warn("用户增加出错, %v", err)
 		c.JSON(http.StatusNotAcceptable, gin.H{
@@ -152,7 +163,7 @@ func userAdd(c *gin.Context) {
 		"message": "用户增加成功",
 		"data": gin.H{
 			"id":       user.Id,
-			"username": user.Ulr.Name,
+			"username": user.Name,
 		},
 	})
 }
@@ -169,8 +180,8 @@ func userUpdate(c *gin.Context) {
 		return
 	}
 
-	uur := new(db.UserUpdateRequest)
-	if err := c.ShouldBindJSON(uur); err != nil {
+	r := new(userUpdateRequest)
+	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code":    http.StatusBadRequest,
@@ -181,8 +192,8 @@ func userUpdate(c *gin.Context) {
 		return
 	}
 
-	log.Debug("login user[%v], userUpdate request[%v]", username.(string), uur)
-	if username != "admin" && uur.Name != username.(string) {
+	log.Debug("login user[%v], userUpdate request[%v]", username.(string), r)
+	if username != "admin" && r.Name != username.(string) {
 		log.Warn("非超级管理员只能修改自己的密码")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code":    http.StatusBadRequest,
@@ -194,13 +205,12 @@ func userUpdate(c *gin.Context) {
 	}
 
 	user := &db.User{
-		Id: uur.Id,
-		Ulr: db.UserLoginRequest{
-			Name:     uur.Name,
-			Password: uur.Password,
-		}}
+		Id:       r.Id,
+		Name:     r.Name,
+		Password: r.Password,
+	}
 
-	if err := db.UpdateSingleColumn(user, "password", user.Ulr.Password); err != nil {
+	if err := db.UpdateSingleColumn(user, "password", user.Password); err != nil {
 		log.Warn("密码修改失败, err[%v]", err)
 		c.JSON(http.StatusNotModified, gin.H{
 			"code":    http.StatusNotModified,

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"hrm/common"
-	"io/ioutil"
+	"io"
 	"math/rand"
 	"net/http"
 	"os"
@@ -52,18 +52,14 @@ func Init(adminUsername, adminPassword string) error {
 	// 表users
 	users := []User{
 		{
-			Ulr: UserLoginRequest{
-				Name:     adminUsername,
-				Password: adminPassword,
-			},
-			Data: "json data",
+			Name:     adminUsername,
+			Password: adminPassword,
+			Data:     "json data",
 		},
 		{
-			Ulr: UserLoginRequest{
-				Name:     "test",
-				Password: "123456",
-			},
-			Data: "json data",
+			Name:     "test",
+			Password: "123456",
+			Data:     "json data",
 		},
 	}
 	err = db.AutoMigrate(&User{})
@@ -196,7 +192,7 @@ func Init(adminUsername, adminPassword string) error {
 			return err
 		}
 
-		data, err := ioutil.ReadAll(r.Body)
+		data, err := io.ReadAll(r.Body)
 		if err != nil {
 			return err
 		}
@@ -423,17 +419,6 @@ func CreateTable(dst ...interface{}) error {
 	return db.AutoMigrate(dst...)
 }
 
-// 查找表中满足conds的所有行
-func SelectAll(output interface{}, conds ...interface{}) error {
-	db, err := getDb()
-	if err != nil {
-		return err
-	}
-
-	result := db.Find(output, conds)
-	return result.Error
-}
-
 // 获取表中满足conds的主键升序的第一条记录
 // 找不到记录时返回 ErrRecordNotFound 错误
 func First(output interface{}, query interface{}, args ...interface{}) error {
@@ -472,15 +457,15 @@ func Take(output interface{}, query interface{}, args ...interface{}) error {
 
 // 根据conds查找
 // 找不到记录时不返回错误
-// limit 为限制获取的行数, -1表示不限制
+// limit 为限制获取的行数, -1表示不限制, 相当于select *
 func Find(output interface{}, limit int, conds ...interface{}) error {
 	db, err := getDb()
 	if err != nil {
 		return err
 	}
 
-	result := db.Limit(limit).Find(output, conds)
-	if limit == 1 && result.RowsAffected == 0 {
+	result := db.Limit(limit).Find(output, conds...)
+	if limit != -1 && result.RowsAffected == 0 {
 		return gorm.ErrRecordNotFound
 	} else {
 		return result.Error
@@ -541,7 +526,7 @@ func Delete(dst interface{}, conds ...interface{}) error {
 	}
 
 	// Unscoped() 永久删除
-	result := db.Unscoped().Delete(dst, conds)
+	result := db.Unscoped().Delete(dst, conds...)
 	return result.Error
 }
 
