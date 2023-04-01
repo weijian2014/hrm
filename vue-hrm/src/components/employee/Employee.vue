@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-import { reactive, computed, toRefs } from "vue"
-import AddVue from "@/views/employee/Add.vue"
-import { Upload, Download, Delete, Plus, Search } from "@element-plus/icons-vue"
+import AddVue from "@/components/employee/Add.vue"
 import { employeeListApi } from "@/utility/api"
 
 const state = reactive<{
@@ -278,19 +276,30 @@ const columns = computed(() => {
       <!-- 表头工具 -->
       <el-row class="my-2">
          <el-col :span="12">
-            <el-button :icon="Plus" type="primary" @click="handleAdd"
-               >新增</el-button
-            >
-            <el-button :icon="Upload" type="primary">导入</el-button>
-            <el-button
-               :icon="Download"
-               :disabled="isButtonDisabled"
-               type="primary"
-               >导出</el-button
-            >
-            <el-button :icon="Delete" :disabled="isButtonDisabled" type="danger"
-               >删除</el-button
-            >
+            <el-button type="primary">
+               <el-icon style="vertical-align: middle">
+                  <Plus />
+               </el-icon>
+               <span style="vertical-align: middle">新增</span>
+            </el-button>
+            <el-button type="primary">
+               <el-icon style="vertical-align: middle">
+                  <Upload />
+               </el-icon>
+               <span style="vertical-align: middle">导入</span>
+            </el-button>
+            <el-button type="primary" :disabled="isButtonDisabled">
+               <el-icon style="vertical-align: middle">
+                  <Download />
+               </el-icon>
+               <span style="vertical-align: middle">导出</span>
+            </el-button>
+            <el-button type="primary" :disabled="isButtonDisabled">
+               <el-icon style="vertical-align: middle">
+                  <Delete />
+               </el-icon>
+               <span style="vertical-align: middle">删除</span>
+            </el-button>
          </el-col>
          <el-col :span="6">
             <el-input

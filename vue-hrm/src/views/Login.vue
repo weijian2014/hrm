@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref, reactive, toRefs } from "vue"
 import { useRouter } from "vue-router"
 import { loginApi, getUserInfo } from "@/utility/api"
 import { useMainStore } from "@/store/index"

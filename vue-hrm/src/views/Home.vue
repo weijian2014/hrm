@@ -1,11 +1,7 @@
-<script setup lang="ts">
-import Employee from "@/views/employee/Employee.vue"
-</script>
+<script setup lang="ts"></script>
 
 <template>
-   <Employee></Employee>
+   <div class="home">Home page</div>
 </template>
 
-<style lang="scss" scoped>
-@import url("@/assets/css/reset.css");
-</style>
+<style lang="scss" scoped></style>

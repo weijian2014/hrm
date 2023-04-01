@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { watch, reactive, toRefs } from "vue"
-
 // defineProps定义了当前组件的属性, 外部组件使用当前组件可以绑定传递进来
 const props = defineProps<{
    isShow: boolean
