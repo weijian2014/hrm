@@ -277,27 +277,19 @@ const columns = computed(() => {
       <el-row class="my-2">
          <el-col :span="12">
             <el-button type="primary">
-               <el-icon style="vertical-align: middle">
-                  <IEpPlus />
-               </el-icon>
+               <IEpPlus />
                <span style="vertical-align: middle">新增</span>
             </el-button>
             <el-button type="primary">
-               <el-icon style="vertical-align: middle">
-                  <IEpUpload />
-               </el-icon>
+               <IEpUpload />
                <span style="vertical-align: middle">导入</span>
             </el-button>
             <el-button type="primary" :disabled="isButtonDisabled">
-               <el-icon style="vertical-align: middle">
-                  <IEpDownload />
-               </el-icon>
+               <IEpDownload />
                <span style="vertical-align: middle">导出</span>
             </el-button>
             <el-button type="primary" :disabled="isButtonDisabled">
-               <el-icon style="vertical-align: middle">
-                  <IEpDelete />
-               </el-icon>
+               <IEpDelete />
                <span style="vertical-align: middle">删除</span>
             </el-button>
          </el-col>
