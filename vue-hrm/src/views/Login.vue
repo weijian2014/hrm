@@ -7,15 +7,15 @@
          :model="ruleForm"
          :rules="rules"
          class="demo-ruleForm">
-         <h1><span>欢迎使用HRM管理系统</span></h1>
-         <el-form-item label="账号">
+         <h1>欢迎使用HRM管理系统</h1>
+         <el-form-item prop="username" label="账号">
             <el-input
                v-model="ruleForm.username"
                type="text"
                autocomplete="off"
                :prefix-icon="User" />
          </el-form-item>
-         <el-form-item label="密码">
+         <el-form-item prop="password" label="密码">
             <el-input
                v-model="ruleForm.password"
                type="password"
@@ -53,12 +53,10 @@ const state = reactive({
       username: "admin",
       password: "123456",
    },
-   logoUrl: "@/assets/logo.svg",
-   bgUrl: "./../assets/svg/undraw_writer_q06d.svg",
 })
 
 // 使用toRefs解构后得到的对象也是响应式的
-let { ruleForm, logoUrl, bgUrl } = toRefs(state)
+let { ruleForm } = toRefs(state)
 
 const validatePassword = (
    rule: unknown,
@@ -84,9 +82,11 @@ const rules = reactive({
    ],
    password: [
       {
+         required: true,
          validator: validatePassword,
          trigger: "blur",
       },
+      { min: 6, max: 20, message: "密码长度在3~20之间", trigger: "blur" },
    ],
 })
 
@@ -120,10 +120,15 @@ const loginFn = () => {
                      .catch((res) => {
                         console.log(res)
                      })
+               } else {
+                  // 登录失败
+                  console.log("登录失败1", res)
+                  ElMessage.success(res.message)
                }
             })
             .catch((res) => {
-               console.log(res)
+               console.log("登录失败2", res)
+               ElMessage.success(res.data.message)
             })
       })
       .catch(() => {
@@ -140,7 +145,7 @@ const loginFn = () => {
    align-items: center;
    text-align: center;
 
-   .h {
+   .h1 {
       font-weight: bold;
    }
 
@@ -148,14 +153,14 @@ const loginFn = () => {
       width: 300px;
       background-color: #fff;
       padding: 30px;
-      border-radius: 10px;
+      border-radius: 15px;
       .el-form-item {
          margin-top: 20px;
       }
 
       .el-button {
          width: 100%;
-         margin-top: 10px;
+         margin-top: 5px;
       }
    }
 }

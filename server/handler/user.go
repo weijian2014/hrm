@@ -51,8 +51,8 @@ func userLogin(c *gin.Context) {
 	err := db.Take(user, "name = ?", r.Name)
 	if err != nil || user.Password != r.Password {
 		log.Warn("用户名或者密码不正确")
-		c.JSON(http.StatusNotFound, gin.H{
-			"code":    http.StatusNotFound,
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    http.StatusBadRequest,
 			"message": "用户名或者密码不正确",
 			"data":    "",
 		})
