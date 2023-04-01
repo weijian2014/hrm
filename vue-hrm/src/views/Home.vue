@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import Employee from "@/components/Employee.vue"
+import Employee from "@/views/employee/Employee.vue"
 </script>
 <style lang="scss" scoped>
 @import url("@/assets/css/reset.css");

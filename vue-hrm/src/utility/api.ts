@@ -20,3 +20,11 @@ export const loginApi = (
 //
 export const getUserInfo = (): PromiseResponse<string> =>
    request.get("/user/info")
+
+// employee
+interface EmployeeListResponseData {
+   total: number
+   rows: Employee[]
+}
+export const employeeListApi = (): PromiseResponse<EmployeeListResponseData> =>
+   request.get("/employee/list")

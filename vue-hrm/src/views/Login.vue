@@ -1,22 +1,32 @@
 <template>
-   <el-form
-      ref="ruleFormRef"
-      :model="ruleForm"
-      :rules="rules"
-      class="demo-ruleForm">
-      <el-form-item prop="username">
-         <el-input v-model="ruleForm.username" type="text" autocomplete="off" />
-      </el-form-item>
-      <el-form-item prop="password">
-         <el-input
-            v-model="ruleForm.password"
-            type="password"
-            autocomplete="off" />
-      </el-form-item>
-      <el-form-item>
-         <el-button type="primary" @click="loginFn()">登录</el-button>
-      </el-form-item>
-   </el-form>
+   <div class="login">
+      <el-form
+         ref="ruleFormRef"
+         label-position="left"
+         size="large"
+         :model="ruleForm"
+         :rules="rules"
+         class="demo-ruleForm">
+         <h1><span>欢迎使用HRM管理系统</span></h1>
+         <el-form-item label="账号">
+            <el-input
+               v-model="ruleForm.username"
+               type="text"
+               autocomplete="off"
+               :prefix-icon="User" />
+         </el-form-item>
+         <el-form-item label="密码">
+            <el-input
+               v-model="ruleForm.password"
+               type="password"
+               autocomplete="off"
+               :prefix-icon="Key" />
+         </el-form-item>
+         <el-form-item>
+            <el-button type="primary" @click="loginFn()">登录</el-button>
+         </el-form-item>
+      </el-form>
+   </div>
 </template>
 
 <script setup lang="ts">
@@ -25,6 +35,7 @@ import { useRouter } from "vue-router"
 import { loginApi, getUserInfo } from "@/utility/api"
 import { useMainStore } from "@/store/index"
 import { storeToRefs } from "pinia"
+import { User, Key } from "@element-plus/icons-vue"
 
 // 获取当前项目的路由对象
 let router = useRouter()
@@ -42,10 +53,12 @@ const state = reactive({
       username: "admin",
       password: "123456",
    },
+   logoUrl: "@/assets/logo.svg",
+   bgUrl: "./../assets/svg/undraw_writer_q06d.svg",
 })
 
 // 使用toRefs解构后得到的对象也是响应式的
-let { ruleForm } = toRefs(state)
+let { ruleForm, logoUrl, bgUrl } = toRefs(state)
 
 const validatePassword = (
    rule: unknown,
@@ -118,4 +131,32 @@ const loginFn = () => {
       })
 }
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.login {
+   background-color: #ccc;
+   height: 100vh;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   text-align: center;
+
+   .h {
+      font-weight: bold;
+   }
+
+   .el-form {
+      width: 300px;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      .el-form-item {
+         margin-top: 20px;
+      }
+
+      .el-button {
+         width: 100%;
+         margin-top: 10px;
+      }
+   }
+}
+</style>
