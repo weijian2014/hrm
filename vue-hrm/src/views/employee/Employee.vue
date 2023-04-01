@@ -1,114 +1,3 @@
-<template>
-   <div class="container" style="margin: auto">
-      <!-- 表头工具 -->
-      <el-row class="my-2">
-         <el-col :span="12">
-            <el-button :icon="Plus" type="primary" @click="handleAdd"
-               >新增</el-button
-            >
-            <el-button :icon="Upload" type="primary">导入</el-button>
-            <el-button
-               :icon="Download"
-               :disabled="isButtonDisabled"
-               type="primary"
-               >导出</el-button
-            >
-            <el-button :icon="Delete" :disabled="isButtonDisabled" type="danger"
-               >删除</el-button
-            >
-         </el-col>
-         <el-col :span="6">
-            <el-input
-               v-model="inputValue"
-               class="w-88"
-               placeholder=""
-               clearable>
-               <template #prepend>模糊搜索</template>
-               <template #prefix>
-                  <el-icon class="el-input__icon"><search /></el-icon>
-               </template>
-            </el-input>
-         </el-col>
-         <el-col :span="6">
-            <el-dropdown
-               split-button
-               :hide-on-click="false"
-               class="mr-3"
-               type="primary"
-               @click="handleDropdownClick">
-               列
-               <template #dropdown>
-                  <el-dropdown-menu>
-                     <el-dropdown-item v-for="(column, index) in tableColumns"
-                        ><el-checkbox
-                           :key="column.prop"
-                           :checked="column.visible"
-                           >{{ column.label }}</el-checkbox
-                        ></el-dropdown-item
-                     >
-                  </el-dropdown-menu>
-               </template>
-            </el-dropdown>
-            <el-switch
-               v-model="zoomValue"
-               size="large"
-               inline-prompt
-               active-text="自动"
-               inactive-text="固定"
-               @change="zoomChange" />
-         </el-col>
-      </el-row>
-      <!-- 表格 -->
-      <el-table
-         ref="tableRef"
-         style="width: 100%"
-         :data="tableData"
-         :border="tableSettings.border"
-         :fit="tableSettings.fit"
-         :height="tableSettings.height"
-         :table-layout="tableLayout"
-         :empty-text="tableSettings.empty_text"
-         :highlight-current-row="tableSettings.highlight_current_row"
-         :row-key="tableSettings.row_key"
-         :default-sort="{ prop: 'name', order: 'descending' }"
-         @selection-change="handleSelectChange"
-         @row-click="handleRowClick">
-         <el-table-column type="selection" />
-         <el-table-column
-            v-for="(column, index) in columns"
-            :key="column.prop"
-            :prop="column.prop"
-            :label="column.label"
-            :sortable="column.sortable"
-            :align="column.align"
-            :index="index"></el-table-column>
-         <el-table-column width="140" label="操作" align="center">
-            <template #default="scope">
-               <el-button
-                  size="small"
-                  type="primary"
-                  @click="handleEdit(scope.$index, scope.row)"
-                  >修改</el-button
-               >
-               <el-button
-                  size="small"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)"
-                  >删除</el-button
-               >
-            </template>
-         </el-table-column>
-      </el-table>
-   </div>
-   <AddVue
-      :isShow="isShow"
-      :title="title"
-      :formData="rowData"
-      @save="handleSave"
-      @cancel="handleCancel">
-   </AddVue>
-</template>
-
 <script lang="ts" setup>
 import { reactive, computed, toRefs } from "vue"
 import AddVue from "@/views/employee/Add.vue"
@@ -383,3 +272,116 @@ const columns = computed(() => {
    return tableColumns.value.filter((column) => column.visible)
 })
 </script>
+
+<template>
+   <div class="container" style="margin: auto">
+      <!-- 表头工具 -->
+      <el-row class="my-2">
+         <el-col :span="12">
+            <el-button :icon="Plus" type="primary" @click="handleAdd"
+               >新增</el-button
+            >
+            <el-button :icon="Upload" type="primary">导入</el-button>
+            <el-button
+               :icon="Download"
+               :disabled="isButtonDisabled"
+               type="primary"
+               >导出</el-button
+            >
+            <el-button :icon="Delete" :disabled="isButtonDisabled" type="danger"
+               >删除</el-button
+            >
+         </el-col>
+         <el-col :span="6">
+            <el-input
+               v-model="inputValue"
+               class="w-88"
+               placeholder=""
+               clearable>
+               <template #prepend>模糊搜索</template>
+               <template #prefix>
+                  <el-icon class="el-input__icon"><search /></el-icon>
+               </template>
+            </el-input>
+         </el-col>
+         <el-col :span="6">
+            <el-dropdown
+               split-button
+               :hide-on-click="false"
+               class="mr-3"
+               type="primary"
+               @click="handleDropdownClick">
+               列
+               <template #dropdown>
+                  <el-dropdown-menu>
+                     <el-dropdown-item v-for="(column, index) in tableColumns"
+                        ><el-checkbox
+                           :key="column.prop"
+                           :checked="column.visible"
+                           >{{ column.label }}</el-checkbox
+                        ></el-dropdown-item
+                     >
+                  </el-dropdown-menu>
+               </template>
+            </el-dropdown>
+            <el-switch
+               v-model="zoomValue"
+               size="large"
+               inline-prompt
+               active-text="自动"
+               inactive-text="固定"
+               @change="zoomChange" />
+         </el-col>
+      </el-row>
+      <!-- 表格 -->
+      <el-table
+         ref="tableRef"
+         style="width: 100%"
+         :data="tableData"
+         :border="tableSettings.border"
+         :fit="tableSettings.fit"
+         :height="tableSettings.height"
+         :table-layout="tableLayout"
+         :empty-text="tableSettings.empty_text"
+         :highlight-current-row="tableSettings.highlight_current_row"
+         :row-key="tableSettings.row_key"
+         :default-sort="{ prop: 'name', order: 'descending' }"
+         @selection-change="handleSelectChange"
+         @row-click="handleRowClick">
+         <el-table-column type="selection" />
+         <el-table-column
+            v-for="(column, index) in columns"
+            :key="column.prop"
+            :prop="column.prop"
+            :label="column.label"
+            :sortable="column.sortable"
+            :align="column.align"
+            :index="index"></el-table-column>
+         <el-table-column width="140" label="操作" align="center">
+            <template #default="scope">
+               <el-button
+                  size="small"
+                  type="primary"
+                  @click="handleEdit(scope.$index, scope.row)"
+                  >修改</el-button
+               >
+               <el-button
+                  size="small"
+                  type="danger"
+                  @click="handleDelete(scope.$index, scope.row)"
+                  >删除</el-button
+               >
+            </template>
+         </el-table-column>
+      </el-table>
+   </div>
+   <AddVue
+      :isShow="isShow"
+      :title="title"
+      :formData="rowData"
+      @save="handleSave"
+      @cancel="handleCancel">
+   </AddVue>
+</template>
+
+<style lang="scss" scoped></style>

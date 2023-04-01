@@ -1,7 +1,13 @@
 {
    "$schema": "http://json-schema.org/draft-04/schema#",
    "extends": "@vue/tsconfig/tsconfig.web.json",
-   "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "*.d.ts"],
+   "include": [
+      "env.d.ts",
+      "src/**/*",
+      "src/**/*.vue",
+      "auto-imports.d.ts",
+      "components.d.ts"
+   ],
    "compilerOptions": {
       "ignoreDeprecations": "5.0",
       "baseUrl": ".",

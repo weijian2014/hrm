@@ -4,5 +4,6 @@
   "editor.quickSuggestions": {
     "strings": true
   },
-  "go.testFlags": ["-v"]
+  "go.testFlags": ["-v"],
+  "go.goroot": "/opt/go"
 }

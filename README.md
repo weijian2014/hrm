@@ -106,12 +106,17 @@ npm install vue-router -S
 # Pinia, https://pinia.web3doc.top/, https://github.com/vuejs/pinia
 npm install pinia
 
-# 自动导入模块插件, 使用element-plus的按需引入需要这两个插件
-npm install -D unplugin-vue-components unplugin-auto-import
-
 # 安装element-plus, https://element-plus.gitee.io/zh-CN/guide/installation.html
-# 修改vite.config.ts文件, [参考](https://element-plus.gitee.io/zh-CN/guide/quickstart.html#%E6%8C%89%E9%9C%80%E5%AF%BC%E5%85%A5)
 npm install element-plus -S
+
+# 安装图标,[参考](https://element-plus.gitee.io/zh-CN/component/icon.html)
+npm install @element-plus/icons-vue
+
+# 按需自动导入插件
+# [修改vite.config.ts参考](https://github.com/sxzz/element-plus-best-practices/blob/db2dfc983ccda5570033a0ac608a1bd9d9a7f658/vite.config.ts#L21-L58)
+# element-plus的按需引入需要unplugin-vue-components和unplugin-auto-import
+# 图标按需引入需要unplugin-icons和unplugin-auto-import
+npm install -D unplugin-vue-components unplugin-auto-import unplugin-icons
 
 # 安装WindiCSS, https://cn.windicss.org/integrations/vite.html
 # 修改vite.config.js文件, [参考](https://cn.windicss.org/integrations/vite.html#install)

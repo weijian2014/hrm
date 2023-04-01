@@ -1,202 +1,3 @@
-<template>
-   <div class="container">
-      <!-- 当点击对话框右上角关闭时, 向外部发送canel事件 -->
-      <el-dialog
-         width="45%"
-         draggable
-         v-model="dialogVisible"
-         :title="title"
-         :close-on-press-escape="isEscapeClose"
-         :show-close="isShowClose"
-         :close-on-click-modal="isClickModalToClose">
-         <el-form :model="rawFormData">
-            <!-- 第1行 -->
-            <el-row class="ml-6">
-               <el-col :span="6">
-                  <el-form-item label="姓名" prop="name">
-                     <el-input v-model="rawFormData.name"> </el-input>
-                  </el-form-item>
-               </el-col>
-               <el-col :span="6" class="mx-5">
-                  <el-form-item label="性别" prop="gender">
-                     <el-select v-model="rawFormData.gender" placeholder="">
-                        <el-option
-                           v-for="item in genderOptions"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value" />
-                     </el-select>
-                  </el-form-item>
-               </el-col>
-               <el-col :span="8">
-                  <el-form-item label="生日" prop="birthday">
-                     <el-date-picker
-                        v-model="rawFormData.birthday"
-                        type="date"
-                        placeholder="" />
-                  </el-form-item>
-               </el-col>
-            </el-row>
-            <!-- 第2行 -->
-            <el-row class="ml-6">
-               <el-col :span="6">
-                  <el-form-item label="身高" prop="height">
-                     <el-input v-model="rawFormData.height" placeholder="">
-                        <template #append>cm</template>
-                     </el-input></el-form-item
-                  >
-               </el-col>
-               <el-col :span="6" class="mx-5">
-                  <el-form-item label="体重" prop="weight">
-                     <el-input v-model="rawFormData.weight" placeholder="">
-                        <template #append>kg</template>
-                     </el-input></el-form-item
-                  >
-               </el-col>
-            </el-row>
-            <!-- 第3行 -->
-            <el-row class="ml-3">
-               <el-col :span="20">
-                  <el-form-item label="现住址" prop="current_address">
-                     <el-input v-model="rawFormData.current_address">
-                     </el-input>
-                  </el-form-item>
-               </el-col>
-            </el-row>
-            <!-- 第4行 -->
-            <el-row>
-               <el-col :span="8">
-                  <el-form-item label="政治面貌" prop="political_status">
-                     <el-select
-                        v-model="rawFormData.political_status"
-                        placeholder="">
-                        <el-option
-                           v-for="item in politicalStatusOptions"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value" />
-                     </el-select>
-                  </el-form-item>
-               </el-col>
-               <el-col :span="6" class="mx-5">
-                  <el-form-item label="学历" prop="degree">
-                     <el-select v-model="rawFormData.degree" placeholder="">
-                        <el-option
-                           v-for="item in degreeOptions"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value" />
-                     </el-select>
-                  </el-form-item>
-               </el-col>
-               <el-col :span="6">
-                  <el-form-item label="社保" prop="social_security">
-                     <el-select
-                        v-model="rawFormData.social_security"
-                        placeholder="">
-                        <el-option
-                           v-for="item in socialSecurityOptions"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value" />
-                     </el-select>
-                  </el-form-item>
-               </el-col>
-            </el-row>
-            <!-- 第5行 -->
-            <el-row class="ml-3">
-               <el-col :span="10">
-                  <el-form-item label="身份证" prop="identifier">
-                     <el-input
-                        v-model="rawFormData.identifier"
-                        :formatter="identifierFormatter"
-                        placeholder="">
-                     </el-input>
-                  </el-form-item>
-               </el-col>
-               <el-col :span="8" class="ml-5">
-                  <el-form-item label="电话" prop="phone">
-                     <el-input
-                        v-model="rawFormData.phone"
-                        :formatter="phoneFormatter"
-                        placeholder="">
-                     </el-input>
-                  </el-form-item>
-               </el-col>
-            </el-row>
-            <!-- 第6行 -->
-            <el-row class="ml-3">
-               <el-col :span="10">
-                  <el-form-item label="原单位" prop="former_employer">
-                     <el-input v-model="rawFormData.former_employer">
-                     </el-input>
-                  </el-form-item>
-               </el-col>
-               <el-col :span="10" class="ml-5">
-                  <el-form-item label="参加工作时间" prop="first_work_time">
-                     <el-date-picker
-                        v-model="rawFormData.first_work_time"
-                        type="date"
-                        placeholder="" />
-                  </el-form-item>
-               </el-col>
-            </el-row>
-            <!-- 第7行 -->
-            <el-row class="ml-6">
-               <el-col :span="6">
-                  <el-form-item label="岗位" prop="post">
-                     <el-select v-model="rawFormData.post" placeholder="">
-                        <el-option
-                           v-for="item in postOptions"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value" />
-                     </el-select>
-                  </el-form-item>
-               </el-col>
-               <el-col :span="8" class="mx-5">
-                  <el-form-item label="工资" prop="salary">
-                     <el-input
-                        v-model="rawFormData.salary"
-                        :formatter="salaryFormatter"
-                        placeholder="">
-                        <template #append>¥</template>
-                     </el-input>
-                  </el-form-item>
-               </el-col>
-               <el-col :span="8">
-                  <el-form-item label="保安证" prop="security_card">
-                     <el-input
-                        v-model="rawFormData.security_card"
-                        :formatter="securityCardFormatter"
-                        placeholder="">
-                     </el-input>
-                  </el-form-item>
-               </el-col>
-            </el-row>
-            <el-row>
-               <el-col :span="20">
-                  <el-form-item label="备注" prop="comments">
-                     <el-input
-                        v-model="rawFormData.comments"
-                        maxlength="800"
-                        placeholder="填写了解的情况"
-                        show-word-limit
-                        type="textarea" />
-                  </el-form-item>
-               </el-col>
-            </el-row>
-         </el-form>
-         <template #footer>
-            <span class="dialog-footer">
-               <el-button type="primary" @click="handleSave">保存</el-button>
-               <el-button type="danger" @click="handleCancel">取消</el-button>
-            </span>
-         </template>
-      </el-dialog>
-   </div>
-</template>
-
 <script setup lang="ts">
 import { watch, reactive, toRefs } from "vue"
 
@@ -396,4 +197,204 @@ const securityCardFormatter = (value: string | number) => {
    console.log("securityCardFormatter", value)
 }
 </script>
+
+<template>
+   <div class="container">
+      <!-- 当点击对话框右上角关闭时, 向外部发送canel事件 -->
+      <el-dialog
+         width="45%"
+         draggable
+         v-model="dialogVisible"
+         :title="title"
+         :close-on-press-escape="isEscapeClose"
+         :show-close="isShowClose"
+         :close-on-click-modal="isClickModalToClose">
+         <el-form :model="rawFormData">
+            <!-- 第1行 -->
+            <el-row class="ml-6">
+               <el-col :span="6">
+                  <el-form-item label="姓名" prop="name">
+                     <el-input v-model="rawFormData.name"> </el-input>
+                  </el-form-item>
+               </el-col>
+               <el-col :span="6" class="mx-5">
+                  <el-form-item label="性别" prop="gender">
+                     <el-select v-model="rawFormData.gender" placeholder="">
+                        <el-option
+                           v-for="item in genderOptions"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value" />
+                     </el-select>
+                  </el-form-item>
+               </el-col>
+               <el-col :span="8">
+                  <el-form-item label="生日" prop="birthday">
+                     <el-date-picker
+                        v-model="rawFormData.birthday"
+                        type="date"
+                        placeholder="" />
+                  </el-form-item>
+               </el-col>
+            </el-row>
+            <!-- 第2行 -->
+            <el-row class="ml-6">
+               <el-col :span="6">
+                  <el-form-item label="身高" prop="height">
+                     <el-input v-model="rawFormData.height" placeholder="">
+                        <template #append>cm</template>
+                     </el-input></el-form-item
+                  >
+               </el-col>
+               <el-col :span="6" class="mx-5">
+                  <el-form-item label="体重" prop="weight">
+                     <el-input v-model="rawFormData.weight" placeholder="">
+                        <template #append>kg</template>
+                     </el-input></el-form-item
+                  >
+               </el-col>
+            </el-row>
+            <!-- 第3行 -->
+            <el-row class="ml-3">
+               <el-col :span="20">
+                  <el-form-item label="现住址" prop="current_address">
+                     <el-input v-model="rawFormData.current_address">
+                     </el-input>
+                  </el-form-item>
+               </el-col>
+            </el-row>
+            <!-- 第4行 -->
+            <el-row>
+               <el-col :span="8">
+                  <el-form-item label="政治面貌" prop="political_status">
+                     <el-select
+                        v-model="rawFormData.political_status"
+                        placeholder="">
+                        <el-option
+                           v-for="item in politicalStatusOptions"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value" />
+                     </el-select>
+                  </el-form-item>
+               </el-col>
+               <el-col :span="6" class="mx-5">
+                  <el-form-item label="学历" prop="degree">
+                     <el-select v-model="rawFormData.degree" placeholder="">
+                        <el-option
+                           v-for="item in degreeOptions"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value" />
+                     </el-select>
+                  </el-form-item>
+               </el-col>
+               <el-col :span="6">
+                  <el-form-item label="社保" prop="social_security">
+                     <el-select
+                        v-model="rawFormData.social_security"
+                        placeholder="">
+                        <el-option
+                           v-for="item in socialSecurityOptions"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value" />
+                     </el-select>
+                  </el-form-item>
+               </el-col>
+            </el-row>
+            <!-- 第5行 -->
+            <el-row class="ml-3">
+               <el-col :span="10">
+                  <el-form-item label="身份证" prop="identifier">
+                     <el-input
+                        v-model="rawFormData.identifier"
+                        :formatter="identifierFormatter"
+                        placeholder="">
+                     </el-input>
+                  </el-form-item>
+               </el-col>
+               <el-col :span="8" class="ml-5">
+                  <el-form-item label="电话" prop="phone">
+                     <el-input
+                        v-model="rawFormData.phone"
+                        :formatter="phoneFormatter"
+                        placeholder="">
+                     </el-input>
+                  </el-form-item>
+               </el-col>
+            </el-row>
+            <!-- 第6行 -->
+            <el-row class="ml-3">
+               <el-col :span="10">
+                  <el-form-item label="原单位" prop="former_employer">
+                     <el-input v-model="rawFormData.former_employer">
+                     </el-input>
+                  </el-form-item>
+               </el-col>
+               <el-col :span="10" class="ml-5">
+                  <el-form-item label="参加工作时间" prop="first_work_time">
+                     <el-date-picker
+                        v-model="rawFormData.first_work_time"
+                        type="date"
+                        placeholder="" />
+                  </el-form-item>
+               </el-col>
+            </el-row>
+            <!-- 第7行 -->
+            <el-row class="ml-6">
+               <el-col :span="6">
+                  <el-form-item label="岗位" prop="post">
+                     <el-select v-model="rawFormData.post" placeholder="">
+                        <el-option
+                           v-for="item in postOptions"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value" />
+                     </el-select>
+                  </el-form-item>
+               </el-col>
+               <el-col :span="8" class="mx-5">
+                  <el-form-item label="工资" prop="salary">
+                     <el-input
+                        v-model="rawFormData.salary"
+                        :formatter="salaryFormatter"
+                        placeholder="">
+                        <template #append>¥</template>
+                     </el-input>
+                  </el-form-item>
+               </el-col>
+               <el-col :span="8">
+                  <el-form-item label="保安证" prop="security_card">
+                     <el-input
+                        v-model="rawFormData.security_card"
+                        :formatter="securityCardFormatter"
+                        placeholder="">
+                     </el-input>
+                  </el-form-item>
+               </el-col>
+            </el-row>
+            <el-row>
+               <el-col :span="20">
+                  <el-form-item label="备注" prop="comments">
+                     <el-input
+                        v-model="rawFormData.comments"
+                        maxlength="800"
+                        placeholder="填写了解的情况"
+                        show-word-limit
+                        type="textarea" />
+                  </el-form-item>
+               </el-col>
+            </el-row>
+         </el-form>
+         <template #footer>
+            <span class="dialog-footer">
+               <el-button type="primary" @click="handleSave">保存</el-button>
+               <el-button type="danger" @click="handleCancel">取消</el-button>
+            </span>
+         </template>
+      </el-dialog>
+   </div>
+</template>
+
 <style lang="scss" scoped></style>

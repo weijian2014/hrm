@@ -1,34 +1,3 @@
-<template>
-   <div class="login">
-      <el-form
-         ref="ruleFormRef"
-         label-position="left"
-         size="large"
-         :model="ruleForm"
-         :rules="rules"
-         class="demo-ruleForm">
-         <h1>欢迎使用HRM管理系统</h1>
-         <el-form-item prop="username" label="账号">
-            <el-input
-               v-model="ruleForm.username"
-               type="text"
-               autocomplete="off"
-               :prefix-icon="User" />
-         </el-form-item>
-         <el-form-item prop="password" label="密码">
-            <el-input
-               v-model="ruleForm.password"
-               type="password"
-               autocomplete="off"
-               :prefix-icon="Key" />
-         </el-form-item>
-         <el-form-item>
-            <el-button type="primary" @click="loginFn()">登录</el-button>
-         </el-form-item>
-      </el-form>
-   </div>
-</template>
-
 <script setup lang="ts">
 import { ref, reactive, toRefs } from "vue"
 import { useRouter } from "vue-router"
@@ -136,6 +105,37 @@ const loginFn = () => {
       })
 }
 </script>
+
+<template>
+   <div class="login">
+      <el-form
+         ref="ruleFormRef"
+         label-position="left"
+         size="large"
+         :model="ruleForm"
+         :rules="rules"
+         class="demo-ruleForm">
+         <h1>欢迎使用HRM管理系统</h1>
+         <el-form-item prop="username" label="账号">
+            <el-input
+               v-model="ruleForm.username"
+               type="text"
+               autocomplete="off"
+               :prefix-icon="User" />
+         </el-form-item>
+         <el-form-item prop="password" label="密码">
+            <el-input
+               v-model="ruleForm.password"
+               type="password"
+               autocomplete="off"
+               :prefix-icon="Key" />
+         </el-form-item>
+         <el-form-item>
+            <el-button type="primary" @click="loginFn()">登录</el-button>
+         </el-form-item>
+      </el-form>
+   </div>
+</template>
 <style lang="scss" scoped>
 .login {
    background-color: #ccc;
