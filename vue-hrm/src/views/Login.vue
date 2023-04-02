@@ -19,14 +19,15 @@ const { data, roles, menus } = storeToRefs(main)
 const formRef = ref()
 
 const state = reactive({
-   ruleForm: {
+   form: {
       username: "admin",
       password: "123456",
    },
+   isLoading: false,
 })
 
 // 使用toRefs解构后得到的对象也是响应式的
-let { ruleForm } = toRefs(state)
+let { form, isLoading } = toRefs(state)
 
 const validatePassword = (rule: unknown, value: string | undefined, callback: (msg?: string) => void) => {
    if (!value) {
@@ -57,63 +58,65 @@ const rules = reactive<FormRules>({
 })
 
 const loginFn = () => {
+   isLoading.value = true
    // 表格输入规则校验, 通过进入than, 不通过则进入catch
    formRef.value
       ?.validate()
       .then(() => {
          console.log("输入规则校验通过")
          loginApi({
-            username: ruleForm.value.username,
-            password: ruleForm.value.password,
+            username: form.value.username,
+            password: form.value.password,
          })
             .then((res) => {
                if (res.code === 200) {
-                  console.log(res)
+                  console.log("登录成功", res)
                   // 先存储token
                   localStorage.setItem("token", res.data.token_header + " " + res.data.token)
                   // 再获取用户信息
                   getUserInfo()
                      .then((res) => {
                         if (res.code === 200) {
-                           console.log(res)
+                           console.log("获取用户信息成功", res)
                            data.value = res.data
                            router.push("/")
                         }
                      })
                      .catch((res) => {
-                        console.log(res)
+                        console.log("获取用户信息失败", res)
                      })
                } else {
                   // 登录失败
-                  console.log("登录失败1", res)
-                  ElMessage.success(res.message)
+                  console.log("登录失败", res)
+                  ElMessage.error(res.message)
                }
+               isLoading.value = false
             })
             .catch((res) => {
-               console.log("登录失败2", res)
-               ElMessage.success(res.data.message)
+               isLoading.value = false
+               console.log("登录错误", res)
+               ElMessage.error(res.data.message)
             })
       })
       .catch((err: any) => {
+         isLoading.value = false
          console.log("表单校验失败", err)
-         ElMessage.success("表单校验失败")
-         throw err
       })
 }
 </script>
 
 <template>
    <div class="login">
-      <el-form ref="formRef" label-position="left" size="large" :model="ruleForm" :rules="rules" class="demo-ruleForm">
+      <el-form ref="formRef" label-position="left" size="large" :model="form" :rules="rules" class="demo-form">
          <h1>欢迎使用HRM管理系统</h1>
          <el-form-item prop="username" label="账号">
-            <el-input v-model="ruleForm.username" type="text" autocomplete="off" :prefix-icon="User" />
+            <el-input v-model="form.username" type="text" autocomplete="off" :prefix-icon="User" />
          </el-form-item>
          <el-form-item prop="password" label="密码">
-            <el-input v-model="ruleForm.password" type="password" autocomplete="off" :prefix-icon="Key" />
+            <el-input v-model="form.password" type="password" autocomplete="off" :prefix-icon="Key" />
          </el-form-item>
          <el-form-item>
-            <el-button type="primary" @click="loginFn()">登录</el-button>
+            <el-button type="primary" :loading="isLoading" @click="loginFn()">登录</el-button>
          </el-form-item>
       </el-form>
    </div>
