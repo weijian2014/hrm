@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	signKey     = []byte("Copyright © 2023 HRM")
-	TokenHeader = "hrm"
+	signKey    = []byte("Copyright © 2023 HRM")
+	bearerName = "Bearer"
 )
 
 type UserInfo struct {
@@ -52,7 +52,7 @@ func GenerateToken(userId uint64, userName string, expiredAtMinutes uint32) (*Us
 		return nil, err
 	}
 
-	claims.Info.Token = token
+	claims.Info.Token = bearerName + " " + token
 	return &claims.Info, nil
 }
 
@@ -83,8 +83,9 @@ func JwtAuthenticator(c *gin.Context) {
 	}
 
 	log.Debug("signToken=[%v]", signToken)
+	// token="Bearer xxxxxxxxxxxxxxxxxxxxx"
 	ht := strings.Split(signToken, " ")
-	if len(ht) != 2 || ht[0] != TokenHeader {
+	if len(ht) != 2 || ht[0] != bearerName {
 		log.Warn("非法token")
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"code":    http.StatusUnauthorized,
@@ -108,8 +109,8 @@ func JwtAuthenticator(c *gin.Context) {
 		return
 	}
 
-	if claims.Info.ExpiredAt.After(time.Now()) {
-		log.Warn("token过期")
+	if claims.Info.ExpiredAt.Before(time.Now()) {
+		log.Warn("token过期, ExpiredAt[%+v], Now[%+v]", claims.Info.ExpiredAt.Format("2006-01-02 15:04:05"), time.Now().Format("2006-01-02 15:04:05"))
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"code":    http.StatusUnauthorized,
 			"message": "token过期",

@@ -9,7 +9,7 @@ interface LoginRequest {
    password: string
 }
 
-export const loginApi = (data: LoginRequest): PromiseResponse<string> => request.post("/user/login", data)
+export const loginApi = (data: LoginRequest): PromiseResponse<TokenInfo> => request.post("/user/login", data)
 
 //
 export const getUserInfo = (): PromiseResponse<string> => request.get("/user/info")
