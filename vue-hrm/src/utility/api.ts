@@ -13,18 +13,14 @@ interface LoginResponseData {
    token_header: string
 }
 
-export const loginApi = (
-   data: LoginRequest
-): PromiseResponse<LoginResponseData> => request.post("/user/login", data)
+export const loginApi = (data: LoginRequest): PromiseResponse<LoginResponseData> => request.post("/user/login", data)
 
 //
-export const getUserInfo = (): PromiseResponse<string> =>
-   request.get("/user/info")
+export const getUserInfo = (): PromiseResponse<string> => request.get("/user/info")
 
 // employee
 interface EmployeeListResponseData {
    total: number
    rows: Employee[]
 }
-export const employeeListApi = (): PromiseResponse<EmployeeListResponseData> =>
-   request.get("/employee/list")
+export const employeeListApi = (): PromiseResponse<EmployeeListResponseData> => request.get("/employee/list")

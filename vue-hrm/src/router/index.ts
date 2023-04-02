@@ -12,13 +12,14 @@ const router = createRouter({
          component: LayoutVue,
          children: [
             {
-               path: "",
+               path: "/",
                // 赖加载
                component: () => import("@/components/summary/Summary.vue"),
             },
             {
                path: "/employee",
                name: "employee",
+               // 赖加载
                component: () => import("@/components/employee/Employee.vue"),
             },
             {
