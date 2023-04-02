@@ -1,4 +1,7 @@
 import axios from "axios"
+import { useUserStore } from "@/store/user"
+
+const store = useUserStore()
 
 const instance = axios.create({
    // 这里的/api是vite.config.ts中的server.proxy配置的
@@ -13,7 +16,7 @@ const instance = axios.create({
 // 请求拦截器
 instance.interceptors.request.use(
    (config) => {
-      let token = localStorage.getItem("token")
+      let token = store.token.token
       if (token) {
          // 如果headers不为空则等于headers, 否则创建一个headers对象
          config.headers = config.headers || {}

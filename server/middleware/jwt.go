@@ -15,35 +15,56 @@ var (
 	TokenHeader = "hrm"
 )
 
-func GenerateToken(userName string) (string, error) {
-	claims := jwt.RegisteredClaims{
-		ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)), // 有效期，结束时间
-		IssuedAt:  jwt.NewNumericDate(time.Now()),                     // 签发时间（比如：时间戳）
-		NotBefore: jwt.NewNumericDate(time.Now()),                     // 有效期，开始时间（比如：时间戳）
-		Issuer:    "Copyright © 2023 HRM Admin",                       // Token 颁发者的唯一标识
-		Subject:   "Copyright © 2023 HRM Token Generate",              // 主题（比如：用户id 或 用户名）
-		ID:        userName,                                           // jwt唯一标识（比如：UUID
-		Audience:  []string{"HRM user"},                               // JWT的接收者（比如：APP的包名）
+type UserInfo struct {
+	UserId    uint64    `json:"user_id"`
+	UserName  string    `json:"user_name"`
+	Token     string    `json:"token"`
+	ExpiredAt time.Time `json:"expired_at"`
+}
+
+type JwtClaims struct {
+	Info UserInfo
+	jwt.RegisteredClaims
+}
+
+func GenerateToken(userId uint64, userName string, expiredAtMinutes uint32) (*UserInfo, error) {
+	claims := JwtClaims{
+		UserInfo{
+			userId,
+			userName,
+			"",
+			time.Now().Add(time.Duration(expiredAtMinutes) * time.Minute),
+		},
+		jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Duration(expiredAtMinutes) * time.Minute)), // 有效期，结束时间
+			IssuedAt:  jwt.NewNumericDate(time.Now()),                                                    // 签发时间（比如：时间戳）
+			NotBefore: jwt.NewNumericDate(time.Now()),                                                    // 有效期，开始时间（比如：时间戳）
+			Issuer:    "Copyright © 2023 HRM Admin",                                                      // Token 颁发者的唯一标识
+			Subject:   "Copyright © 2023 HRM Token Generate",                                             // 主题（比如：用户id 或 用户名）
+			ID:        userName,                                                                          // jwt唯一标识（比如：UUID
+			Audience:  []string{"HRM users"},                                                             // JWT的接收者（比如：APP的包名）
+		},
 	}
 
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	token, err := t.SignedString(signKey)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return token, nil
+	claims.Info.Token = token
+	return &claims.Info, nil
 }
 
-func IsTokenValid(token string) (string, error) {
-	t, err := jwt.ParseWithClaims(token, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
+func isTokenValid(token string) (*JwtClaims, error) {
+	t, err := jwt.ParseWithClaims(token, &JwtClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(signKey), nil
 	}, jwt.WithLeeway(5*time.Second))
 
-	if claims, ok := t.Claims.(*jwt.RegisteredClaims); ok && t.Valid {
-		return claims.ID, nil
+	if claims, ok := t.Claims.(*JwtClaims); ok && t.Valid {
+		return claims, nil
 	} else {
-		return "", err
+		return nil, err
 	}
 }
 
@@ -75,7 +96,7 @@ func JwtAuthenticator(c *gin.Context) {
 	}
 
 	// 校验token
-	username, err := IsTokenValid(ht[1])
+	claims, err := isTokenValid(ht[1])
 	if err != nil {
 		log.Warn("非法token")
 		c.JSON(http.StatusUnauthorized, gin.H{
@@ -87,10 +108,21 @@ func JwtAuthenticator(c *gin.Context) {
 		return
 	}
 
-	// 将用户的id放在到请求的上下文中
-	c.Set("username", username)
+	if claims.Info.ExpiredAt.After(time.Now()) {
+		log.Warn("token过期")
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"code":    http.StatusUnauthorized,
+			"message": "token过期",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
 
-	// 后续的处理函数可以用过c.Get("username")来获取当前请求的username
+	// 将用户的id放在到请求的上下文中
+	c.Set("UserInfo", claims.Info)
+
+	// 后续的处理函数可以用过c.Get("UserInfo")来获取当前请求的UserInfo
 	c.Next()
 
 }

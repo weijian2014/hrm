@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"hrm/common"
 	"hrm/db"
 	"hrm/log"
 	"hrm/middleware"
@@ -61,7 +62,7 @@ func userLogin(c *gin.Context) {
 	}
 
 	log.Debug("Find user in database, [%v]", user)
-	token, err := middleware.GenerateToken(r.Name)
+	info, err := middleware.GenerateToken(user.Id, user.Name, common.JsonConfigs.TokenExpiredMinutes)
 	if err != nil {
 		log.Warn("系统无法生成token")
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -72,21 +73,18 @@ func userLogin(c *gin.Context) {
 		c.Abort()
 		return
 	} else {
-		log.Debug("Generate token [%v] for username [%v]", token, r.Name)
+		log.Debug("Generate user info [%+v]", info)
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"message": "ok",
-		"data": gin.H{
-			"token_header": middleware.TokenHeader,
-			"token":        token,
-		},
+		"message": "登录成功",
+		"data":    info,
 	})
 }
 
 func userInfo(c *gin.Context) {
-	username, isExists := c.Get("username")
+	info, isExists := c.Get("UserInfo")
 	if !isExists {
 		c.JSON(http.StatusNoContent, gin.H{
 			"code":    http.StatusNoContent,
@@ -96,9 +94,10 @@ func userInfo(c *gin.Context) {
 		c.Abort()
 		return
 	}
+	userInfo := info.(middleware.UserInfo)
 
 	user := new(db.User)
-	if err := db.Take(user, "name = ?", username); err != nil {
+	if err := db.Take(user, "name = ?", userInfo.UserName); err != nil {
 		log.Warn("用户不存在")
 		c.JSON(http.StatusNoContent, gin.H{
 			"code":    http.StatusNoContent,
@@ -111,7 +110,7 @@ func userInfo(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"message": "用户合法",
+		"message": "获取用户信息成功",
 		"data":    user.Data,
 	})
 }
@@ -169,7 +168,7 @@ func userAdd(c *gin.Context) {
 }
 
 func userUpdate(c *gin.Context) {
-	username, isExists := c.Get("username")
+	info, isExists := c.Get("UserInfo")
 	if !isExists {
 		c.JSON(http.StatusNoContent, gin.H{
 			"code":    http.StatusNoContent,
@@ -179,6 +178,7 @@ func userUpdate(c *gin.Context) {
 		c.Abort()
 		return
 	}
+	userInfo := info.(middleware.UserInfo)
 
 	r := new(userUpdateRequest)
 	if err := c.ShouldBindJSON(r); err != nil {
@@ -192,8 +192,8 @@ func userUpdate(c *gin.Context) {
 		return
 	}
 
-	log.Debug("login user[%v], userUpdate request[%v]", username.(string), r)
-	if username != "admin" && r.Name != username.(string) {
+	log.Debug("login user info[%+v], userUpdate request[%+v]", userInfo.UserName, r)
+	if userInfo.UserName != "admin" && r.Name != userInfo.UserName {
 		log.Warn("非超级管理员只能修改自己的密码")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code":    http.StatusBadRequest,

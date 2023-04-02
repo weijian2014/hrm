@@ -35,19 +35,14 @@ func init() {
 }
 
 type JsonConfigStruct struct {
-	Version                string `json:"Version"`
-	LogLevel               int    `json:"LogLevel"`
-	LogRoll                int    `json:"LogRoll"`
-	LogFullPathName        string `json:"LogFullPathName"`
-	ServerListenHost       string `json:"ServerListenHost"`
-	CookieName             string `json:"CookieName"`
-	HtmlDirectory          string `json:"HtmlDirectory"`
-	StaticDirectory        string `json:"Staticdirectory"`
-	PostgresqlHost         string `json:"PostgresqlHost"`
-	PostgresqlPort         uint16 `json:"PostgresqlPort"`
-	PostgresqlUser         string `json:"PostgresqlUser"`
-	PostgresqlPassword     string `json:"PostgresqlPassword"`
-	PostgresqlDatabaseName string `json:"PostgresqlDatabaseName"`
+	Version             string `json:"Version"`
+	LogLevel            int    `json:"LogLevel"`
+	LogRoll             int    `json:"LogRoll"`
+	LogFullPathName     string `json:"LogFullPathName"`
+	ServerListenHost    string `json:"ServerListenHost"`
+	TokenExpiredMinutes uint32 `json:"TokenExpiredMinutes"`
+	HtmlDirectory       string `json:"HtmlDirectory"`
+	StaticDirectory     string `json:"Staticdirectory"`
 }
 
 type FlagInfoStruct struct {

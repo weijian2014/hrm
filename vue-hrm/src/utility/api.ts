@@ -8,12 +8,8 @@ interface LoginRequest {
    username: string
    password: string
 }
-interface LoginResponseData {
-   token: string
-   token_header: string
-}
 
-export const loginApi = (data: LoginRequest): PromiseResponse<LoginResponseData> => request.post("/user/login", data)
+export const loginApi = (data: LoginRequest): PromiseResponse<string> => request.post("/user/login", data)
 
 //
 export const getUserInfo = (): PromiseResponse<string> => request.get("/user/info")

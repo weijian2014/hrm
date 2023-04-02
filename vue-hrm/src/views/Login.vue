@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router"
 import { loginApi, getUserInfo } from "@/utility/api"
-import { useMainStore } from "@/store/index"
+import { useUserStore } from "@/store/user"
 import { storeToRefs } from "pinia"
 import { User, Key } from "@element-plus/icons-vue"
 import type { FormInstance, FormRules } from "element-plus"
@@ -10,9 +10,9 @@ import type { FormInstance, FormRules } from "element-plus"
 let router = useRouter()
 
 // 使用pinia的main存储
-const main = useMainStore()
+const store = useUserStore()
 // 对pinia中main存储的对象进行解构, 使之成为响应式对象
-const { data, roles, menus } = storeToRefs(main)
+// const { token, saveToken } = storeToRefs(store)
 
 // el-form组件对象, 自动关联到el-form组件
 // const formRef = ref<FormInstance>()
@@ -63,7 +63,7 @@ const loginFn = () => {
    formRef.value
       ?.validate()
       .then(() => {
-         console.log("输入规则校验通过")
+         console.log("表单校验成功")
          loginApi({
             username: form.value.username,
             password: form.value.password,
@@ -72,18 +72,20 @@ const loginFn = () => {
                if (res.code === 200) {
                   console.log("登录成功", res)
                   // 先存储token
-                  localStorage.setItem("token", res.data.token_header + " " + res.data.token)
+                  store.saveToken(res.data)
                   // 再获取用户信息
                   getUserInfo()
                      .then((res) => {
                         if (res.code === 200) {
                            console.log("获取用户信息成功", res)
-                           data.value = res.data
+                           store.data = res.data
                            router.push("/")
+                           ElMessage.success(res.message)
                         }
                      })
                      .catch((res) => {
                         console.log("获取用户信息失败", res)
+                        ElMessage.error(res.message)
                      })
                } else {
                   // 登录失败

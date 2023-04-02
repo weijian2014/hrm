@@ -7,12 +7,13 @@ const router = createRouter({
    routes: [
       {
          path: "/",
-         name: "home",
+         name: "",
          // 当前脚本执行立即加载
          component: LayoutVue,
          children: [
             {
-               path: "/",
+               path: "",
+               name: "home",
                // 赖加载
                component: () => import("@/components/summary/Summary.vue"),
             },

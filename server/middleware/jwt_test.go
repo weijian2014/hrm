@@ -10,25 +10,26 @@ func init() {
 
 func Test_GenerateToken_And_IsTokenValid(t *testing.T) {
 	t.Logf("Test excel file reading function")
+	userId := uint64(1)
 	username := "weijian"
 
-	token, err := GenerateToken(username)
+	info, err := GenerateToken(userId, username, 60)
 	if nil != err {
 		t.Error(err)
 		t.FailNow()
 	}
 
-	t.Logf("Generate token [%v] for username [%v] ok", token, username)
+	t.Logf("Generate user info[%+v]", info)
 
-	un, err := IsTokenValid(token)
+	claims, err := isTokenValid(info.Token)
 	if err != nil {
 		t.Error(err)
 		t.FailNow()
 	}
 
-	if un != username {
+	if claims.Info.UserId != userId || claims.Info.UserName != username {
 		t.FailNow()
 	}
 
-	t.Logf("Token [%v] is valid for username [%v]", token, un)
+	t.Logf("Test ok")
 }
