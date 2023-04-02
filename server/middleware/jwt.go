@@ -16,7 +16,6 @@ var (
 )
 
 type UserInfo struct {
-	UserId    uint64    `json:"user_id"`
 	UserName  string    `json:"user_name"`
 	Token     string    `json:"token"`
 	ExpiredAt time.Time `json:"expired_at"`
@@ -27,10 +26,9 @@ type JwtClaims struct {
 	jwt.RegisteredClaims
 }
 
-func GenerateToken(userId uint64, userName string, expiredAtMinutes uint32) (*UserInfo, error) {
+func GenerateToken(userName string, expiredAtMinutes uint32) (*UserInfo, error) {
 	claims := JwtClaims{
 		UserInfo{
-			userId,
 			userName,
 			"",
 			time.Now().Add(time.Duration(expiredAtMinutes) * time.Minute),

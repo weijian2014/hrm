@@ -62,7 +62,7 @@ func userLogin(c *gin.Context) {
 	}
 
 	log.Debug("Find user in database, [%v]", user)
-	info, err := middleware.GenerateToken(user.Id, user.Name, common.JsonConfigs.TokenExpiredMinutes)
+	info, err := middleware.GenerateToken(user.Name, common.JsonConfigs.TokenExpiredMinutes)
 	if err != nil {
 		log.Warn("系统无法生成token")
 		c.JSON(http.StatusInternalServerError, gin.H{
