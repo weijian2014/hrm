@@ -55,7 +55,7 @@ export default defineConfig({
       cors: true,
       proxy: {
          "^/api": {
-            target: "http://0.0.0.0:8080",
+            target: loadEnv("", process.cwd()).VITE_API_URL,
             changeOrigin: true, // 允许跨域
             rewrite: (path) => path.replace(/^\/api/, ""), // 将api替换为空
          },
