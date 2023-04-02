@@ -1,9 +1,5 @@
 <script setup lang="ts">
-const state = reactive({
-   isCollapse: false, // 是否收起侧边栏
-})
-
-const { isCollapse } = toRefs(state)
+import { isCollapse } from "./index"
 </script>
 
 <template>
@@ -43,12 +39,12 @@ const { isCollapse } = toRefs(state)
 
 <style lang="scss" scoped>
 .el-aside {
-   background-color: #eee;
+   background-color: #a0cfff;
    height: 100vh;
    width: auto;
 
    .el-menu {
-      background-color: #eee;
+      background-color: #a0cfff;
       border-right: none;
       width: 200px;
       // 当el-menu的class有el-menu--collapse样式时, 修改侧边栏宽度
@@ -67,7 +63,6 @@ const { isCollapse } = toRefs(state)
          align-items: center;
          height: 60px;
          text-decoration: none; // 取消a标签的下划线
-         color: blue;
          img {
             width: 32px;
             height: 32px;

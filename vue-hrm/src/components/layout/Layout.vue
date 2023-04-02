@@ -9,7 +9,11 @@ import Header from "./Header.vue"
          <Aside></Aside>
          <el-container class="header-and-main">
             <Header>Header</Header>
-            <el-main>Main</el-main>
+            <el-main>
+               <el-scrollbar>
+                  <RouterView></RouterView>
+               </el-scrollbar>
+            </el-main>
          </el-container>
       </el-container>
    </div>
@@ -18,5 +22,11 @@ import Header from "./Header.vue"
 <style lang="scss" scoped>
 .header-and-main {
    flex-direction: column; // 垂直显示
+   height: 100vh;
+}
+
+.el-main {
+   background-color: #d9ecff;
+   padding-right: 0;
 }
 </style>

@@ -1,4 +1,4 @@
-import { defineConfig } from "vite"
+import { defineConfig, loadEnv } from "vite"
 import { fileURLToPath, URL } from "node:url"
 import vue from "@vitejs/plugin-vue"
 import Icons from "unplugin-icons/vite"

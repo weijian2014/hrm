@@ -10,7 +10,7 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Add: typeof import('./components/employee/Add.vue')['default']
-    Aside: typeof import('./components/Aside.vue')['default']
+    Aside: typeof import('./components/layout/Aside.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
@@ -41,7 +41,8 @@ declare module '@vue/runtime-core' {
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     Employee: typeof import('./components/employee/Employee.vue')['default']
-    Header: typeof import('./components/Header.vue')['default']
+    Error: typeof import('./components/Error.vue')['default']
+    Header: typeof import('./components/layout/Header.vue')['default']
     IEpArrowDown: typeof import('~icons/ep/arrow-down')['default']
     IEpDelete: typeof import('~icons/ep/delete')['default']
     IEpDownload: typeof import('~icons/ep/download')['default']
@@ -50,8 +51,9 @@ declare module '@vue/runtime-core' {
     IEpPlus: typeof import('~icons/ep/plus')['default']
     IEpSetting: typeof import('~icons/ep/setting')['default']
     IEpUpload: typeof import('~icons/ep/upload')['default']
-    Layout: typeof import('./components/Layout.vue')['default']
+    Layout: typeof import('./components/layout/Layout.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Summary: typeof import('./components/summary/Summary.vue')['default']
   }
 }

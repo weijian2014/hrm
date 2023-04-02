@@ -1,12 +1,10 @@
 <script setup lang="ts">
-const state = reactive({ isCollapse: false })
-
-const { isCollapse } = toRefs(state)
+import { isCollapse } from "./index"
 </script>
 
 <template>
    <el-header>
-      <el-icon
+      <el-icon @click="isCollapse = !isCollapse"
          ><IEpExpand v-show="isCollapse" /> <IEpFold v-show="!isCollapse" />
       </el-icon>
 
@@ -44,7 +42,7 @@ const { isCollapse } = toRefs(state)
 .el-header {
    display: flex; // 让子元素水平显示
    align-items: center;
-   background-color: #ccc;
+   background-color: #79bbff;
 
    .el-icon {
       margin-right: 17px;
