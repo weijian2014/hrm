@@ -4,7 +4,7 @@ export const useUserStore = defineStore("user", () => {
    const tokenJson = ref("")
    const data = reactive({})
 
-   const token = computed<TokenInfo>(() => {
+   const tokenInfo = computed<TokenInfo>(() => {
       try {
          // 先读Store的tokenJson, 空再从Local Storage读取
          return JSON.parse(tokenJson.value || window.localStorage.getItem("TokenInfo") || "{}")
@@ -21,5 +21,5 @@ export const useUserStore = defineStore("user", () => {
       window.localStorage.setItem("TokenInfo", JSON.stringify(info))
    }
 
-   return { token, saveToken, data }
+   return { tokenInfo, saveToken, data }
 })

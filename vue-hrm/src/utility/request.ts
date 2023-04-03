@@ -16,7 +16,7 @@ const instance = axios.create({
 // 请求拦截器
 instance.interceptors.request.use(
    (config) => {
-      let token = store.token.token
+      let token = store.tokenInfo.token
       if (token) {
          // 如果headers不为空则等于headers, 否则创建一个headers对象
          config.headers = config.headers || {}

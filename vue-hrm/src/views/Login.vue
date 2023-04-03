@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRouter } from "vue-router"
+import { useRouter, useRoute } from "vue-router"
 import { loginApi, getUserInfo } from "@/utility/api"
 import { useUserStore } from "@/store/user"
 import { storeToRefs } from "pinia"
@@ -7,7 +7,8 @@ import { User, Key } from "@element-plus/icons-vue"
 import type { FormInstance, FormRules } from "element-plus"
 
 // 获取当前项目的路由对象
-let router = useRouter()
+const router = useRouter()
+const route = useRoute()
 
 // 使用pinia的main存储
 const store = useUserStore()
@@ -79,7 +80,8 @@ const loginFn = () => {
                         if (res.code === 200) {
                            console.log("获取用户信息成功", res)
                            store.data = res.data
-                           router.push("/")
+                           // 有重定向地址(路由拦截设置的)时跳转到该地址, 否则跳转到首页
+                           router.push((route.query.redirect as string) || "/")
                            ElMessage.success(res.message)
                         }
                      })
