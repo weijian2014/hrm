@@ -16,8 +16,8 @@ func registerMenuRouter(r *gin.Engine) {
 
 	// 以下接口登陆后才能访问, 加中间件
 	menuRouter.POST("add", menuAdd)
-	menuRouter.PUT("update", middleware.JwtAuthenticator, menuUpdate)
-	menuRouter.DELETE(":id", middleware.JwtAuthenticator, menuDel)
+	menuRouter.PUT("update", middleware.AccessTokenAuthenticator, menuUpdate)
+	menuRouter.DELETE(":id", middleware.AccessTokenAuthenticator, menuDel)
 }
 
 type menuAddRequest struct {

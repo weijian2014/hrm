@@ -15,10 +15,10 @@ func registerEmployeeRouter(r *gin.Engine) {
 	employeeRouter := r.Group("/employee")
 
 	// 以下接口登陆后才能访问, 加中间件
-	employeeRouter.GET("list", middleware.JwtAuthenticator, employeeList)
-	employeeRouter.POST("add", middleware.JwtAuthenticator, employeeAdd)
-	employeeRouter.PUT("update", middleware.JwtAuthenticator, employeeUpdate)
-	employeeRouter.DELETE(":id", middleware.JwtAuthenticator, employeeDel)
+	employeeRouter.GET("list", middleware.AccessTokenAuthenticator, employeeList)
+	employeeRouter.POST("add", middleware.AccessTokenAuthenticator, employeeAdd)
+	employeeRouter.PUT("update", middleware.AccessTokenAuthenticator, employeeUpdate)
+	employeeRouter.DELETE(":id", middleware.AccessTokenAuthenticator, employeeDel)
 }
 
 func employeeList(c *gin.Context) {

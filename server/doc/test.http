@@ -2,7 +2,7 @@
 
 ### Admin登录
 # @name adminLogin
-@adminToken = {{adminLogin.response.body.$.data.token_header}} {{adminLogin.response.body.$.data.token}}
+@adminToken = {{adminLogin.response.body.$.data.access_token}}
 POST http://{{host}}/user/login
 Content-Type: application/json
 
@@ -13,7 +13,7 @@ Content-Type: application/json
 
 ### test用户登录
 # @name testLogin
-@testToken = {{testLogin.response.body.$.data.token_header}} {{testLogin.response.body.$.data.token}}
+@testToken = {{testLogin.response.body.$.data.access_token}}
 POST http://{{host}}/user/login
 Content-Type: application/json
 
@@ -55,7 +55,7 @@ Authorization: {{adminToken}}
 
 ### weijian用户登录
 # @name weijianLogin
-@weijianToken = {{weijianLogin.response.body.$.data.token_header}} {{weijianLogin.response.body.$.data.token}}
+@weijianToken = {{weijianLogin.response.body.$.data.access_token}}
 POST http://{{host}}/user/login
 Content-Type: application/json
 

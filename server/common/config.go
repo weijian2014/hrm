@@ -40,7 +40,7 @@ type JsonConfigStruct struct {
 	LogRoll             int    `json:"LogRoll"`
 	LogFullPathName     string `json:"LogFullPathName"`
 	ServerListenHost    string `json:"ServerListenHost"`
-	TokenExpiredMinutes uint32 `json:"TokenExpiredMinutes"`
+	TokenExpiredSeconds uint64 `json:"TokenExpiredSeconds"`
 	HtmlDirectory       string `json:"HtmlDirectory"`
 	StaticDirectory     string `json:"Staticdirectory"`
 }
