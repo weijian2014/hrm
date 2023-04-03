@@ -7,6 +7,11 @@ const router = createRouter({
    history: createWebHistory(import.meta.env.BASE_URL),
    routes: [
       {
+         path: "/login",
+         name: "login",
+         component: () => import("@/views/Login.vue"),
+      },
+      {
          path: "/",
          name: "",
          // 当前脚本执行立即加载
@@ -35,11 +40,6 @@ const router = createRouter({
             },
          ],
       },
-      {
-         path: "/login",
-         name: "login",
-         component: () => import("@/views/Login.vue"),
-      },
    ],
 })
 
@@ -51,8 +51,8 @@ router.beforeEach((to, from, next) => {
       if (!store.tokenInfo.token) {
          // 跳转到login页, 登录成功后跳转回to.fullPath
          next({ name: "login", query: { redirect: to.fullPath } })
+         return
       }
-      return
    }
 
    // 继续跳转
