@@ -17,6 +17,7 @@ func registerUserRouter(r *gin.Engine) {
 	userRouter.POST("login", userLogin)
 
 	// 以下接口登陆后才能访问, 加中间件
+	userRouter.POST("logout", userLogout)
 	userRouter.GET("info", middleware.JwtAuthenticator, userInfo)
 	userRouter.POST("add", middleware.JwtAuthenticator, userAdd)
 	userRouter.PUT("update", middleware.JwtAuthenticator, userUpdate)
@@ -38,8 +39,8 @@ func userLogin(c *gin.Context) {
 	r := new(userLoginRequest)
 	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
+		c.JSON(http.StatusNoContent, gin.H{
+			"code":    http.StatusNoContent,
 			"message": "请求数据格式错误",
 			"data":    "",
 		})
@@ -52,8 +53,8 @@ func userLogin(c *gin.Context) {
 	err := db.Take(user, "name = ?", r.Name)
 	if err != nil || user.Password != r.Password {
 		log.Warn("用户名或者密码不正确")
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
+		c.JSON(http.StatusNonAuthoritativeInfo, gin.H{
+			"code":    http.StatusNonAuthoritativeInfo,
 			"message": "用户名或者密码不正确",
 			"data":    "",
 		})
@@ -80,6 +81,38 @@ func userLogin(c *gin.Context) {
 		"code":    http.StatusOK,
 		"message": "登录成功",
 		"data":    info,
+	})
+}
+
+func userLogout(c *gin.Context) {
+	_, isExists := c.Get("UserInfo")
+	if !isExists {
+		c.JSON(http.StatusNoContent, gin.H{
+			"code":    http.StatusNoContent,
+			"message": "用户不存在",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+	// userInfo := info.(middleware.UserInfo)
+
+	// user := new(db.User)
+	// if err := db.Take(user, "name = ?", userInfo.UserName); err != nil {
+	// 	log.Warn("用户不存在")
+	// 	c.JSON(http.StatusNoContent, gin.H{
+	// 		"code":    http.StatusNoContent,
+	// 		"message": "用户不存在",
+	// 		"data":    "",
+	// 	})
+	// 	c.Abort()
+	// 	return
+	// }
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":    http.StatusOK,
+		"message": "退出成功",
+		"data":    "",
 	})
 }
 
@@ -119,8 +152,8 @@ func userAdd(c *gin.Context) {
 	ulr := new(userLoginRequest)
 	if err := c.ShouldBindJSON(ulr); err != nil {
 		log.Warn("请求数据格式错误")
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
+		c.JSON(http.StatusNoContent, gin.H{
+			"code":    http.StatusNoContent,
 			"message": "请求数据格式错误",
 			"data":    "",
 		})
@@ -183,8 +216,8 @@ func userUpdate(c *gin.Context) {
 	r := new(userUpdateRequest)
 	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
+		c.JSON(http.StatusNoContent, gin.H{
+			"code":    http.StatusNoContent,
 			"message": "请求数据格式错误",
 			"data":    "",
 		})
@@ -231,8 +264,8 @@ func userUpdate(c *gin.Context) {
 func userDel(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
+		c.JSON(http.StatusNoContent, gin.H{
+			"code":    http.StatusNoContent,
 			"message": "请求数据格式错误",
 			"data":    "",
 		})

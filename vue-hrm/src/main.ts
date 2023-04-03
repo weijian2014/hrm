@@ -20,4 +20,4 @@ app.config.globalProperties.$http = axios
 //    app.component(key, component)
 // }
 // app.use(ElementPlus, { locale })
-app.use(router).use(pinia).mount("#app")
+app.use(pinia).use(router).mount("#app")

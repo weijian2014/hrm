@@ -11,6 +11,8 @@ interface LoginRequest {
 
 export const loginApi = (data: LoginRequest): PromiseResponse<TokenInfo> => request.post("/user/login", data)
 
+export const logoutApi = (): PromiseResponse<string> => request.post("/user/logout")
+
 //
 export const getUserInfo = (): PromiseResponse<string> => request.get("/user/info")
 

@@ -15,10 +15,10 @@ export const useUserStore = defineStore("user", () => {
       }
    })
 
-   function saveToken(info: TokenInfo) {
-      tokenJson.value = JSON.stringify(info)
+   function saveToken(data: string) {
+      tokenJson.value = data
       // 浏览器刷新后Store就清空了, 所以需要将数据保存到Local Storage
-      window.localStorage.setItem("TokenInfo", JSON.stringify(info))
+      window.localStorage.setItem("TokenInfo", data)
    }
 
    return { tokenInfo, saveToken, data }

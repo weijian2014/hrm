@@ -73,7 +73,7 @@ const loginFn = () => {
                if (res.code === 200) {
                   console.log("登录成功", res)
                   // 先存储token
-                  store.saveToken(res.data)
+                  store.saveToken(JSON.stringify(res.data))
                   // 再获取用户信息
                   getUserInfo()
                      .then((res) => {
