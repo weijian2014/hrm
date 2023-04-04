@@ -38,7 +38,7 @@ type JwtClaims struct {
 }
 
 func GenerateToken(userId uint64, userName string, expiredAtSeconds uint64) (*TokenInfo, error) {
-	accessTokenExpiredAt := time.Now().Add(time.Duration(expiredAtSeconds) * time.Minute)
+	accessTokenExpiredAt := time.Now().Add(time.Duration(expiredAtSeconds) * time.Second)
 	accessClaims := JwtClaims{
 		userId,
 		userName,
@@ -54,7 +54,7 @@ func GenerateToken(userId uint64, userName string, expiredAtSeconds uint64) (*To
 		},
 	}
 
-	refreshTokenExpiredAt := accessTokenExpiredAt.Add(time.Duration(expiredAtSeconds) * time.Minute)
+	refreshTokenExpiredAt := accessTokenExpiredAt.Add(time.Duration(expiredAtSeconds) * time.Second)
 	refreshClaims := JwtClaims{
 		userId,
 		userName,

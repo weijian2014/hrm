@@ -4,7 +4,7 @@
   "LogRoll": 5000,
   "LogFullPathName": "",
   "ServerListenHost": "0.0.0.0:8080",
-  "TokenExpiredSeconds": 3600,
+  "TokenExpiredSeconds": 20,
   "HtmlDirectory": "../client/web",
   "StaticDirectory": "../client/web/static"
 }

@@ -83,6 +83,7 @@ const loginFn = () => {
                            ElMessage.success("登录成功")
                            // 有重定向地址(路由拦截设置的)时跳转到该地址, 否则跳转到首页
                            router.push((route.query.redirect as string) || "/")
+                           return
                         }
                      })
                      .catch((res) => {

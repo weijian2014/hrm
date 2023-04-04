@@ -1,5 +1,6 @@
 interface TokenInfo {
    user_name: string
-   token: string
+   access_token: string
+   refresh_token: string
    expired_at: string
 }

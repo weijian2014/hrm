@@ -48,7 +48,7 @@ router.beforeEach((to, from, next) => {
    // some遍历每一个路由是否需要登录后才能显示
    if (to.matched.some((r) => r.meta?.requiresAuth)) {
       const store = useUserStore()
-      if (!store.tokenInfo.token) {
+      if (!store.tokenInfo.access_token) {
          // 跳转到login页, 登录成功后跳转回to.fullPath
          next({ name: "login", query: { redirect: to.fullPath } })
          return

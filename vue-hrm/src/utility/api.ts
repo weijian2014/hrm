@@ -14,14 +14,10 @@ export const loginApi = (data: LoginRequest): PromiseResponse<TokenInfo> => requ
 
 export const logoutApi = (): PromiseResponse<string> => request.post("/user/logout")
 
-export const refreshToken = (): PromiseResponse<string> =>
-   request({
-      method: "POST",
-      url: "/user/refresh",
-      params: {
-         refresh_token: useUserStore().tokenInfo.token,
-      },
-   })
+interface RefreshRequest {
+   refresh_token: string
+}
+export const refreshToken = (data: RefreshRequest): PromiseResponse<TokenInfo> => request.post("/user/refresh", data)
 
 //
 export const getUserInfo = (): PromiseResponse<string> => request.get("/user/info")
