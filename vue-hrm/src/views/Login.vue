@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter, useRoute } from "vue-router"
-import { loginApi, getUserInfo } from "@/utility/api"
+import { loginApi, getUserInfo } from "@/utils/user"
 import { useUserStore } from "@/store/user"
 import { storeToRefs } from "pinia"
 import { User, Key } from "@element-plus/icons-vue"
@@ -58,10 +58,10 @@ const rules = reactive<FormRules>({
    ],
 })
 
-const loginFn = () => {
+const loginFn = async () => {
    isLoading.value = true
    // 表格输入规则校验, 通过进入than, 不通过则进入catch
-   formRef.value
+   await formRef.value
       ?.validate()
       .then(() => {
          console.log("表单校验成功")

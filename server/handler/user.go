@@ -93,8 +93,8 @@ func userRefresh(c *gin.Context) {
 	r := new(userRefreshRequest)
 	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
+		c.JSON(http.StatusResetContent, gin.H{
+			"code":    http.StatusResetContent,
 			"message": "请求数据格式错误",
 			"data":    "",
 		})
@@ -105,8 +105,8 @@ func userRefresh(c *gin.Context) {
 
 	tokenInfo, err := middleware.RefreshToken(r.RefreshToken)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"code":    http.StatusUnauthorized,
+		c.JSON(http.StatusResetContent, gin.H{
+			"code":    http.StatusResetContent,
 			"message": "重新生成token失败",
 			"data":    "",
 		})

@@ -3,7 +3,7 @@ import { useUserStore } from "@/store/user"
 import { storeToRefs } from "pinia"
 import { isCollapse } from "./index"
 import { useRouter } from "vue-router"
-import { logoutApi } from "@/utility/api"
+import { logoutApi } from "@/utils/user"
 
 const router = useRouter()
 const store = useUserStore()

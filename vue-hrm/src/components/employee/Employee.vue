@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import AddVue from "@/components/employee/Add.vue"
-import { employeeListApi } from "@/utility/api"
+import { employeeListApi } from "@/utils/employee"
 
 const state = reactive<{
    isButtonDisabled: boolean
