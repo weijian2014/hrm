@@ -296,12 +296,12 @@ const columns = computed(() => {
          <el-col :span="6">
             <el-input
                v-model="inputValue"
-               class="w-88"
+               class="w-80"
                placeholder=""
                clearable>
                <template #prepend>模糊搜索</template>
                <template #prefix>
-                  <el-icon class="el-input__icon"><search /></el-icon>
+                  <el-icon><IEpSearch /></el-icon>
                </template>
             </el-input>
          </el-col>

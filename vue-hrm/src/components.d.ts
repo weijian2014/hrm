@@ -53,6 +53,7 @@ declare module '@vue/runtime-core' {
     IEpKey: typeof import('~icons/ep/key')['default']
     IEpMenu: typeof import('~icons/ep/menu')['default']
     IEpPlus: typeof import('~icons/ep/plus')['default']
+    IEpSearch: typeof import('~icons/ep/search')['default']
     IEpSetting: typeof import('~icons/ep/setting')['default']
     IEpUpload: typeof import('~icons/ep/upload')['default']
     IEpUser: typeof import('~icons/ep/user')['default']
