@@ -126,7 +126,8 @@ npm install sass --save-dev
 npm i -D vite-plugin-windicss windicss
 
 # 安装axios, http://axios-js.com/
-npm install axios
+npm install axios promise.prototype.finally --save
+npm install --save-dev @types/promise.prototype.finall   # main.ts要引入shim()
 
 # js-cookie, https://github.com/js-cookie/js-cookie
 npm i js-cookie

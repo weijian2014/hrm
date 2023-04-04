@@ -40,29 +40,24 @@ request.interceptors.response.use(
       // Token过期
       if (err.response.status === 401) {
          console.log("token过期, 需要刷新")
-         await refreshToken({
+         const res = await refreshToken({
             refresh_token: useUserStore().tokenInfo.refresh_token,
          })
-            .then((res) => {
-               if (res.code === 200) {
-                  console.log("刷新token成功")
-                  // 保存新生成的Token
-                  useUserStore().saveToken(JSON.stringify(res.data))
 
-                  // 再次发送失败的请求, 并返回结果
-                  return request(err.config)
-               } else {
-                  // 刷新Token失败, 跳转至登录页
-                  console.log("刷新Token失败, 请重新登录")
-                  ElMessage.error("刷新Token失败, 请重新登录")
-                  router.push({ name: "login", query: { redirect: router.currentRoute.value.fullPath } })
-                  return
-               }
-            })
-            .catch(() => {
-               router.push({ name: "login", query: { redirect: router.currentRoute.value.fullPath } })
-               return
-            })
+         if (res.code === 200) {
+            console.log("刷新token成功")
+            // 保存新生成的Token
+            useUserStore().saveToken(JSON.stringify(res.data))
+
+            // 再次发送失败的请求, 并返回结果
+            return request(err.config)
+         } else {
+            // 刷新Token失败, 跳转至登录页
+            console.log("刷新Token失败, 请重新登录")
+            ElMessage.error("刷新Token失败, 请重新登录")
+            router.push({ name: "login", query: { redirect: router.currentRoute.value.fullPath } })
+            return
+         }
       }
       return Promise.reject(err)
    }

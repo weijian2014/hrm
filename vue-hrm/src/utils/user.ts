@@ -1,5 +1,5 @@
 import request from "@/utils/request"
-import type { PromiseResponse } from "@/utils/common"
+import type { ApiResponse, PromiseResponse } from "@/utils/common"
 
 //
 interface LoginRequest {
@@ -15,7 +15,21 @@ interface RefreshRequest {
    refresh_token: string
 }
 
-export const refreshToken = (data: RefreshRequest): PromiseResponse<TokenInfo> => request.post("/user/refresh", data)
+let refreshPromise: Promise<any>
+let isRefreshing = false
+export const refreshToken = (data: RefreshRequest): PromiseResponse<TokenInfo> => {
+   if (isRefreshing) {
+      return refreshPromise
+   }
+
+   isRefreshing = true
+   refreshPromise = request.post("/user/refresh", data).finally(() => {
+      // 无论成功还是失败都会走入finally
+      isRefreshing = false
+   })
+
+   return refreshPromise
+}
 
 //
 export const getUserInfo = (): PromiseResponse<string> => request.get("/user/info")
