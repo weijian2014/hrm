@@ -18,6 +18,7 @@ interface RefreshRequest {
 let refreshPromise: Promise<any>
 let isRefreshing = false
 export const refreshToken = (data: RefreshRequest): PromiseResponse<TokenInfo> => {
+   // 防止重复刷新
    if (isRefreshing) {
       return refreshPromise
    }

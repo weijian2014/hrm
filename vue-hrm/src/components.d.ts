@@ -59,8 +59,12 @@ declare module '@vue/runtime-core' {
     IEpUser: typeof import('~icons/ep/user')['default']
     IEpUserFilled: typeof import('~icons/ep/user-filled')['default']
     Layout: typeof import('./components/layout/Layout.vue')['default']
+    Menu: typeof import('./components/menu/Menu.vue')['default']
+    Recruitment: typeof import('./components/recruitment/Recruitment.vue')['default']
+    Role: typeof import('./components/role/Role.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Summary: typeof import('./components/summary/Summary.vue')['default']
+    User: typeof import('./components/user/User.vue')['default']
   }
 }

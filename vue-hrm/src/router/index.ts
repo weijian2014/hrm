@@ -26,16 +26,39 @@ const router = createRouter({
                component: () => import("@/components/summary/Summary.vue"),
             },
             {
+               path: "/recruitment",
+               name: "recruitment",
+               component: () => import("@/components/recruitment/Recruitment.vue"),
+            },
+            {
+               path: "/menu",
+               name: "menu",
+               component: () => import("@/components/menu/Menu.vue"),
+            },
+            {
+               path: "/role",
+               name: "role",
+               component: () => import("@/components/role/Role.vue"),
+            },
+            {
+               path: "/user",
+               name: "user",
+               component: () => import("@/components/user/User.vue"),
+            },
+            {
                path: "/employee",
                name: "employee",
-               // 赖加载
                component: () => import("@/components/employee/Employee.vue"),
+            },
+            {
+               path: "/menu",
+               name: "menu",
+               component: () => import("@/components/menu/Menu.vue"),
             },
             {
                // 路由不匹配时显示此页面
                path: "/:xxx(.*)*",
                name: "error",
-               // 赖加载
                component: () => import("@/components/Error.vue"),
             },
          ],
