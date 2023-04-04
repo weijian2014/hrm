@@ -11,21 +11,24 @@ import { isCollapse } from "./index"
                <h1>HRM管理系统</h1>
             </a>
             <el-menu-item index="/employee">
-               <el-icon><IEpSetting /></el-icon><span>员工管理</span>
+               <el-icon><IEpUser /></el-icon><span>员工管理</span>
+            </el-menu-item>
+            <el-menu-item index="/recruitment">
+               <el-icon><IEpCollectionTag /></el-icon><span>招聘管理</span>
             </el-menu-item>
 
             <el-sub-menu index="/permission">
                <template #title
-                  ><el-icon><IEpSetting /></el-icon><span>权限管理</span>
+                  ><el-icon><IEpKey /></el-icon><span>权限管理</span>
                </template>
                <el-menu-item index="menu">
-                  <el-icon><IEpSetting /></el-icon><span>菜单列表</span>
+                  <el-icon><IEpMenu /></el-icon><span>菜单列表</span>
                </el-menu-item>
                <el-menu-item index="role">
-                  <el-icon><IEpSetting /></el-icon><span>角色列表</span>
+                  <el-icon><IEpUserFilled /></el-icon><span>角色列表</span>
                </el-menu-item>
                <el-menu-item index="user">
-                  <el-icon><IEpSetting /></el-icon><span>用户列表</span>
+                  <el-icon><IEpAvatar /></el-icon><span>用户列表</span>
                </el-menu-item>
             </el-sub-menu>
 

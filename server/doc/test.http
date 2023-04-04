@@ -2,7 +2,8 @@
 
 ### Admin登录
 # @name adminLogin
-@adminToken = {{adminLogin.response.body.$.data.access_token}}
+@adminAccessToken = {{adminLogin.response.body.$.data.access_token}}
+@adminRefreshToken = {{adminLogin.response.body.$.data.refresh_token}}
 POST http://{{host}}/user/login
 Content-Type: application/json
 
@@ -11,9 +12,19 @@ Content-Type: application/json
    "password": "123456"
 }
 
+### 刷新Admin Token
+# @name adminRefresh
+POST http://{{host}}/user/refresh
+Content-Type: application/json
+Authorization: {{adminAccessToken}}
+
+{
+   "refresh_token": "{{adminRefreshToken}}"
+}
+
 ### test用户登录
 # @name testLogin
-@testToken = {{testLogin.response.body.$.data.access_token}}
+@testAccessToken = {{testLogin.response.body.$.data.access_token}}
 POST http://{{host}}/user/login
 Content-Type: application/json
 
@@ -26,7 +37,7 @@ Content-Type: application/json
 # @name getAdminLoginUserInfo
 GET http://{{host}}/user/info
 Content-Type: application/json
-Authorization: {{adminToken}}
+Authorization: {{adminAccessToken}}
 
 
 ### 增加weijian用户
@@ -34,7 +45,7 @@ Authorization: {{adminToken}}
 @weijianUserId = {{addWeijianUser.response.body.$.data.id}}
 POST http://{{host}}/user/add
 Content-Type: application/json
-Authorization: {{adminToken}}
+Authorization: {{adminAccessToken}}
 
 {
    "username": "weijian",
@@ -45,7 +56,7 @@ Authorization: {{adminToken}}
 # @name updateWeijianUser
 PUT http://{{host}}/user/update
 Content-Type: application/json
-Authorization: {{adminToken}}
+Authorization: {{adminAccessToken}}
 
 {
    "id": {{weijianUserId}},
@@ -67,4 +78,4 @@ Content-Type: application/json
 ### 删除weijian用户
 DELETE http://{{host}}/user/{{weijianUserId}}
 Content-Type: application/json
-Authorization: {{adminToken}}
+Authorization: {{adminAccessToken}}

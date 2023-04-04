@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"errors"
+	"fmt"
 	"hrm/common"
 	"hrm/log"
 	"net/http"
@@ -132,13 +133,13 @@ func AccessTokenAuthenticator(c *gin.Context) {
 		return
 	}
 
-	// 校验token
+	// 校验token, 包括token是否过期
 	claims, err := isTokenValid(ht[1])
 	if err != nil {
-		log.Warn("非法token")
+		log.Warn("非法token, err[%+v]", err)
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"code":    http.StatusUnauthorized,
-			"message": "非法token",
+			"message": fmt.Sprintf("非法token, err: %+v", err),
 			"data":    "",
 		})
 		c.Abort()
@@ -146,18 +147,6 @@ func AccessTokenAuthenticator(c *gin.Context) {
 	}
 
 	log.Debug("claims[%+v]", claims)
-
-	// token是否过期
-	if claims.ExpiredAt.Before(time.Now()) {
-		log.Warn("token过期, ExpiredAt[%+v], Now[%+v]", claims.ExpiredAt.Format("2006-01-02 15:04:05"), time.Now().Format("2006-01-02 15:04:05"))
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"code":    http.StatusUnauthorized,
-			"message": "token过期",
-			"data":    "",
-		})
-		c.Abort()
-		return
-	}
 
 	contextInfo := ContextInfo{
 		UserId:   claims.UserId,
