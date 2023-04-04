@@ -26,14 +26,7 @@ const state = reactive<{
 })
 
 // 解构
-const {
-   isEscapeClose,
-   isShowClose,
-   isClickModalToClose,
-   dialogVisible,
-   formLabelWidth,
-   rawFormData,
-} = toRefs(state)
+const { isEscapeClose, isShowClose, isClickModalToClose, dialogVisible, formLabelWidth, rawFormData } = toRefs(state)
 
 // watch写法上支持一个或者多个监听源, 这些监听源必须只能是getter/effect函数, ref数据, reactive对象或者数组类型
 watch(
@@ -228,10 +221,7 @@ const securityCardFormatter = (value: string | number) => {
                </el-col>
                <el-col :span="8">
                   <el-form-item label="生日" prop="birthday">
-                     <el-date-picker
-                        v-model="rawFormData.birthday"
-                        type="date"
-                        placeholder="" />
+                     <el-date-picker v-model="rawFormData.birthday" type="date" placeholder="" />
                   </el-form-item>
                </el-col>
             </el-row>
@@ -256,8 +246,7 @@ const securityCardFormatter = (value: string | number) => {
             <el-row class="ml-3">
                <el-col :span="20">
                   <el-form-item label="现住址" prop="current_address">
-                     <el-input v-model="rawFormData.current_address">
-                     </el-input>
+                     <el-input v-model="rawFormData.current_address"> </el-input>
                   </el-form-item>
                </el-col>
             </el-row>
@@ -265,9 +254,7 @@ const securityCardFormatter = (value: string | number) => {
             <el-row>
                <el-col :span="8">
                   <el-form-item label="政治面貌" prop="political_status">
-                     <el-select
-                        v-model="rawFormData.political_status"
-                        placeholder="">
+                     <el-select v-model="rawFormData.political_status" placeholder="">
                         <el-option
                            v-for="item in politicalStatusOptions"
                            :key="item.value"
@@ -289,9 +276,7 @@ const securityCardFormatter = (value: string | number) => {
                </el-col>
                <el-col :span="6">
                   <el-form-item label="社保" prop="social_security">
-                     <el-select
-                        v-model="rawFormData.social_security"
-                        placeholder="">
+                     <el-select v-model="rawFormData.social_security" placeholder="">
                         <el-option
                            v-for="item in socialSecurityOptions"
                            :key="item.value"
@@ -305,20 +290,13 @@ const securityCardFormatter = (value: string | number) => {
             <el-row class="ml-3">
                <el-col :span="10">
                   <el-form-item label="身份证" prop="identifier">
-                     <el-input
-                        v-model="rawFormData.identifier"
-                        :formatter="identifierFormatter"
-                        placeholder="">
+                     <el-input v-model="rawFormData.identifier" :formatter="identifierFormatter" placeholder="">
                      </el-input>
                   </el-form-item>
                </el-col>
                <el-col :span="8" class="ml-5">
                   <el-form-item label="电话" prop="phone">
-                     <el-input
-                        v-model="rawFormData.phone"
-                        :formatter="phoneFormatter"
-                        placeholder="">
-                     </el-input>
+                     <el-input v-model="rawFormData.phone" :formatter="phoneFormatter" placeholder=""> </el-input>
                   </el-form-item>
                </el-col>
             </el-row>
@@ -326,16 +304,12 @@ const securityCardFormatter = (value: string | number) => {
             <el-row class="ml-3">
                <el-col :span="10">
                   <el-form-item label="原单位" prop="former_employer">
-                     <el-input v-model="rawFormData.former_employer">
-                     </el-input>
+                     <el-input v-model="rawFormData.former_employer"> </el-input>
                   </el-form-item>
                </el-col>
                <el-col :span="10" class="ml-5">
                   <el-form-item label="参加工作时间" prop="first_work_time">
-                     <el-date-picker
-                        v-model="rawFormData.first_work_time"
-                        type="date"
-                        placeholder="" />
+                     <el-date-picker v-model="rawFormData.first_work_time" type="date" placeholder="" />
                   </el-form-item>
                </el-col>
             </el-row>
@@ -354,20 +328,14 @@ const securityCardFormatter = (value: string | number) => {
                </el-col>
                <el-col :span="8" class="mx-5">
                   <el-form-item label="工资" prop="salary">
-                     <el-input
-                        v-model="rawFormData.salary"
-                        :formatter="salaryFormatter"
-                        placeholder="">
+                     <el-input v-model="rawFormData.salary" :formatter="salaryFormatter" placeholder="">
                         <template #append>¥</template>
                      </el-input>
                   </el-form-item>
                </el-col>
                <el-col :span="8">
                   <el-form-item label="保安证" prop="security_card">
-                     <el-input
-                        v-model="rawFormData.security_card"
-                        :formatter="securityCardFormatter"
-                        placeholder="">
+                     <el-input v-model="rawFormData.security_card" :formatter="securityCardFormatter" placeholder="">
                      </el-input>
                   </el-form-item>
                </el-col>

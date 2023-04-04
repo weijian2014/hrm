@@ -4,10 +4,13 @@
    "useTabs": false,
    "semi": false,
    "singleQuote": false,
-   "disableLanguages": [],
-   "jsxSingleQuote": false,
+   "quoteProps": "as-needed",
    "bracketSpacing": true,
    "bracketSameLine": true,
    "arrowParens": "always",
-   "endOfLine": "lf"
+   "vueIndentScriptAndStyle": false,
+   "endOfLine": "lf",
+   "singleAttributePerLine": false,
+   "disableLanguages": [],
+   "jsxSingleQuote": false
 }

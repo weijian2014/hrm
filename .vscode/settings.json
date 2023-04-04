@@ -5,5 +5,6 @@
     "strings": true
   },
   "go.testFlags": ["-v"],
-  "go.goroot": "/opt/go"
+  "go.goroot": "/opt/go",
+  "editor.formatOnSave": true
 }

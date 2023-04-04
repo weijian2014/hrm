@@ -294,11 +294,7 @@ const columns = computed(() => {
             </el-button>
          </el-col>
          <el-col :span="6">
-            <el-input
-               v-model="inputValue"
-               class="w-80"
-               placeholder=""
-               clearable>
+            <el-input v-model="inputValue" class="w-80" placeholder="" clearable>
                <template #prepend>模糊搜索</template>
                <template #prefix>
                   <el-icon><IEpSearch /></el-icon>
@@ -306,21 +302,14 @@ const columns = computed(() => {
             </el-input>
          </el-col>
          <el-col :span="6">
-            <el-dropdown
-               split-button
-               :hide-on-click="false"
-               class="mr-3"
-               type="primary"
-               @click="handleDropdownClick">
+            <el-dropdown split-button :hide-on-click="false" class="mr-3" type="primary" @click="handleDropdownClick">
                列
                <template #dropdown>
                   <el-dropdown-menu>
                      <el-dropdown-item v-for="(column, index) in tableColumns"
-                        ><el-checkbox
-                           :key="column.prop"
-                           :checked="column.visible"
-                           >{{ column.label }}</el-checkbox
-                        ></el-dropdown-item
+                        ><el-checkbox :key="column.prop" :checked="column.visible">{{
+                           column.label
+                        }}</el-checkbox></el-dropdown-item
                      >
                   </el-dropdown-menu>
                </template>
@@ -360,29 +349,13 @@ const columns = computed(() => {
             :index="index"></el-table-column>
          <el-table-column width="140" label="操作" align="center">
             <template #default="scope">
-               <el-button
-                  size="small"
-                  type="primary"
-                  @click="handleEdit(scope.$index, scope.row)"
-                  >修改</el-button
-               >
-               <el-button
-                  size="small"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)"
-                  >删除</el-button
-               >
+               <el-button size="small" type="primary" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
+               <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             </template>
          </el-table-column>
       </el-table>
    </div>
-   <AddVue
-      :isShow="isShow"
-      :title="title"
-      :formData="rowData"
-      @save="handleSave"
-      @cancel="handleCancel">
-   </AddVue>
+   <AddVue :isShow="isShow" :title="title" :formData="rowData" @save="handleSave" @cancel="handleCancel"> </AddVue>
 </template>
 
 <style lang="scss" scoped></style>
