@@ -15,7 +15,8 @@ func registerMenuRouter(r *gin.Engine) {
 	menuRouter := r.Group("/menu")
 
 	// 以下接口登陆后才能访问, 加中间件
-	menuRouter.POST("add", menuAdd)
+	menuRouter.GET("list", middleware.AccessTokenAuthenticator, menuList)
+	menuRouter.POST("add", middleware.AccessTokenAuthenticator, menuAdd)
 	menuRouter.PUT("update", middleware.AccessTokenAuthenticator, menuUpdate)
 	menuRouter.DELETE(":id", middleware.AccessTokenAuthenticator, menuDel)
 }
@@ -31,6 +32,30 @@ type menuUpdateRequest struct {
 	Name     string `xml:"menu_name" json:"menu_name" description:"菜单名"`
 	Url      string `xml:"menu_url" json:"menu_url" description:"菜单链接"`
 	ParentId uint64 `xml:"menu_parent_id" json:"menu_parent_id" description:"菜单的父级菜单ID"`
+}
+
+func menuList(c *gin.Context) {
+	menus := new([]db.Menu)
+	err := db.Find(menus, -1)
+	if err != nil {
+		log.Warn("菜单信息获取失败, %v", err)
+		c.JSON(http.StatusNotFound, gin.H{
+			"code":    http.StatusNotFound,
+			"message": fmt.Sprintf("菜单信息获取失败, %v", err),
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":    http.StatusOK,
+		"message": "菜单信息获取成功",
+		"data": gin.H{
+			"total": len(*menus),
+			"rows":  menus,
+		},
+	})
 }
 
 func menuAdd(c *gin.Context) {

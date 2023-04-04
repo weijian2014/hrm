@@ -20,6 +20,7 @@ var (
 	DatabaseFullPath = common.CurrDir + "/" + DatabaseName
 
 	// test
+	// /opt/idgen_linux_amd64 server -l 0.0.0.0 -p 7070 -m json &
 	api = "http://0.0.0.0:7070/api"
 )
 
@@ -91,20 +92,46 @@ func Init(adminUsername, adminPassword string) error {
 	// 表menus
 	menus := []Menu{
 		{
-			Name: "员工管理",
-			Url:  "url",
+			Id:       1,
+			Name:     "员工管理",
+			Url:      "url",
+			ParentId: 0,
 		},
 		{
-			Name: "招聘管理",
-			Url:  "url",
+			Id:       2,
+			Name:     "招聘管理",
+			Url:      "url",
+			ParentId: 0,
 		},
 		{
-			Name: "休假管理",
-			Url:  "url",
+			Id:       3,
+			Name:     "权限管理",
+			Url:      "url",
+			ParentId: 0,
 		},
 		{
-			Name: "系统管理",
-			Url:  "url",
+			Id:       4,
+			Name:     "系统管理",
+			Url:      "url",
+			ParentId: 0,
+		},
+		{
+			Id:       5,
+			Name:     "菜单列表",
+			Url:      "url",
+			ParentId: 3,
+		},
+		{
+			Id:       6,
+			Name:     "角色列表",
+			Url:      "url",
+			ParentId: 3,
+		},
+		{
+			Id:       7,
+			Name:     "用户列表",
+			Url:      "url",
+			ParentId: 3,
 		},
 	}
 	err = CreateTable(&Menu{})

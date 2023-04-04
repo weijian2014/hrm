@@ -11,7 +11,7 @@ type Menu struct {
 	Name      string    `json:"name" description:"菜单名"`
 	Url       string    `json:"url" description:"菜单链接"`
 	ParentId  uint64    `json:"parent_id" description:"菜单的父级菜单ID"`
-	UpdatedAt time.Time `json:"update_at" description:"更新时间"`
+	UpdatedAt time.Time `json:"updated_at" description:"更新时间"`
 }
 
 func (m *Menu) BeforeDelete(tx *gorm.DB) error {

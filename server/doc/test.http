@@ -79,3 +79,9 @@ Content-Type: application/json
 DELETE http://{{host}}/user/{{weijianUserId}}
 Content-Type: application/json
 Authorization: {{adminAccessToken}}
+
+
+### 获取菜单
+GET http://{{host}}/menu/list
+Content-Type: application/json
+Authorization: {{adminAccessToken}}
