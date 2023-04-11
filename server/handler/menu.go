@@ -22,16 +22,17 @@ func registerMenuRouter(r *gin.Engine) {
 }
 
 type menuAddRequest struct {
-	Name     string `xml:"menu_name" json:"menu_name" description:"菜单名"`
-	Url      string `xml:"menu_url" json:"menu_url" description:"菜单链接"`
-	ParentId uint64 `xml:"menu_parent_id" json:"menu_parent_id" description:"菜单的父级菜单ID"`
+	Name     string `json:"menu_name" description:"菜单名"`
+	Url      string `json:"menu_url" description:"菜单链接"`
+	ParentId uint64 `json:"menu_parent_id" description:"菜单的父级菜单ID"`
 }
 
 type menuUpdateRequest struct {
-	Id       uint64 `xml:"menu_id" json:"menu_id" description:"菜单ID"`
-	Name     string `xml:"menu_name" json:"menu_name" description:"菜单名"`
-	Url      string `xml:"menu_url" json:"menu_url" description:"菜单链接"`
-	ParentId uint64 `xml:"menu_parent_id" json:"menu_parent_id" description:"菜单的父级菜单ID"`
+	Id       uint64 `json:"menu_id" description:"菜单ID"`
+	Name     string `json:"menu_name" description:"菜单名"`
+	Url      string `json:"menu_url" description:"菜单链接"`
+	Icon     string `json:"menu_icon" description:"菜单图标"`
+	ParentId uint64 `json:"menu_parent_id" description:"菜单的父级菜单ID"`
 }
 
 func menuList(c *gin.Context) {

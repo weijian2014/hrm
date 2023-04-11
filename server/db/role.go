@@ -15,6 +15,7 @@ type Role struct {
 	UpdatedAt time.Time `json:"updated_at" description:"更新时间"`
 }
 
+// Hook是事务的, 返回错误事务将终止, 并执行回滚
 func (r *Role) BeforeDelete(tx *gorm.DB) error {
 	ur := &UserRole{
 		RoleId: r.Id,
