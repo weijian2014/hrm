@@ -24,4 +24,5 @@ interface TableColumn {
    visible: boolean = true
    sortable: boolean = true
    align: string = "center"
+   formatter?: any | undefined
 }

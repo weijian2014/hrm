@@ -1,6 +1,25 @@
 <script lang="ts" setup>
+import moment from "moment"
+import { getAgeByBirthday } from "@/utils/common"
 import AddVue from "@/components/employee/Add.vue"
 import { employeeListApi } from "@/utils/employee"
+
+const dateFormatter = (row, column) => {
+   var date = row[column.property]
+   if (date == undefined) {
+      return "未知"
+   }
+
+   const dateStr = moment(date).format("YYYY-MM-DD")
+   const age = getAgeByBirthday(dateStr)
+   if (column.property === "birthday") {
+      // 生日
+      return dateStr + " (" + age + "岁)"
+   } else {
+      // 参加工作时间
+      return dateStr + " (" + age + "年)"
+   }
+}
 
 const state = reactive<{
    isButtonDisabled: boolean
@@ -65,6 +84,7 @@ const state = reactive<{
          visible: true,
          sortable: true,
          align: "center",
+         formatter: dateFormatter,
       },
       {
          prop: "first_work_time",
@@ -72,6 +92,7 @@ const state = reactive<{
          visible: true,
          sortable: true,
          align: "center",
+         formatter: dateFormatter,
       },
       {
          prop: "salary",
@@ -267,7 +288,7 @@ const handleCancel = (message: string) => {
 
 ////// 数据
 const columns = computed(() => {
-   return tableColumns.value.filter((column) => column.visible)
+   return tableColumns.value.filter((column: { visible: any }) => column.visible)
 })
 </script>
 
@@ -346,6 +367,7 @@ const columns = computed(() => {
             :label="column.label"
             :sortable="column.sortable"
             :align="column.align"
+            :formatter="column.formatter"
             :index="index"></el-table-column>
          <el-table-column width="140" label="操作" align="center">
             <template #default="scope">
