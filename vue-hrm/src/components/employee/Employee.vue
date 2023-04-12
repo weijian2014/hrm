@@ -26,6 +26,8 @@ const state = reactive<{
    inputValue: string
    tableRef: {}
    selections: []
+   isVisibleColumnsSettings: boolean
+   checkList: string[]
    isShow: boolean
    title: string
    rowData: Employee
@@ -40,6 +42,8 @@ const state = reactive<{
    inputValue: "", // 搜索框的值
    tableRef: {}, // el-table组件对象, 自动关联到el-table组件
    selections: [], // 表格选中的行
+   isVisibleColumnsSettings: false,
+   checkList: [],
    // Add组件属性
    isShow: false,
    title: "查看",
@@ -203,6 +207,8 @@ const {
    inputValue,
    tableRef,
    selections,
+   isVisibleColumnsSettings,
+   checkList,
    isShow,
    title,
    rowData,
@@ -225,9 +231,19 @@ employeeListApi()
    })
 
 ////// 表头工具栏
-const handleDropdownClick = () => {}
+todo
+// console.log("lastCheckValues", lastCheckValues)
+// const handleCheckedChange = (values: string[]) => {
+//    // values为所有被选中的列
+//    console.log("handleCheckedChange", values)
+//    console.log("handleCheckedChange", checkList.value)
+//    values.forEach((item, index) => {
+//       tableColumns.value[index]
+//    })
+// }
 
 ////// 表格
+
 const handleSelectChange = (rows: Employee[]) => {
    console.log("handleSelectChange", rows)
    isButtonDisabled.value = rows.length === 0
@@ -285,7 +301,7 @@ const columns = computed(() => {
 <template>
    <div>
       <!-- 表头工具 -->
-      <el-row class="my-2">
+      <el-row class="mb-4">
          <el-col :span="12">
             <el-button type="primary" @click="handleAdd">
                <IEpPlus />
@@ -312,19 +328,20 @@ const columns = computed(() => {
                </template>
             </el-input>
          </el-col>
-         <el-col :offset="2" :span="4">
-            <el-dropdown split-button :hide-on-click="false" class="mr-3" type="primary" @click="handleDropdownClick">
-               列
-               <template #dropdown>
-                  <el-dropdown-menu>
-                     <el-dropdown-item v-for="(column, index) in tableColumns"
-                        ><el-checkbox :key="column.prop" :checked="column.visible">{{
-                           column.label
-                        }}</el-checkbox></el-dropdown-item
-                     >
-                  </el-dropdown-menu>
+         <el-col :offset="1" :span="5">
+            <el-popover placement="left-end" title="列筛选" trigger="click" :visible="isVisibleColumnsSettings">
+               <template #reference>
+                  <el-button type="primary" @click="isVisibleColumnsSettings = !isVisibleColumnsSettings">
+                     <IEpPlus />
+                     <span style="vertical-align: middle">列筛选</span>
+                  </el-button>
                </template>
-            </el-dropdown>
+               <el-checkbox-group v-model="checkList" @change="handleCheckedChange">
+                  <el-checkbox v-for="(item, index) in tableColumns" :label="item.label" :checked="item.visible">{{
+                     item.label
+                  }}</el-checkbox>
+               </el-checkbox-group>
+            </el-popover>
          </el-col>
       </el-row>
       <!-- 表格 -->
