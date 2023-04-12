@@ -23,7 +23,6 @@ const dateFormatter = (row, column) => {
 
 const state = reactive<{
    isButtonDisabled: boolean
-   zoomValue: boolean
    inputValue: string
    tableRef: {}
    selections: []
@@ -38,7 +37,6 @@ const state = reactive<{
 }>({
    // 表格
    isButtonDisabled: true, // 是否禁用表头的修改和删除按钮
-   zoomValue: true, // 开关控制的表格样式
    inputValue: "", // 搜索框的值
    tableRef: {}, // el-table组件对象, 自动关联到el-table组件
    selections: [], // 表格选中的行
@@ -203,7 +201,6 @@ const state = reactive<{
 const {
    isButtonDisabled,
    inputValue,
-   zoomValue,
    tableRef,
    selections,
    isShow,
@@ -229,12 +226,6 @@ employeeListApi()
 
 ////// 表头工具栏
 const handleDropdownClick = () => {}
-const zoomChange = (val: any) => {
-   console.log("zoomChange", val)
-}
-const tableLayout = computed(() => {
-   return zoomValue.value ? "auto" : "fixed"
-})
 
 ////// 表格
 const handleSelectChange = (rows: Employee[]) => {
@@ -292,7 +283,7 @@ const columns = computed(() => {
 </script>
 
 <template>
-   <div class="container" style="margin: auto">
+   <div>
       <!-- 表头工具 -->
       <el-row class="my-2">
          <el-col :span="12">
@@ -314,14 +305,14 @@ const columns = computed(() => {
             </el-button>
          </el-col>
          <el-col :span="6">
-            <el-input v-model="inputValue" class="w-80" placeholder="" clearable>
+            <el-input v-model="inputValue" placeholder="" clearable>
                <template #prepend>模糊搜索</template>
                <template #prefix>
                   <el-icon><IEpSearch /></el-icon>
                </template>
             </el-input>
          </el-col>
-         <el-col :span="6">
+         <el-col :offset="2" :span="4">
             <el-dropdown split-button :hide-on-click="false" class="mr-3" type="primary" @click="handleDropdownClick">
                列
                <template #dropdown>
@@ -334,13 +325,6 @@ const columns = computed(() => {
                   </el-dropdown-menu>
                </template>
             </el-dropdown>
-            <el-switch
-               v-model="zoomValue"
-               size="large"
-               inline-prompt
-               active-text="自动"
-               inactive-text="固定"
-               @change="zoomChange" />
          </el-col>
       </el-row>
       <!-- 表格 -->
@@ -351,7 +335,7 @@ const columns = computed(() => {
          :border="tableSettings.border"
          :fit="tableSettings.fit"
          :height="tableSettings.height"
-         :table-layout="tableLayout"
+         :table-layout="tableSettings.table_layout"
          :empty-text="tableSettings.empty_text"
          :highlight-current-row="tableSettings.highlight_current_row"
          :row-key="tableSettings.row_key"

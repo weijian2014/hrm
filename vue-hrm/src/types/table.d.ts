@@ -12,7 +12,7 @@ interface TableSettings {
    border: boolean = true
    fit: boolean = true
    height: number = 500
-   table_layout: string = "auto" as const
+   table_layout: "auto" | "fixed" | undefined
    empty_text: string = "N/A"
    highlight_current_row: boolean = true
    row_key: string = "id"
