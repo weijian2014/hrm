@@ -30,9 +30,9 @@ type menuAddRequest struct {
 type menuUpdateRequest struct {
 	Id       uint64 `json:"menu_id" description:"菜单ID"`
 	Name     string `json:"menu_name" description:"菜单名"`
+	ParentId uint64 `json:"menu_parent_id" description:"菜单的父级菜单ID"`
 	Url      string `json:"menu_url" description:"菜单链接"`
 	Icon     string `json:"menu_icon" description:"菜单图标"`
-	ParentId uint64 `json:"menu_parent_id" description:"菜单的父级菜单ID"`
 }
 
 func menuList(c *gin.Context) {
@@ -54,7 +54,7 @@ func menuList(c *gin.Context) {
 		"message": "菜单信息获取成功",
 		"data": gin.H{
 			"total": len(*menus),
-			"rows":  menus,
+			"menus": menus,
 		},
 	})
 }

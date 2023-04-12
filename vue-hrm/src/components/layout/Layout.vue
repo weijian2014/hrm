@@ -27,6 +27,5 @@ import Header from "./Header.vue"
 
 .el-main {
    background-color: #d9ecff;
-   padding-right: 0;
 }
 </style>

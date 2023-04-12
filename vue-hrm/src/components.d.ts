@@ -10,6 +10,7 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Add: typeof import('./components/employee/Add.vue')['default']
+    AddOrEdit: typeof import('./components/menu/AddOrEdit.vue')['default']
     Aside: typeof import('./components/layout/Aside.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']

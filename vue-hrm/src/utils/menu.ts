@@ -8,13 +8,18 @@ import type { ApiResponse, PromiseResponse } from "@/utils/common"
 // UpdatedAt time.Time `json:"updated_at" description:"更新时间"`
 
 //
-export interface MenuListResponse {
+export interface Menu {
    id: number
    name: string
-   url: string
-   icon: string
    parent_id: number
+   icon: string
+   url: string
    updated_at: string
 }
 
-export const menuListApi = (): PromiseResponse<MenuListResponse[]> => request.post("/menu/list")
+export interface MenuListResponse {
+   total: number
+   menus: Menu[]
+}
+
+export const menuListApi = (): PromiseResponse<MenuListResponse> => request.get("/menu/list")

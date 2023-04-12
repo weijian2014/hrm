@@ -127,7 +127,7 @@ const state = reactive<{
          label: "原单位",
          visible: true,
          sortable: true,
-         align: "center",
+         align: "left",
       },
       {
          prop: "height",
@@ -155,7 +155,7 @@ const state = reactive<{
          label: "政治面貌",
          visible: true,
          sortable: true,
-         align: "center",
+         align: "left",
       },
       {
          prop: "identifier",
@@ -246,7 +246,6 @@ const handleRowClick = (row: Employee) => {
    // console.log("handleRowClick", row)
 }
 
-// 向AddVue组件传值
 const handleAdd = () => {
    console.log("新增")
    title.value = "新增"
@@ -255,7 +254,7 @@ const handleAdd = () => {
 }
 
 const handleEdit = (index: number, row: Employee | undefined) => {
-   console.log(index, row)
+   console.log("handleEdit", index, row)
    if (row) {
       rowData.value = row
       console.log("handleEdit", rowData.value)
@@ -297,7 +296,7 @@ const columns = computed(() => {
       <!-- 表头工具 -->
       <el-row class="my-2">
          <el-col :span="12">
-            <el-button type="primary">
+            <el-button type="primary" @click="handleAdd">
                <IEpPlus />
                <span style="vertical-align: middle">新增</span>
             </el-button>
