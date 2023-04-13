@@ -3,6 +3,9 @@ import moment from "moment"
 import { getAgeByBirthday } from "@/utils/common"
 import AddVue from "@/components/employee/Add.vue"
 import { employeeListApi } from "@/utils/employee"
+import { useUserStore } from "@/store/user"
+import type { CheckboxValueType } from "element-plus"
+import { storeToRefs } from "pinia"
 
 const dateFormatter = (row, column) => {
    var date = row[column.property]
@@ -70,20 +73,20 @@ const state = reactive<{
          prop: "name",
          label: "姓名",
          visible: true,
-         sortable: true,
+         sortable: useUserStore().employeeCloumnSettings[0].visible,
          align: "center",
       },
       {
          prop: "gender",
          label: "性别",
-         visible: true,
+         visible: useUserStore().employeeCloumnSettings[1].visible,
          sortable: true,
          align: "center",
       },
       {
          prop: "birthday",
          label: "生日",
-         visible: true,
+         visible: useUserStore().employeeCloumnSettings[2].visible,
          sortable: true,
          align: "center",
          formatter: dateFormatter,
@@ -91,7 +94,7 @@ const state = reactive<{
       {
          prop: "first_work_time",
          label: "参加工作时间",
-         visible: true,
+         visible: useUserStore().employeeCloumnSettings[3].visible,
          sortable: true,
          align: "center",
          formatter: dateFormatter,
@@ -99,91 +102,91 @@ const state = reactive<{
       {
          prop: "salary",
          label: "工资",
-         visible: true,
+         visible: useUserStore().employeeCloumnSettings[4].visible,
          sortable: true,
          align: "center",
       },
       {
          prop: "post",
          label: "岗位",
-         visible: true,
+         visible: useUserStore().employeeCloumnSettings[5].visible,
          sortable: true,
          align: "center",
       },
       {
          prop: "social_security",
          label: "社保",
-         visible: true,
+         visible: useUserStore().employeeCloumnSettings[6].visible,
          sortable: true,
          align: "center",
       },
       {
          prop: "phone",
          label: "电话",
-         visible: true,
+         visible: useUserStore().employeeCloumnSettings[7].visible,
          sortable: true,
          align: "center",
       },
       {
          prop: "former_employer",
          label: "原单位",
-         visible: true,
+         visible: useUserStore().employeeCloumnSettings[8].visible,
          sortable: true,
          align: "left",
       },
       {
          prop: "height",
          label: "身高",
-         visible: true,
+         visible: useUserStore().employeeCloumnSettings[9].visible,
          sortable: true,
          align: "center",
       },
       {
          prop: "weight",
          label: "体重",
-         visible: true,
+         visible: useUserStore().employeeCloumnSettings[10].visible,
          sortable: true,
          align: "center",
       },
       {
          prop: "degree",
          label: "学历",
-         visible: true,
+         visible: useUserStore().employeeCloumnSettings[11].visible,
          sortable: true,
          align: "center",
       },
       {
          prop: "political_status",
          label: "政治面貌",
-         visible: true,
+         visible: useUserStore().employeeCloumnSettings[12].visible,
          sortable: true,
          align: "left",
       },
       {
          prop: "identifier",
          label: "身份证",
-         visible: false,
+         visible: useUserStore().employeeCloumnSettings[13].visible,
          sortable: false,
          align: "center",
       },
       {
          prop: "security_card",
          label: "保安证",
-         visible: false,
+         visible: useUserStore().employeeCloumnSettings[14].visible,
          sortable: false,
          align: "center",
       },
       {
          prop: "current_address",
          label: "现住址",
-         visible: false,
+         visible: useUserStore().employeeCloumnSettings[15].visible,
          sortable: false,
          align: "left",
       },
       {
          prop: "comments",
          label: "备注",
-         visible: false,
+         visible: useUserStore().employeeCloumnSettings[16].visible,
          sortable: false,
          align: "left",
       },
@@ -231,16 +234,41 @@ employeeListApi()
    })
 
 ////// 表头工具栏
-todo
-// console.log("lastCheckValues", lastCheckValues)
-// const handleCheckedChange = (values: string[]) => {
-//    // values为所有被选中的列
-//    console.log("handleCheckedChange", values)
-//    console.log("handleCheckedChange", checkList.value)
-//    values.forEach((item, index) => {
-//       tableColumns.value[index]
-//    })
-// }
+let lastCheckedLables: CheckboxValueType[] = []
+const handleCheckedChange = (values: CheckboxValueType[]) => {
+   const store = useUserStore()
+   const { employeeCloumnSettings } = storeToRefs(store)
+   // values为所有被选中的列
+   // 求出values与lastCheckedLables的差集--取消选中的lable
+   // todo
+   var diff = values.filter(function (v) {
+      return lastCheckedLables.indexOf(v) == -1
+   })
+   console.log("diff1", diff)
+   diff.forEach((c) => {
+      employeeCloumnSettings.value.forEach((i) => {
+         if (i.label === c) {
+            i.visible = false
+         }
+      })
+   })
+
+   // 求出lastCheckedLables与values的差集--新增选中的lable
+   console.log("diff2", diff)
+   var diff = lastCheckedLables.filter(function (v) {
+      return values.indexOf(v) == -1
+   })
+   diff.forEach((c) => {
+      employeeCloumnSettings.value.forEach((i) => {
+         if (i.label === c) {
+            i.visible = true
+         }
+      })
+   })
+
+   console.log(employeeCloumnSettings.value)
+   lastCheckedLables = values
+}
 
 ////// 表格
 
@@ -322,10 +350,10 @@ const columns = computed(() => {
          </el-col>
          <el-col :span="6">
             <el-input v-model="inputValue" placeholder="" clearable>
-               <template #prepend>模糊搜索</template>
-               <template #prefix>
+               <template #suffix>
                   <el-icon><IEpSearch /></el-icon>
                </template>
+               <template #prepend>模糊搜索</template>
             </el-input>
          </el-col>
          <el-col :offset="1" :span="5">
@@ -337,9 +365,13 @@ const columns = computed(() => {
                   </el-button>
                </template>
                <el-checkbox-group v-model="checkList" @change="handleCheckedChange">
-                  <el-checkbox v-for="(item, index) in tableColumns" :label="item.label" :checked="item.visible">{{
-                     item.label
-                  }}</el-checkbox>
+                  <el-checkbox
+                     v-for="(item, index) in useUserStore().employeeCloumnSettings"
+                     :label="item.label"
+                     :checked="item.visible"
+                     :disabled="item.disable"
+                     >{{ item.label }}</el-checkbox
+                  >
                </el-checkbox-group>
             </el-popover>
          </el-col>

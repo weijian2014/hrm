@@ -18,3 +18,9 @@ interface Employee {
    current_address: string = ""
    comments: string = ""
 }
+
+interface EmployeeColumnSetting {
+   label: string
+   visible: boolean
+   disable: boolean
+}
