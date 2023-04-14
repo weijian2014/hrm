@@ -22,6 +22,7 @@ interface TableColumn {
    prop: string = ""
    label: string = ""
    visible: boolean = true
+   disable: boolean = false
    sortable: boolean = true
    align: string = "center"
    formatter?: any | undefined

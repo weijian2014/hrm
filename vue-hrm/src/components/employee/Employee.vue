@@ -7,7 +7,7 @@ import { useUserStore } from "@/store/user"
 import type { CheckboxValueType } from "element-plus"
 import { storeToRefs } from "pinia"
 
-const dateFormatter = (row, column) => {
+const dateFormatter = (row: [], column: any) => {
    var date = row[column.property]
    if (date == undefined) {
       return "未知"
@@ -61,136 +61,7 @@ const state = reactive<{
       table_layout: "auto",
       row_key: "id",
    },
-   tableColumns: [
-      {
-         prop: "id",
-         label: "序号",
-         visible: false,
-         sortable: false,
-         align: "center",
-      },
-      {
-         prop: "name",
-         label: "姓名",
-         visible: true,
-         sortable: useUserStore().employeeCloumnSettings[0].visible,
-         align: "center",
-      },
-      {
-         prop: "gender",
-         label: "性别",
-         visible: useUserStore().employeeCloumnSettings[1].visible,
-         sortable: true,
-         align: "center",
-      },
-      {
-         prop: "birthday",
-         label: "生日",
-         visible: useUserStore().employeeCloumnSettings[2].visible,
-         sortable: true,
-         align: "center",
-         formatter: dateFormatter,
-      },
-      {
-         prop: "first_work_time",
-         label: "参加工作时间",
-         visible: useUserStore().employeeCloumnSettings[3].visible,
-         sortable: true,
-         align: "center",
-         formatter: dateFormatter,
-      },
-      {
-         prop: "salary",
-         label: "工资",
-         visible: useUserStore().employeeCloumnSettings[4].visible,
-         sortable: true,
-         align: "center",
-      },
-      {
-         prop: "post",
-         label: "岗位",
-         visible: useUserStore().employeeCloumnSettings[5].visible,
-         sortable: true,
-         align: "center",
-      },
-      {
-         prop: "social_security",
-         label: "社保",
-         visible: useUserStore().employeeCloumnSettings[6].visible,
-         sortable: true,
-         align: "center",
-      },
-      {
-         prop: "phone",
-         label: "电话",
-         visible: useUserStore().employeeCloumnSettings[7].visible,
-         sortable: true,
-         align: "center",
-      },
-      {
-         prop: "former_employer",
-         label: "原单位",
-         visible: useUserStore().employeeCloumnSettings[8].visible,
-         sortable: true,
-         align: "left",
-      },
-      {
-         prop: "height",
-         label: "身高",
-         visible: useUserStore().employeeCloumnSettings[9].visible,
-         sortable: true,
-         align: "center",
-      },
-      {
-         prop: "weight",
-         label: "体重",
-         visible: useUserStore().employeeCloumnSettings[10].visible,
-         sortable: true,
-         align: "center",
-      },
-      {
-         prop: "degree",
-         label: "学历",
-         visible: useUserStore().employeeCloumnSettings[11].visible,
-         sortable: true,
-         align: "center",
-      },
-      {
-         prop: "political_status",
-         label: "政治面貌",
-         visible: useUserStore().employeeCloumnSettings[12].visible,
-         sortable: true,
-         align: "left",
-      },
-      {
-         prop: "identifier",
-         label: "身份证",
-         visible: useUserStore().employeeCloumnSettings[13].visible,
-         sortable: false,
-         align: "center",
-      },
-      {
-         prop: "security_card",
-         label: "保安证",
-         visible: useUserStore().employeeCloumnSettings[14].visible,
-         sortable: false,
-         align: "center",
-      },
-      {
-         prop: "current_address",
-         label: "现住址",
-         visible: useUserStore().employeeCloumnSettings[15].visible,
-         sortable: false,
-         align: "left",
-      },
-      {
-         prop: "comments",
-         label: "备注",
-         visible: useUserStore().employeeCloumnSettings[16].visible,
-         sortable: false,
-         align: "left",
-      },
-   ],
+   tableColumns: [],
    paginationSettings: {
       layout: "->, total, sizes, prev, pager, next",
       prev_text: "上一页",
@@ -221,6 +92,160 @@ const {
    tableData,
 } = toRefs(state)
 
+const initTableColumns = () => {
+   const { employeeTableSettings } = storeToRefs(useUserStore())
+   tableColumns.value = [
+      {
+         prop: "id",
+         label: "序号",
+         visible: employeeTableSettings?.value?.get("序号") || false,
+         disable: true,
+         sortable: false,
+         align: "center",
+      },
+      {
+         prop: "name",
+         label: "姓名",
+         visible: employeeTableSettings?.value?.get("姓名") || true,
+         disable: true,
+         sortable: true,
+         align: "center",
+      },
+      {
+         prop: "gender",
+         label: "性别",
+         visible: employeeTableSettings?.value?.get("性别") || true,
+         disable: true,
+         sortable: true,
+         align: "center",
+      },
+      {
+         prop: "birthday",
+         label: "生日",
+         visible: employeeTableSettings?.value?.get("生日") || true,
+         disable: true,
+         sortable: true,
+         align: "center",
+         formatter: dateFormatter,
+      },
+      {
+         prop: "first_work_time",
+         label: "参加工作时间",
+         visible: employeeTableSettings?.value?.get("参加工作时间") || false,
+         disable: false,
+         sortable: true,
+         align: "center",
+         formatter: dateFormatter,
+      },
+      {
+         prop: "salary",
+         label: "工资",
+         visible: employeeTableSettings?.value?.get("工资") || true,
+         disable: true,
+         sortable: true,
+         align: "center",
+      },
+      {
+         prop: "post",
+         label: "岗位",
+         visible: employeeTableSettings?.value?.get("岗位") || true,
+         disable: true,
+         sortable: true,
+         align: "center",
+      },
+      {
+         prop: "social_security",
+         label: "社保",
+         visible: employeeTableSettings?.value?.get("社保") || true,
+         disable: true,
+         sortable: true,
+         align: "center",
+      },
+      {
+         prop: "phone",
+         label: "电话",
+         visible: employeeTableSettings?.value?.get("电话") || false,
+         disable: false,
+         sortable: true,
+         align: "center",
+      },
+      {
+         prop: "former_employer",
+         label: "原单位",
+         visible: employeeTableSettings?.value?.get("原单位") || false,
+         disable: false,
+         sortable: true,
+         align: "left",
+      },
+      {
+         prop: "height",
+         label: "身高",
+         visible: employeeTableSettings?.value?.get("身高") || true,
+         disable: true,
+         sortable: true,
+         align: "center",
+      },
+      {
+         prop: "weight",
+         label: "体重",
+         visible: employeeTableSettings?.value?.get("体重") || true,
+         disable: true,
+         sortable: true,
+         align: "center",
+      },
+      {
+         prop: "degree",
+         label: "学历",
+         visible: employeeTableSettings?.value?.get("学历") || false,
+         disable: false,
+         sortable: true,
+         align: "center",
+      },
+      {
+         prop: "political_status",
+         label: "政治面貌",
+         visible: employeeTableSettings?.value?.get("政治面貌") || false,
+         disable: false,
+         sortable: true,
+         align: "left",
+      },
+      {
+         prop: "identifier",
+         label: "身份证",
+         visible: employeeTableSettings?.value?.get("身份证") || false,
+         disable: false,
+         sortable: false,
+         align: "center",
+      },
+      {
+         prop: "security_card",
+         label: "保安证",
+         visible: employeeTableSettings?.value?.get("保安证") || false,
+         disable: false,
+         sortable: false,
+         align: "center",
+      },
+      {
+         prop: "current_address",
+         label: "现住址",
+         visible: employeeTableSettings?.value?.get("现住址") || false,
+         disable: false,
+         sortable: false,
+         align: "left",
+      },
+      {
+         prop: "comments",
+         label: "备注",
+         visible: employeeTableSettings?.value?.get("备注") || false,
+         disable: false,
+         sortable: false,
+         align: "left",
+      },
+   ]
+}
+
+initTableColumns()
+
 employeeListApi()
    .then((res) => {
       if (res.code === 200) {
@@ -233,41 +258,53 @@ employeeListApi()
       console.log(res)
    })
 
+// 可显示的列
+const columns = computed(() => {
+   const allVisibleColumns = tableColumns.value.filter((column: { visible: boolean }) => column.visible)
+
+   // 变化时保存到Local Storage
+   let columnSettings = new Map<string, boolean>()
+   tableColumns.value.forEach((item) => {
+      columnSettings.set(item.label, item.visible)
+   })
+   useUserStore().saveEmployeeTableSettings(columnSettings)
+
+   console.log("allVisibleColumns", allVisibleColumns)
+   console.log("columnSettings", allVisibleColumns)
+   return allVisibleColumns
+})
+
 ////// 表头工具栏
-let lastCheckedLables: CheckboxValueType[] = []
+let lastCheckList = checkList.value as CheckboxValueType[]
 const handleCheckedChange = (values: CheckboxValueType[]) => {
-   const store = useUserStore()
-   const { employeeCloumnSettings } = storeToRefs(store)
    // values为所有被选中的列
    // 求出values与lastCheckedLables的差集--取消选中的lable
-   // todo
-   var diff = values.filter(function (v) {
-      return lastCheckedLables.indexOf(v) == -1
-   })
-   console.log("diff1", diff)
-   diff.forEach((c) => {
-      employeeCloumnSettings.value.forEach((i) => {
-         if (i.label === c) {
-            i.visible = false
-         }
-      })
-   })
+   const diffA = values.concat(lastCheckList).filter((v) => !values.includes(v))
 
    // 求出lastCheckedLables与values的差集--新增选中的lable
-   console.log("diff2", diff)
-   var diff = lastCheckedLables.filter(function (v) {
-      return values.indexOf(v) == -1
-   })
-   diff.forEach((c) => {
-      employeeCloumnSettings.value.forEach((i) => {
-         if (i.label === c) {
-            i.visible = true
+   var diffB = lastCheckList.concat(values).filter((v) => !lastCheckList.includes(v))
+
+   diffA.forEach((item1) => {
+      tableColumns.value.forEach((item2) => {
+         if (item2.label === item1) {
+            item2.visible = false
          }
       })
    })
 
-   console.log(employeeCloumnSettings.value)
-   lastCheckedLables = values
+   diffB.forEach((item1) => {
+      tableColumns.value.forEach((item2) => {
+         if (item2.label === item1) {
+            item2.visible = true
+         }
+      })
+   })
+
+   // console.log("values", values)
+   // console.log("checkList", checkList.value)
+   // console.log("lastCheckList", lastCheckList)
+   // console.log("tableColumns", tableColumns.value)
+   lastCheckList = values
 }
 
 ////// 表格
@@ -319,11 +356,6 @@ const handleCancel = (message: string) => {
    console.log("handleCancel", message, rowData.value)
    ElMessage.info(message)
 }
-
-////// 数据
-const columns = computed(() => {
-   return tableColumns.value.filter((column: { visible: any }) => column.visible)
-})
 </script>
 
 <template>
@@ -366,7 +398,7 @@ const columns = computed(() => {
                </template>
                <el-checkbox-group v-model="checkList" @change="handleCheckedChange">
                   <el-checkbox
-                     v-for="(item, index) in useUserStore().employeeCloumnSettings"
+                     v-for="item in tableColumns"
                      :label="item.label"
                      :checked="item.visible"
                      :disabled="item.disable"
@@ -376,7 +408,7 @@ const columns = computed(() => {
             </el-popover>
          </el-col>
       </el-row>
-      <!-- 表格 -->
+      <!-- 表格, table-layout为auto时表头无法固定 -->
       <el-table
          ref="tableRef"
          style="width: 100%"
@@ -391,7 +423,7 @@ const columns = computed(() => {
          :default-sort="{ prop: 'name', order: 'descending' }"
          @selection-change="handleSelectChange"
          @row-click="handleRowClick">
-         <el-table-column type="selection" />
+         <el-table-column type="selection" align="center" />
          <el-table-column
             v-for="(column, index) in columns"
             :key="column.prop"
