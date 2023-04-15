@@ -6,6 +6,7 @@ const props = defineProps<{
    isShow: boolean
    title: string
    formData: Menu
+   allMenu: Menu[]
 }>()
 
 // defineEmits定义了当前组件的事件, 可以向外部发送(通知外部组件)
@@ -18,6 +19,7 @@ const state = reactive<{
    dialogVisible: boolean
    formLabelWidth: string
    rawFormData: Menu
+   menus: Menu[]
 }>({
    isEscapeClose: false, // 是否按ESC关闭
    isShowClose: false, // 是否显示右上角的关闭
@@ -25,10 +27,12 @@ const state = reactive<{
    dialogVisible: false, // 是否显示对话框
    formLabelWidth: "10px",
    rawFormData: {} as Menu,
+   menus: [],
 })
 
 // 解构
-const { isEscapeClose, isShowClose, isClickModalToClose, dialogVisible, formLabelWidth, rawFormData } = toRefs(state)
+const { isEscapeClose, isShowClose, isClickModalToClose, dialogVisible, formLabelWidth, rawFormData, menus } =
+   toRefs(state)
 
 // watch写法上支持一个或者多个监听源, 这些监听源必须只能是getter/effect函数, ref数据, reactive对象或者数组类型
 watch(
@@ -37,6 +41,18 @@ watch(
       // 当props.formData变化为newValue时, 拷贝一份原始数据,
       // 不要直接使用props.formData, 否则会影响父组件的数据
       rawFormData.value = { ...props.formData }
+   }
+)
+
+watch(
+   () => props.allMenu,
+   (newValue) => {
+      menus.value.push({ id: 0, name: "顶级菜单", parent_id: 0, icon: "", url: "", updated_at: "" })
+      props.allMenu.forEach((item) => {
+         if (item.parent_id === 0) {
+            menus.value.push(item)
+         }
+      })
    }
 )
 
@@ -76,7 +92,9 @@ const handleCancel = () => {
                <el-input v-model="rawFormData.name"> </el-input>
             </el-form-item>
             <el-form-item label="父菜单" prop="parent_id">
-               <el-input v-model="rawFormData.parent_id"> </el-input>
+               <el-select v-model="rawFormData.parent_id" placeholder="">
+                  <el-option v-for="item in menus" :key="item.id" :label="item.name" :value="item.name" />
+               </el-select>
             </el-form-item>
             <el-form-item label="图标" prop="icon">
                <el-input v-model="rawFormData.icon"> </el-input>

@@ -1,13 +1,22 @@
 <script lang="ts" setup>
 import AddVue from "@/components/employee/Add.vue"
-import { employeeListApi } from "@/utils/employee"
+import { employeeListApi, employeeDeleteApi } from "@/utils/employee"
 import type { CheckboxValueType } from "element-plus"
 import { useSettings, useData } from "./index"
 
 const { table, columns, pagination, checkList } = useSettings()
 
-const { tableRef, tableData, isButtonDisabled, seachInputValue, isShow, title, rowData, isVisibleColumnsSettings } =
-   useData()
+const {
+   tableRef,
+   tableData,
+   isButtonDisabled,
+   seachInputValue,
+   isShow,
+   title,
+   rowData,
+   isVisibleColumnsSettings,
+   selections,
+} = useData()
 
 employeeListApi()
    .then((res) => {
@@ -20,6 +29,34 @@ employeeListApi()
    .catch((res) => {
       console.log(res)
    })
+
+const deleteAndRefresh = async (ids: number[]) => {
+   for (let i = 0; i < ids.length; ++i) {
+      await employeeDeleteApi(ids[i])
+         .then((res) => {
+            if (res.code === 200) {
+               console.log(res)
+            }
+         })
+         .catch((res) => {
+            console.log(res)
+            isButtonDisabled.value = false
+            return new Promise(() => {})
+         })
+   }
+
+   await employeeListApi()
+      .then((res) => {
+         if (res.code === 200) {
+            console.log(res)
+            tableData.value = res.data.rows
+         }
+      })
+      .catch((res) => {
+         console.log(res)
+         return new Promise(() => {})
+      })
+}
 
 // 可显示的列
 const visibleColumns = computed(() => {
@@ -56,8 +93,12 @@ const handleCheckedChange = (values: CheckboxValueType[]) => {
 }
 
 ////// 表格
+
+// 勾选表格的行时
 const handleSelectChange = (rows: Employee[]) => {
+   // rows为所有选中的行
    console.log("handleSelectChange", rows)
+   selections.value = rows
    isButtonDisabled.value = rows.length === 0
 }
 
@@ -82,18 +123,98 @@ const handleEdit = (index: number, row: Employee | undefined) => {
    }
 }
 
-const handleDelete = (index: number, row: Employee) => {
+const handleDelete = async (index: number, row: Employee) => {
    console.log("handleDelete", index, row)
-   tableData.splice(index, 1)
+   await ElMessageBox.confirm(
+      h("p", null, [
+         h("span", null, "确认删除姓名 "),
+         h("i", { style: "color: red" }, row.name),
+         h("span", null, " 的记录?"),
+      ]),
+      "删除确认",
+      {
+         confirmButtonText: "确认",
+         cancelButtonText: "取消",
+         type: "warning",
+      }
+   ).catch(() => {
+      ElMessage.info("操作已取消")
+      return new Promise(() => {})
+   })
+
+   const ids = [row.id]
+   deleteAndRefresh(ids)
+   ElMessage.success("删除成功")
+}
+
+// 批量删除
+const handleBatchDelete = () => {
+   console.log("handleBatchDelete", selections)
+   if (selections.value.length === 0) {
+      isButtonDisabled.value = true
+      return
+   }
+
+   isButtonDisabled.value = true
+   let names: string = ""
+   let ids: number[] = []
+   selections.value.forEach((item, i) => {
+      names += item.name
+      ids.push(item.id)
+      if (i != selections.value.length - 1) {
+         names += ", "
+      }
+   })
+
+   ElMessageBox.confirm(
+      h("p", null, [
+         h("span", null, "确认删除姓名 "),
+         h("i", { style: "color: red" }, names),
+         h("span", null, " 共" + selections.value.length + "条记录?"),
+      ]),
+      "删除确认",
+      {
+         confirmButtonText: "确认",
+         cancelButtonText: "取消",
+         type: "warning",
+      }
+   )
+      .then(() => {
+         deleteAndRefresh(ids)
+
+         selections.value = [] as Employee[]
+         isButtonDisabled.value = true
+         ElMessage.success("删除成功")
+      })
+      .catch(() => {
+         ElMessage.info("操作已取消")
+         isButtonDisabled.value = false
+         return new Promise(() => {})
+      })
 }
 
 ////// Add组件
 
 // AddVue组件发送的保存事件
-const handleSave = (message: string) => {
+const handleSave = async (message: string) => {
    // todo 更新表格数据
    isShow.value = false
    console.log("handleSave", message, rowData.value)
+
+   // 从数据库中读取最新的数据
+   await employeeListApi()
+      .then((res) => {
+         if (res.code === 200) {
+            console.log(res)
+            // totalRows.value = res.data.total
+            tableData.value = res.data.rows
+         }
+      })
+      .catch((res) => {
+         console.log(res)
+         return new Promise(() => {})
+      })
+
    ElMessage.success(message)
 }
 
@@ -122,7 +243,7 @@ const handleCancel = (message: string) => {
                <IEpDownload />
                <span style="vertical-align: middle">导出</span>
             </el-button>
-            <el-button type="primary" :disabled="isButtonDisabled">
+            <el-button type="primary" :disabled="isButtonDisabled" @click="handleBatchDelete">
                <IEpDelete />
                <span style="vertical-align: middle">删除</span>
             </el-button>

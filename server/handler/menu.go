@@ -92,7 +92,7 @@ func menuAdd(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
 		"message": "菜单增加成功",
-		"data":    "",
+		"data":    menu,
 	})
 }
 

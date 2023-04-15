@@ -92,7 +92,13 @@ const handleCancel = (message: string) => {
             </el-table-column>
          </el-table>
       </el-card>
-      <AddOrEdit :isShow="isShow" :title="title" :formData="rowData" @save="handleSave" @cancel="handleCancel">
+      <AddOrEdit
+         :isShow="isShow"
+         :title="title"
+         :formData="rowData"
+         :allMenu="menus"
+         @save="handleSave"
+         @cancel="handleCancel">
       </AddOrEdit>
    </div>
 </template>

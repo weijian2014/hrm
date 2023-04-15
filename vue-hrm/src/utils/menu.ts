@@ -1,11 +1,5 @@
 import request from "@/utils/request"
-import type { ApiResponse, PromiseResponse } from "@/utils/common"
-
-// Id        uint64    `json:"id" description:"菜单ID"`
-// Name      string    `json:"name" description:"菜单名"`
-// Url       string    `json:"url" description:"菜单链接"`
-// ParentId  uint64    `json:"parent_id" description:"菜单的父级菜单ID"`
-// UpdatedAt time.Time `json:"updated_at" description:"更新时间"`
+import type { PromiseResponse } from "@/utils/common"
 
 //
 export interface Menu {
@@ -23,3 +17,17 @@ export interface MenuListResponse {
 }
 
 export const menuListApi = (): PromiseResponse<MenuListResponse> => request.get("/menu/list")
+
+// Partial让Menu中的所有成员变成可选字段
+// type MenuAddRequest = Partial<Menu>
+
+// 从Menu中挑选出几个成员做为新的类型
+type MenuAddRequest = Pick<Menu, "name" | "parent_id" | "icon" | "url">
+
+// 组合other成为新类型
+// type MenuAddRequest = Pick<Menu, "name" | "parent_id" | "icon" | "url"> & { other: string}
+
+// 另一种写法, 忽略id和updated_at, 保留其它成员做为新的类型
+// type MenuAddRequest = Omit<Menu, "id" | "updated_at">
+
+export const menuAddApi = (data: MenuAddRequest): PromiseResponse<Menu> => request.post("/menu/add")

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { employeeUpdateApi } from "@/utils/employee"
+
 // defineProps定义了当前组件的属性, 外部组件使用当前组件可以绑定传递进来
 const props = defineProps<{
    isShow: boolean
@@ -48,8 +50,19 @@ watch(
 
 const handleSave = () => {
    // todo 保存到数据库
-   // 向外发送save(保存)事件
-   emits("save", "保存成功")
+   console.log("handleSave", rawFormData.value)
+
+   employeeUpdateApi(rawFormData.value)
+      .then((res) => {
+         if (res.code === 200) {
+            console.log(res)
+            // 向外发送save(保存)事件
+            emits("save", "保存成功")
+         }
+      })
+      .catch((res) => {
+         console.log(res)
+      })
 }
 
 const handleCancel = () => {

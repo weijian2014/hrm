@@ -9,7 +9,7 @@ export function useSettings() {
       fit: true,
       highlight_current_row: true,
       height: 500,
-      empty_text: "N/A",
+      empty_text: "暂无数据",
       table_layout: "auto",
       row_key: "id",
    })
@@ -216,7 +216,7 @@ export function useData() {
    const isVisibleColumnsSettings = ref(false)
 
    // 表格选中的行
-   const selections = Array
+   const selections = ref<Employee[]>([] as Employee[])
 
    return {
       tableRef,
