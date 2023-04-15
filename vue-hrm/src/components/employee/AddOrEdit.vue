@@ -47,6 +47,7 @@ watch(
    () => props.isShow,
    (newValue) => {
       dialogVisible.value = newValue as boolean
+      formRef.value?.clearValidate()
    }
 )
 
@@ -63,7 +64,6 @@ const handleSave = async () => {
       ?.validate()
       .then(async () => {
          console.log("表单校验成功")
-         isLoading.value = false
 
          await employeeUpdateApi(rawFormData.value)
             .then((res) => {
@@ -71,10 +71,12 @@ const handleSave = async () => {
                   console.log(res)
                   // 向外发送save(保存)事件
                   emits("save", "保存成功")
+                  isLoading.value = false
                }
             })
             .catch((res) => {
                console.log(res)
+               isLoading.value = false
                return new Promise(() => {})
             })
       })
@@ -205,13 +207,43 @@ const postOptions = [
    },
 ]
 
+const isHeightValid = (rule: unknown, value: string | undefined, callback: (msg?: string) => void) => {
+   if (!value) {
+      callback("请输入身高, 单位厘米")
+      return
+   }
+
+   let h = Number(value)
+   if (h < 120 || h > 230) {
+      callback("身高在120~230厘米之间")
+      return
+   }
+
+   callback()
+}
+
+const isWeightValid = (rule: unknown, value: string | undefined, callback: (msg?: string) => void) => {
+   if (!value) {
+      callback("请输入体重, 单位公斤")
+      return
+   }
+
+   let w = Number(value)
+   if (w < 40 || w > 130) {
+      callback("体重在40~130公斤之间")
+      return
+   }
+
+   callback()
+}
+
 const isIdentifierValid = (rule: unknown, value: string | undefined, callback: (msg?: string) => void) => {
    if (!value) {
       callback("请输入身份证号")
       return
    }
 
-   if (Validator.isIdentifierValid(value?.toString())) {
+   if (!Validator.isIdentifierValid(value?.toString())) {
       callback("身份证号输入有误")
       return
    }
@@ -225,7 +257,7 @@ const isPhoneValid = (rule: unknown, value: string | undefined, callback: (msg?:
       return
    }
 
-   if (Validator.isPhoneValid(value?.toString())) {
+   if (!Validator.isPhoneValid(value?.toString())) {
       callback("手机号输入有误")
       return
    }
@@ -257,25 +289,18 @@ const rules = reactive<FormRules>({
       },
    ],
    height: [
+      { type: "number", whitespace: false, message: "身高必须是数字, 单位厘米", trigger: "change" },
       {
          required: true,
-         message: "请输入身高, 单位厘米",
+         validator: isHeightValid,
          trigger: "blur",
       },
-      { min: 120, max: 230, message: "身高在120~230之间", trigger: "blur" },
    ],
    weight: [
+      { type: "number", whitespace: false, message: "体重必须是数字, 单位公斤", trigger: "change" },
       {
          required: true,
-         message: "请输入体重, 单位公斤",
-         trigger: "blur",
-      },
-      { min: 40, max: 230, message: "密码长度在40~230之间", trigger: "blur" },
-   ],
-   current_address: [
-      {
-         required: true,
-         message: "请输入现住址",
+         validator: isWeightValid,
          trigger: "blur",
       },
    ],
@@ -306,15 +331,14 @@ const rules = reactive<FormRules>({
          validator: isIdentifierValid,
          trigger: "blur",
       },
-      { min: 18, max: 18, message: "身份证为18位数", trigger: "blur" },
    ],
    phone: [
+      { min: 11, max: 11, whitespace: false, message: "电话是11位数字", trigger: "change" },
       {
          required: true,
          validator: isPhoneValid,
          trigger: "blur",
       },
-      { min: 6, max: 20, message: "密码长度在3~20之间", trigger: "blur" },
    ],
    first_work_time: [
       {
@@ -331,10 +355,21 @@ const rules = reactive<FormRules>({
       },
    ],
    salary: [
+      { type: "number", whitespace: false, message: "工资必须是数字, 单位人民币元", trigger: "change" },
       {
          required: true,
          message: "请输入工资, 单位人民币元",
          trigger: "blur",
+      },
+   ],
+   security_card: [
+      {
+         required: false,
+         min: 8,
+         max: 8,
+         whitespace: false,
+         message: "保安证必须是8位",
+         trigger: "change",
       },
    ],
 })

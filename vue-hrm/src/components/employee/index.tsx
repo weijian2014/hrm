@@ -280,12 +280,12 @@ export default class Validator {
 
    /**
     * @description 校验手机号格式是否正确
-    * @param { string } n 手机号
+    * @param { string } phone 手机号
     * @returns { boolean }
     */
-   static isPhoneValid(n: string): boolean {
-      const phone: RegExp =
-         /^(0|86|17951)?(13[0-9]|15[012356789]|16[67]|17[1235678]|18[0-9]|19[01356789]|14[0578])[0-9]{8}$/
-      return phone.test(n)
+   static isPhoneValid(phone: string): boolean {
+      const phoneRegExp: RegExp =
+         /^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$/
+      return phoneRegExp.test(phone)
    }
 }
