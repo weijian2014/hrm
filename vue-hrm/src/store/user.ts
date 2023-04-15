@@ -1,12 +1,10 @@
 import { defineStore } from "pinia"
 
 const tokenInfoKey = "TokenInfo"
-const employeeTableSettingsKey = "EmployeeTableSettings"
 
 export const useUserStore = defineStore("user", () => {
    const tokenJson = ref("")
    const data = reactive({})
-   const employeeTableSettings = ref<Map<string, boolean>>()
 
    const tokenInfo = computed<TokenInfo>(() => {
       try {
@@ -25,23 +23,5 @@ export const useUserStore = defineStore("user", () => {
       window.localStorage.setItem(tokenInfoKey, data)
    }
 
-   // const employeeTableSettings = computed<Map<string, boolean>>(() => {
-   //    try {
-   //       return JSON.parse(
-   //          employeeTableSettingsJson.value || window.localStorage.getItem(employeeTableSettingsKey) || "{}"
-   //       )
-   //    } catch (err) {
-   //       ElMessage.error("保存EmployeeTableSettings时json格式错误")
-   //       window.localStorage.setItem(employeeTableSettingsKey, "")
-   //       throw err
-   //    }
-   // })
-   function saveEmployeeTableSettings(settings: Map<string, boolean>) {
-      employeeTableSettings.value = settings
-      const settingsString = JSON.stringify(settings)
-      console.log("settingsString", settingsString)
-      window.localStorage.setItem(employeeTableSettingsKey, settingsString)
-   }
-
-   return { tokenInfo, saveToken, data, employeeTableSettings, saveEmployeeTableSettings }
+   return { tokenInfo, saveToken, data }
 })

@@ -1,13 +1,10 @@
 {
    "$schema": "http://json-schema.org/draft-04/schema#",
    "extends": "@vue/tsconfig/tsconfig.web.json",
-   "include": [
-      "env.d.ts",
-      "src/**/*",
-      "src/**/*.vue",
-      "auto-imports.d.ts",
-      "components.d.ts"
-   ],
+   "jsx": "preserve",
+   "jsxFactory": "h",
+   "jsxFragmentFactory": "Fragment",
+   "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "auto-imports.d.tsx", "components.d.ts"],
    "compilerOptions": {
       "ignoreDeprecations": "5.0",
       "baseUrl": ".",

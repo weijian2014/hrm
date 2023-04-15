@@ -129,6 +129,9 @@ npm i -D vite-plugin-windicss windicss
 npm install axios promise.prototype.finally --save
 npm install --save-dev @types/promise.prototype.finall   # main.ts要引入shim()
 
+# 使用JSX和TSX, https://blog.csdn.net/qq1195566313/article/details/123172735
+npm install @vitejs/plugin-vue-jsx -D
+
 # js-cookie, https://github.com/js-cookie/js-cookie
 npm i js-cookie
 

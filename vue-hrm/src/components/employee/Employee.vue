@@ -1,256 +1,19 @@
 <script lang="ts" setup>
-import moment from "moment"
-import { getAgeByBirthday } from "@/utils/common"
 import AddVue from "@/components/employee/Add.vue"
 import { employeeListApi } from "@/utils/employee"
-import { useUserStore } from "@/store/user"
 import type { CheckboxValueType } from "element-plus"
-import { storeToRefs } from "pinia"
+import { useSettings, useData } from "./index"
 
-const dateFormatter = (row: [], column: any) => {
-   var date = row[column.property]
-   if (date == undefined) {
-      return "未知"
-   }
+const { table, columns, pagination, checkList } = useSettings()
 
-   const dateStr = moment(date).format("YYYY-MM-DD")
-   const age = getAgeByBirthday(dateStr)
-   if (column.property === "birthday") {
-      // 生日
-      return dateStr + " (" + age + "岁)"
-   } else {
-      // 参加工作时间
-      return dateStr + " (" + age + "年)"
-   }
-}
-
-const state = reactive<{
-   isButtonDisabled: boolean
-   inputValue: string
-   tableRef: {}
-   selections: []
-   isVisibleColumnsSettings: boolean
-   checkList: string[]
-   isShow: boolean
-   title: string
-   rowData: Employee
-   tableSettings: TableSettings
-   tableColumns: TableColumn[]
-   paginationSettings: PaginationSettings
-   totalRows: number
-   tableData: Employee[]
-}>({
-   // 表格
-   isButtonDisabled: true, // 是否禁用表头的修改和删除按钮
-   inputValue: "", // 搜索框的值
-   tableRef: {}, // el-table组件对象, 自动关联到el-table组件
-   selections: [], // 表格选中的行
-   isVisibleColumnsSettings: false,
-   checkList: [],
-   // Add组件属性
-   isShow: false,
-   title: "查看",
-   rowData: {} as Employee,
-   // 表格数据
-   tableSettings: {
-      border: true,
-      fit: true,
-      highlight_current_row: true,
-      height: 500,
-      empty_text: "N/A",
-      table_layout: "auto",
-      row_key: "id",
-   },
-   tableColumns: [],
-   paginationSettings: {
-      layout: "->, total, sizes, prev, pager, next",
-      prev_text: "上一页",
-      next_text: "下一页",
-      page_sizes: [10, 20, 30, 40, 50, 100],
-      default_page_size: 10,
-      default_current_page: 1,
-      hide_on_single_page: false,
-   },
-   totalRows: 0,
-   tableData: [],
-})
-
-// 解构
-const {
-   isButtonDisabled,
-   inputValue,
-   tableRef,
-   selections,
-   isVisibleColumnsSettings,
-   checkList,
-   isShow,
-   title,
-   rowData,
-   tableSettings,
-   tableColumns,
-   totalRows,
-   tableData,
-} = toRefs(state)
-
-const initTableColumns = () => {
-   const { employeeTableSettings } = storeToRefs(useUserStore())
-   tableColumns.value = [
-      {
-         prop: "id",
-         label: "序号",
-         visible: employeeTableSettings?.value?.get("序号") || false,
-         disable: true,
-         sortable: false,
-         align: "center",
-      },
-      {
-         prop: "name",
-         label: "姓名",
-         visible: employeeTableSettings?.value?.get("姓名") || true,
-         disable: true,
-         sortable: true,
-         align: "center",
-      },
-      {
-         prop: "gender",
-         label: "性别",
-         visible: employeeTableSettings?.value?.get("性别") || true,
-         disable: true,
-         sortable: true,
-         align: "center",
-      },
-      {
-         prop: "birthday",
-         label: "生日",
-         visible: employeeTableSettings?.value?.get("生日") || true,
-         disable: true,
-         sortable: true,
-         align: "center",
-         formatter: dateFormatter,
-      },
-      {
-         prop: "first_work_time",
-         label: "参加工作时间",
-         visible: employeeTableSettings?.value?.get("参加工作时间") || false,
-         disable: false,
-         sortable: true,
-         align: "center",
-         formatter: dateFormatter,
-      },
-      {
-         prop: "salary",
-         label: "工资",
-         visible: employeeTableSettings?.value?.get("工资") || true,
-         disable: true,
-         sortable: true,
-         align: "center",
-      },
-      {
-         prop: "post",
-         label: "岗位",
-         visible: employeeTableSettings?.value?.get("岗位") || true,
-         disable: true,
-         sortable: true,
-         align: "center",
-      },
-      {
-         prop: "social_security",
-         label: "社保",
-         visible: employeeTableSettings?.value?.get("社保") || true,
-         disable: true,
-         sortable: true,
-         align: "center",
-      },
-      {
-         prop: "phone",
-         label: "电话",
-         visible: employeeTableSettings?.value?.get("电话") || false,
-         disable: false,
-         sortable: true,
-         align: "center",
-      },
-      {
-         prop: "former_employer",
-         label: "原单位",
-         visible: employeeTableSettings?.value?.get("原单位") || false,
-         disable: false,
-         sortable: true,
-         align: "left",
-      },
-      {
-         prop: "height",
-         label: "身高",
-         visible: employeeTableSettings?.value?.get("身高") || true,
-         disable: true,
-         sortable: true,
-         align: "center",
-      },
-      {
-         prop: "weight",
-         label: "体重",
-         visible: employeeTableSettings?.value?.get("体重") || true,
-         disable: true,
-         sortable: true,
-         align: "center",
-      },
-      {
-         prop: "degree",
-         label: "学历",
-         visible: employeeTableSettings?.value?.get("学历") || false,
-         disable: false,
-         sortable: true,
-         align: "center",
-      },
-      {
-         prop: "political_status",
-         label: "政治面貌",
-         visible: employeeTableSettings?.value?.get("政治面貌") || false,
-         disable: false,
-         sortable: true,
-         align: "left",
-      },
-      {
-         prop: "identifier",
-         label: "身份证",
-         visible: employeeTableSettings?.value?.get("身份证") || false,
-         disable: false,
-         sortable: false,
-         align: "center",
-      },
-      {
-         prop: "security_card",
-         label: "保安证",
-         visible: employeeTableSettings?.value?.get("保安证") || false,
-         disable: false,
-         sortable: false,
-         align: "center",
-      },
-      {
-         prop: "current_address",
-         label: "现住址",
-         visible: employeeTableSettings?.value?.get("现住址") || false,
-         disable: false,
-         sortable: false,
-         align: "left",
-      },
-      {
-         prop: "comments",
-         label: "备注",
-         visible: employeeTableSettings?.value?.get("备注") || false,
-         disable: false,
-         sortable: false,
-         align: "left",
-      },
-   ]
-}
-
-initTableColumns()
+const { tableRef, tableData, isButtonDisabled, seachInputValue, isShow, title, rowData, isVisibleColumnsSettings } =
+   useData()
 
 employeeListApi()
    .then((res) => {
       if (res.code === 200) {
          console.log(res)
-         totalRows.value = res.data.total
+         // totalRows.value = res.data.total
          tableData.value = res.data.rows
       }
    })
@@ -259,19 +22,8 @@ employeeListApi()
    })
 
 // 可显示的列
-const columns = computed(() => {
-   const allVisibleColumns = tableColumns.value.filter((column: { visible: boolean }) => column.visible)
-
-   // 变化时保存到Local Storage
-   let columnSettings = new Map<string, boolean>()
-   tableColumns.value.forEach((item) => {
-      columnSettings.set(item.label, item.visible)
-   })
-   useUserStore().saveEmployeeTableSettings(columnSettings)
-
-   console.log("allVisibleColumns", allVisibleColumns)
-   console.log("columnSettings", allVisibleColumns)
-   return allVisibleColumns
+const visibleColumns = computed(() => {
+   return columns.filter((column: { visible: boolean }) => column.visible)
 })
 
 ////// 表头工具栏
@@ -285,7 +37,7 @@ const handleCheckedChange = (values: CheckboxValueType[]) => {
    var diffB = lastCheckList.concat(values).filter((v) => !lastCheckList.includes(v))
 
    diffA.forEach((item1) => {
-      tableColumns.value.forEach((item2) => {
+      columns.forEach((item2) => {
          if (item2.label === item1) {
             item2.visible = false
          }
@@ -293,22 +45,17 @@ const handleCheckedChange = (values: CheckboxValueType[]) => {
    })
 
    diffB.forEach((item1) => {
-      tableColumns.value.forEach((item2) => {
+      columns.forEach((item2) => {
          if (item2.label === item1) {
             item2.visible = true
          }
       })
    })
 
-   // console.log("values", values)
-   // console.log("checkList", checkList.value)
-   // console.log("lastCheckList", lastCheckList)
-   // console.log("tableColumns", tableColumns.value)
    lastCheckList = values
 }
 
 ////// 表格
-
 const handleSelectChange = (rows: Employee[]) => {
    console.log("handleSelectChange", rows)
    isButtonDisabled.value = rows.length === 0
@@ -337,7 +84,7 @@ const handleEdit = (index: number, row: Employee | undefined) => {
 
 const handleDelete = (index: number, row: Employee) => {
    console.log("handleDelete", index, row)
-   tableData.value.splice(index, 1)
+   tableData.splice(index, 1)
 }
 
 ////// Add组件
@@ -381,7 +128,7 @@ const handleCancel = (message: string) => {
             </el-button>
          </el-col>
          <el-col :span="6">
-            <el-input v-model="inputValue" placeholder="" clearable>
+            <el-input v-model="seachInputValue" placeholder="" clearable>
                <template #suffix>
                   <el-icon><IEpSearch /></el-icon>
                </template>
@@ -389,7 +136,12 @@ const handleCancel = (message: string) => {
             </el-input>
          </el-col>
          <el-col :offset="1" :span="5">
-            <el-popover placement="left-end" title="列筛选" trigger="click" :visible="isVisibleColumnsSettings">
+            <el-popover
+               placement="left-end"
+               title="列筛选"
+               trigger="click"
+               width="300"
+               :visible="isVisibleColumnsSettings">
                <template #reference>
                   <el-button type="primary" @click="isVisibleColumnsSettings = !isVisibleColumnsSettings">
                      <IEpPlus />
@@ -398,7 +150,7 @@ const handleCancel = (message: string) => {
                </template>
                <el-checkbox-group v-model="checkList" @change="handleCheckedChange">
                   <el-checkbox
-                     v-for="item in tableColumns"
+                     v-for="item in columns"
                      :label="item.label"
                      :checked="item.visible"
                      :disabled="item.disable"
@@ -413,19 +165,19 @@ const handleCancel = (message: string) => {
          ref="tableRef"
          style="width: 100%"
          :data="tableData"
-         :border="tableSettings.border"
-         :fit="tableSettings.fit"
-         :height="tableSettings.height"
-         :table-layout="tableSettings.table_layout"
-         :empty-text="tableSettings.empty_text"
-         :highlight-current-row="tableSettings.highlight_current_row"
-         :row-key="tableSettings.row_key"
+         :border="table.border"
+         :fit="table.fit"
+         :height="table.height"
+         :table-layout="table.table_layout"
+         :empty-text="table.empty_text"
+         :highlight-current-row="table.highlight_current_row"
+         :row-key="table.row_key"
          :default-sort="{ prop: 'name', order: 'descending' }"
          @selection-change="handleSelectChange"
          @row-click="handleRowClick">
          <el-table-column type="selection" align="center" />
          <el-table-column
-            v-for="(column, index) in columns"
+            v-for="(column, index) in visibleColumns"
             :key="column.prop"
             :prop="column.prop"
             :label="column.label"

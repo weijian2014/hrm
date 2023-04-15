@@ -6,9 +6,9 @@ export interface ApiResponse<T> {
 
 export type PromiseResponse<T> = Promise<ApiResponse<T>>
 
-export function getAgeByBirthday(strintBirthday: string) {
+export function getAgeByBirthday(stringBirthday: string) {
    let returnAge
-   const strBirthdayArr = strintBirthday.split("-")
+   const strBirthdayArr = stringBirthday.split("-")
    const birthYear = Number(strBirthdayArr[0])
    const birthMonth = Number(strBirthdayArr[1])
    const birthDay = Number(strBirthdayArr[2])
