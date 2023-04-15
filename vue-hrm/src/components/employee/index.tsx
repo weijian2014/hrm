@@ -212,9 +212,6 @@ export function useData() {
    const title = ref("修改")
    const rowData = ref<Employee>({} as Employee)
 
-   // 隐藏列
-   const isVisibleColumnsSettings = ref(false)
-
    // 表格选中的行
    const selections = ref<Employee[]>([] as Employee[])
 
@@ -226,7 +223,6 @@ export function useData() {
       isShow,
       title,
       rowData,
-      isVisibleColumnsSettings,
       selections,
    }
 }

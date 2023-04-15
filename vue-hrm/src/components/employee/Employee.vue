@@ -6,17 +6,7 @@ import { useSettings, useData } from "./index"
 
 const { table, columns, pagination, checkList } = useSettings()
 
-const {
-   tableRef,
-   tableData,
-   isButtonDisabled,
-   seachInputValue,
-   isShow,
-   title,
-   rowData,
-   isVisibleColumnsSettings,
-   selections,
-} = useData()
+const { tableRef, tableData, isButtonDisabled, seachInputValue, isShow, title, rowData, selections } = useData()
 
 employeeListApi()
    .then((res) => {
@@ -257,19 +247,11 @@ const handleCancel = (message: string) => {
             </el-input>
          </el-col>
          <el-col :offset="1" :span="5">
-            <el-popover
-               placement="left-end"
-               title="列筛选"
-               trigger="click"
-               width="300"
-               :visible="isVisibleColumnsSettings">
+            <el-popover placement="left-end" title="列筛选" :width="300" trigger="click">
                <template #reference>
-                  <el-button type="primary" @click="isVisibleColumnsSettings = !isVisibleColumnsSettings">
-                     <IEpPlus />
-                     <span style="vertical-align: middle">列筛选</span>
-                  </el-button>
+                  <el-button type="primary" style="vertical-align: middle"><IEpPlus />列筛选</el-button>
                </template>
-               <el-checkbox-group v-model="checkList" @change="handleCheckedChange">
+               <el-checkbox-group v-model="checkList" @change="handleCheckedChange" :min="6" :max="17">
                   <el-checkbox
                      v-for="item in columns"
                      :label="item.label"
