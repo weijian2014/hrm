@@ -275,6 +275,7 @@ const handleCancel = (message: string) => {
                      :label="item.label"
                      :checked="item.visible"
                      :disabled="item.disable"
+                     v-show="item.prop != 'id'"
                      >{{ item.label }}</el-checkbox
                   >
                </el-checkbox-group>
