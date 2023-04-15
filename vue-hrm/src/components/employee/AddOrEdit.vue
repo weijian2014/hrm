@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { employeeUpdateApi } from "@/utils/employee"
+import Validator from "./index"
+import type { FormRules } from "element-plus"
 
 // defineProps定义了当前组件的属性, 外部组件使用当前组件可以绑定传递进来
 const props = defineProps<{
@@ -48,20 +50,38 @@ watch(
    }
 )
 
-const handleSave = () => {
-   // todo 保存到数据库
+// el-form组件对象, 自动关联到el-form组件
+// const formRef = ref<FormInstance>()
+const formRef = ref()
+const isLoading = ref(false)
+const handleSave = async () => {
    console.log("handleSave", rawFormData.value)
+   isLoading.value = true
 
-   employeeUpdateApi(rawFormData.value)
-      .then((res) => {
-         if (res.code === 200) {
-            console.log(res)
-            // 向外发送save(保存)事件
-            emits("save", "保存成功")
-         }
+   // 表格输入规则校验, 通过进入than, 不通过则进入catch
+   await formRef.value
+      ?.validate()
+      .then(async () => {
+         console.log("表单校验成功")
+         isLoading.value = false
+
+         await employeeUpdateApi(rawFormData.value)
+            .then((res) => {
+               if (res.code === 200) {
+                  console.log(res)
+                  // 向外发送save(保存)事件
+                  emits("save", "保存成功")
+               }
+            })
+            .catch((res) => {
+               console.log(res)
+               return new Promise(() => {})
+            })
       })
-      .catch((res) => {
-         console.log(res)
+      .catch((err: any) => {
+         isLoading.value = false
+         console.log("表单校验失败", err)
+         return new Promise(() => {})
       })
 }
 
@@ -185,21 +205,139 @@ const postOptions = [
    },
 ]
 
-const phoneFormatter = (value: string | number) => {
-   console.log("phoneFormatter", value)
+const isIdentifierValid = (rule: unknown, value: string | undefined, callback: (msg?: string) => void) => {
+   if (!value) {
+      callback("请输入身份证号")
+      return
+   }
+
+   if (Validator.isIdentifierValid(value?.toString())) {
+      callback("身份证号输入有误")
+      return
+   }
+
+   callback()
 }
 
-const salaryFormatter = (value: string | number) => {
-   console.log("salaryFormatter", value)
+const isPhoneValid = (rule: unknown, value: string | undefined, callback: (msg?: string) => void) => {
+   if (!value) {
+      callback("请输入手机号")
+      return
+   }
+
+   if (Validator.isPhoneValid(value?.toString())) {
+      callback("手机号输入有误")
+      return
+   }
+
+   callback()
 }
 
-const identifierFormatter = (value: string | number) => {
-   console.log("identifierFormatter", value)
-}
-
-const securityCardFormatter = (value: string | number) => {
-   console.log("securityCardFormatter", value)
-}
+// 校验规则
+const rules = reactive<FormRules>({
+   name: [
+      {
+         required: true,
+         message: "请输入姓名",
+         trigger: "blur", // 失去焦点时
+      },
+   ],
+   gender: [
+      {
+         required: true,
+         message: "请选择性别",
+         trigger: "blur",
+      },
+   ],
+   birthday: [
+      {
+         required: true,
+         message: "请选择生日",
+         trigger: "blur",
+      },
+   ],
+   height: [
+      {
+         required: true,
+         message: "请输入身高, 单位厘米",
+         trigger: "blur",
+      },
+      { min: 120, max: 230, message: "身高在120~230之间", trigger: "blur" },
+   ],
+   weight: [
+      {
+         required: true,
+         message: "请输入体重, 单位公斤",
+         trigger: "blur",
+      },
+      { min: 40, max: 230, message: "密码长度在40~230之间", trigger: "blur" },
+   ],
+   current_address: [
+      {
+         required: true,
+         message: "请输入现住址",
+         trigger: "blur",
+      },
+   ],
+   political_status: [
+      {
+         required: true,
+         message: "请选择政治面貌",
+         trigger: "blur",
+      },
+   ],
+   degree: [
+      {
+         required: true,
+         message: "请选择学历",
+         trigger: "blur",
+      },
+   ],
+   social_security: [
+      {
+         required: true,
+         message: "请选择社保",
+         trigger: "blur",
+      },
+   ],
+   identifier: [
+      {
+         required: true,
+         validator: isIdentifierValid,
+         trigger: "blur",
+      },
+      { min: 18, max: 18, message: "身份证为18位数", trigger: "blur" },
+   ],
+   phone: [
+      {
+         required: true,
+         validator: isPhoneValid,
+         trigger: "blur",
+      },
+      { min: 6, max: 20, message: "密码长度在3~20之间", trigger: "blur" },
+   ],
+   first_work_time: [
+      {
+         required: true,
+         message: "请选择参加工作时间",
+         trigger: "blur",
+      },
+   ],
+   post: [
+      {
+         required: true,
+         message: "请输入岗位",
+         trigger: "blur",
+      },
+   ],
+   salary: [
+      {
+         required: true,
+         message: "请输入工资, 单位人民币元",
+         trigger: "blur",
+      },
+   ],
+})
 </script>
 
 <template>
@@ -213,7 +351,7 @@ const securityCardFormatter = (value: string | number) => {
          :close-on-press-escape="isEscapeClose"
          :show-close="isShowClose"
          :close-on-click-modal="isClickModalToClose">
-         <el-form :model="rawFormData">
+         <el-form ref="formRef" :model="rawFormData" :rules="rules">
             <!-- 第1行 -->
             <el-row class="ml-6">
                <el-col :span="6">
@@ -303,13 +441,12 @@ const securityCardFormatter = (value: string | number) => {
             <el-row class="ml-3">
                <el-col :span="10">
                   <el-form-item label="身份证" prop="identifier">
-                     <el-input v-model="rawFormData.identifier" :formatter="identifierFormatter" placeholder="">
-                     </el-input>
+                     <el-input v-model="rawFormData.identifier" placeholder=""> </el-input>
                   </el-form-item>
                </el-col>
                <el-col :span="8" class="ml-5">
                   <el-form-item label="电话" prop="phone">
-                     <el-input v-model="rawFormData.phone" :formatter="phoneFormatter" placeholder=""> </el-input>
+                     <el-input v-model="rawFormData.phone" placeholder=""> </el-input>
                   </el-form-item>
                </el-col>
             </el-row>
@@ -341,15 +478,14 @@ const securityCardFormatter = (value: string | number) => {
                </el-col>
                <el-col :span="8" class="mx-5">
                   <el-form-item label="工资" prop="salary">
-                     <el-input v-model="rawFormData.salary" :formatter="salaryFormatter" placeholder="">
+                     <el-input v-model="rawFormData.salary" placeholder="">
                         <template #append>¥</template>
                      </el-input>
                   </el-form-item>
                </el-col>
                <el-col :span="8">
                   <el-form-item label="保安证" prop="security_card">
-                     <el-input v-model="rawFormData.security_card" :formatter="securityCardFormatter" placeholder="">
-                     </el-input>
+                     <el-input v-model="rawFormData.security_card" placeholder=""> </el-input>
                   </el-form-item>
                </el-col>
             </el-row>
@@ -368,8 +504,8 @@ const securityCardFormatter = (value: string | number) => {
          </el-form>
          <template #footer>
             <span class="dialog-footer">
-               <el-button type="primary" @click="handleSave">保存</el-button>
-               <el-button type="danger" @click="handleCancel">取消</el-button>
+               <el-button type="primary" :loading="isLoading" @click="handleSave">保存</el-button>
+               <el-button type="danger" :loading="isLoading" @click="handleCancel">取消</el-button>
             </span>
          </template>
       </el-dialog>

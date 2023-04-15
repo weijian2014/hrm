@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import AddVue from "@/components/employee/Add.vue"
+import AddOrEdit from "@/components/employee/AddOrEdit.vue"
 import { employeeListApi, employeeDeleteApi } from "@/utils/employee"
 import type { CheckboxValueType } from "element-plus"
 import { useSettings, useData } from "./index"
@@ -314,7 +314,8 @@ const handleCancel = (message: string) => {
          </el-table-column>
       </el-table>
    </div>
-   <AddVue :isShow="isShow" :title="title" :formData="rowData" @save="handleSave" @cancel="handleCancel"> </AddVue>
+   <AddOrEdit :isShow="isShow" :title="title" :formData="rowData" @save="handleSave" @cancel="handleCancel">
+   </AddOrEdit>
 </template>
 
 <style lang="scss" scoped></style>
