@@ -28,11 +28,11 @@ const state = reactive<{
 })
 
 // 标签的长度
-const labelWidth = ref("auto")
+const labelWidth = ref("110px")
 // 表单对齐方式, 'left' | 'right' | 'top'
 const labelPosition = ref("right")
 // 行内表单模式
-const isInline = ref(true)
+const isInline = ref(false)
 // 是否隐藏必填字段标签旁边的红色星号
 const isHideRequiredAsterisk = ref(false)
 // 星号的位置, 'left' | 'right'
@@ -258,6 +258,12 @@ const isIdentifierValid = (rule: unknown, value: string | undefined, callback: (
       return
    }
 
+   const identifierString = value.toString()
+   if (identifierString.length != 11) {
+      callback("身份证号必须是18位")
+      return
+   }
+
    if (!Validator.isIdentifierValid(value?.toString())) {
       callback("身份证号输入有误")
       return
@@ -272,8 +278,24 @@ const isPhoneValid = (rule: unknown, value: string | undefined, callback: (msg?:
       return
    }
 
-   if (!Validator.isPhoneValid(value?.toString())) {
+   const phoneString = value.toString()
+   if (phoneString.length != 11) {
+      callback("手机号是11位数字")
+      return
+   }
+
+   if (!Validator.isPhoneValid(phoneString)) {
       callback("手机号输入有误")
+      return
+   }
+
+   callback()
+}
+
+const isSecurityCardValid = (rule: unknown, value: string | undefined, callback: (msg?: string) => void) => {
+   const securityCardString = value?.toString()
+   if (securityCardString && (securityCardString.length < 6 || securityCardString.length > 10)) {
+      callback("保安证是6~10位数字")
       return
    }
 
@@ -304,7 +326,6 @@ const rules = reactive<FormRules>({
       },
    ],
    height: [
-      { type: "number", whitespace: false, message: "身高必须是数字, 单位厘米", trigger: "change" },
       {
          required: true,
          validator: isHeightValid,
@@ -312,7 +333,6 @@ const rules = reactive<FormRules>({
       },
    ],
    weight: [
-      { type: "number", whitespace: false, message: "体重必须是数字, 单位公斤", trigger: "change" },
       {
          required: true,
          validator: isWeightValid,
@@ -348,7 +368,7 @@ const rules = reactive<FormRules>({
       },
    ],
    phone: [
-      { min: 11, max: 11, whitespace: false, message: "电话是11位数字", trigger: "change" },
+      { type: "number", message: "手机号是数字", trigger: "change" },
       {
          required: true,
          validator: isPhoneValid,
@@ -370,21 +390,15 @@ const rules = reactive<FormRules>({
       },
    ],
    salary: [
-      { type: "number", whitespace: false, message: "工资必须是数字, 单位人民币元", trigger: "change" },
-      {
-         required: true,
-         message: "请输入工资, 单位人民币元",
-         trigger: "blur",
-      },
+      { required: true, message: "请输入工资", trigger: "blur" },
+      { type: "number", message: "工资是数字, 单位人民币元", trigger: "change" },
    ],
    security_card: [
+      { type: "number", message: "保安证是数字", trigger: "change" },
       {
          required: false,
-         min: 8,
-         max: 8,
-         whitespace: false,
-         message: "保安证必须是8位",
-         trigger: "change",
+         validator: isSecurityCardValid,
+         trigger: "blur",
       },
    ],
 })
@@ -440,20 +454,22 @@ const rules = reactive<FormRules>({
          <el-row>
             <el-col :span="8">
                <el-form-item label="身高(cm)" prop="height">
-                  <el-input v-model="rawFormData.height" placeholder=""> </el-input
+                  <el-input v-model.number="rawFormData.height" placeholder=""> </el-input
                ></el-form-item>
             </el-col>
             <el-col :span="8">
                <el-form-item label="体重(kg)" prop="weight">
-                  <el-input v-model="rawFormData.weight" placeholder=""> </el-input
+                  <el-input v-model.number="rawFormData.weight" placeholder=""> </el-input
                ></el-form-item>
             </el-col>
          </el-row>
          <!-- 第3行 -->
          <el-row>
-            <el-form-item label="现住址" prop="current_address">
-               <el-input v-model="rawFormData.current_address"> </el-input>
-            </el-form-item>
+            <el-col :span="24">
+               <el-form-item label="现住址" prop="current_address">
+                  <el-input v-model="rawFormData.current_address"> </el-input>
+               </el-form-item>
+            </el-col>
          </el-row>
          <!-- 第4行 -->
          <el-row>
@@ -500,7 +516,7 @@ const rules = reactive<FormRules>({
             </el-col>
             <el-col :span="8">
                <el-form-item label="电话" prop="phone">
-                  <el-input v-model="rawFormData.phone" placeholder=""> </el-input>
+                  <el-input v-model.number="rawFormData.phone" placeholder=""> </el-input>
                </el-form-item>
             </el-col>
          </el-row>
@@ -528,12 +544,12 @@ const rules = reactive<FormRules>({
             </el-col>
             <el-col :span="8">
                <el-form-item label="工资(¥)" prop="salary">
-                  <el-input v-model="rawFormData.salary" placeholder=""> </el-input>
+                  <el-input v-model.number="rawFormData.salary" placeholder=""> </el-input>
                </el-form-item>
             </el-col>
             <el-col :span="8">
                <el-form-item label="保安证" prop="security_card">
-                  <el-input v-model="rawFormData.security_card" placeholder=""> </el-input>
+                  <el-input v-model.number="rawFormData.security_card" placeholder=""> </el-input>
                </el-form-item>
             </el-col>
          </el-row>
