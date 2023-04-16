@@ -84,7 +84,7 @@ export function useSettings() {
       },
       {
          prop: "phone",
-         label: "电话",
+         label: "手机号码",
          visible: false,
          disable: false,
          sortable: true,
@@ -132,7 +132,7 @@ export function useSettings() {
       },
       {
          prop: "identifier",
-         label: "身份证",
+         label: "身份证号",
          visible: false,
          disable: false,
          sortable: false,
@@ -209,7 +209,7 @@ export function useData() {
 
    // Add组件属性
    const isShow = ref(false)
-   const title = ref("修改")
+   const title = ref("员工修改")
    const rowData = ref<Employee>({} as Employee)
 
    // 表格选中的行

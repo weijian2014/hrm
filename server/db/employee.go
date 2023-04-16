@@ -46,13 +46,13 @@ type Employee struct {
 	Salary          uint64    `json:"salary" description:"工资"`
 	Post            string    `json:"post" description:"岗位"`
 	SocialSecurity  string    `json:"social_security" description:"社保"`
-	Phone           string    `json:"phone" description:"电话"`
+	Phone           string    `json:"phone" description:"手机号码"`
 	FormerEmployer  string    `json:"former_employer" description:"原单位"`
 	Height          uint64    `json:"height" description:"身高"`
 	Weight          uint64    `json:"weight" description:"体重"`
 	Degree          string    `json:"degree" description:"学历"`
 	PoliticalStatus string    `json:"political_status" description:"政治面貌"`
-	Identifier      string    `json:"identifier" description:"身份证"`
+	Identifier      string    `json:"identifier" description:"身份证号"`
 	SecurityCard    string    `json:"security_card" description:"保安证"`
 	CurrentAddress  string    `json:"current_address" description:"现住址"`
 	Comments        string    `json:"comments" description:"备注"`

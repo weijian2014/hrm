@@ -13,13 +13,13 @@ const (
 	salaryCell          = "D3" // 工资
 	postCell            = "F3" // 岗位
 	socialSecurityCell  = "B4" // 社保
-	phoneCell           = "D4" // 电话
+	phoneCell           = "D4" // 手机号码
 	formerEmployerCell  = "F4" // 原单位
 	heightCell          = "B5" // 身高
 	weightCell          = "D5" // 体重
 	degreeCell          = "F5" // 学历
 	politicalStatusCell = "B6" // 政治面貌
-	idCell              = "D6" // 身份证
+	idCell              = "D6" // 身份证号
 	securityCardCell    = "F6" // 保安证
 	currentAddressCell  = "B7" // 现住址
 	commentsCell        = "A8" // 需要了解的情况
@@ -37,13 +37,13 @@ type EmployeeInfo struct {
 	Salary          string // 工资
 	Post            string // 岗位
 	SocialSecurity  string // 社保
-	Phone           string // 电话
+	Phone           string // 手机号码
 	FormerEmployer  string // 原单位
 	Height          string // 身高
 	Weight          string // 体重
 	degree          string // 学历
 	PoliticalStatus string // 政治面貌
-	Id              string // 身份证
+	Id              string // 身份证号
 	SecurityCard    string // 保安证
 	CurrentAddress  string // 现住址
 	Comments        string // 需要了解的情况
@@ -104,7 +104,7 @@ func ReadExcel(excelFile string) (*EmployeeInfo, error) {
 		return nil, err
 	}
 
-	// 电话
+	// 手机号码
 	e.Phone, err = f.GetCellValue(excelSheetName, phoneCell)
 	if err != nil {
 		return nil, err
@@ -140,7 +140,7 @@ func ReadExcel(excelFile string) (*EmployeeInfo, error) {
 		return nil, err
 	}
 
-	// 身份证
+	// 身份证号
 	e.Id, err = f.GetCellValue(excelSheetName, idCell)
 	if err != nil {
 		return nil, err
@@ -220,7 +220,7 @@ func WriteExcel(excelFile string, ei *EmployeeInfo) error {
 		return err
 	}
 
-	// 电话
+	// 手机号码
 	err = f.SetCellValue(excelSheetName, phoneCell, ei.Phone)
 	if err != nil {
 		return err
@@ -256,7 +256,7 @@ func WriteExcel(excelFile string, ei *EmployeeInfo) error {
 		return err
 	}
 
-	// 身份证
+	// 身份证号
 	err = f.SetCellValue(excelSheetName, idCell, ei.Id)
 	if err != nil {
 		return err

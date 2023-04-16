@@ -345,7 +345,7 @@ func Init(adminUsername, adminPassword string) error {
 		Align:    "center",
 	}, {
 		Prop:     "phone",
-		Label:    "电话",
+		Label:    "手机号码",
 		Visible:  true,
 		Sortable: false,
 		Align:    "center",
@@ -381,7 +381,7 @@ func Init(adminUsername, adminPassword string) error {
 		Align:    "center",
 	}, {
 		Prop:     "identifier",
-		Label:    "身份证",
+		Label:    "身份证号",
 		Visible:  true,
 		Sortable: false,
 		Align:    "center",

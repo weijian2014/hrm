@@ -103,6 +103,8 @@ const handleSave = async () => {
 }
 
 const handleCancel = () => {
+   formRef.value?.clearValidate()
+   rawFormData.value = { ...props.formData }
    // 向外发送cancel(取消)事件
    emits("cancel", "已取消")
 }
@@ -259,7 +261,7 @@ const isIdentifierValid = (rule: unknown, value: string | undefined, callback: (
    }
 
    const identifierString = value.toString()
-   if (identifierString.length != 11) {
+   if (identifierString.length != 18) {
       callback("身份证号必须是18位")
       return
    }
@@ -368,7 +370,7 @@ const rules = reactive<FormRules>({
       },
    ],
    phone: [
-      { type: "number", message: "手机号是数字", trigger: "change" },
+      // { type: "number", message: "手机号是数字", trigger: "change" },
       {
          required: true,
          validator: isPhoneValid,
@@ -394,7 +396,7 @@ const rules = reactive<FormRules>({
       { type: "number", message: "工资是数字, 单位人民币元", trigger: "change" },
    ],
    security_card: [
-      { type: "number", message: "保安证是数字", trigger: "change" },
+      // { type: "number", message: "保安证是数字", trigger: "change" },
       {
          required: false,
          validator: isSecurityCardValid,
@@ -510,12 +512,12 @@ const rules = reactive<FormRules>({
          <!-- 第5行 -->
          <el-row>
             <el-col :span="8">
-               <el-form-item label="身份证" prop="identifier">
+               <el-form-item label="身份证号" prop="identifier">
                   <el-input v-model="rawFormData.identifier" placeholder=""> </el-input>
                </el-form-item>
             </el-col>
             <el-col :span="8">
-               <el-form-item label="电话" prop="phone">
+               <el-form-item label="手机号码" prop="phone">
                   <el-input v-model.number="rawFormData.phone" placeholder=""> </el-input>
                </el-form-item>
             </el-col>
@@ -523,13 +525,13 @@ const rules = reactive<FormRules>({
          <!-- 第6行 -->
          <el-row>
             <el-col :span="8">
-               <el-form-item label="原单位" prop="former_employer">
-                  <el-input v-model="rawFormData.former_employer"> </el-input>
+               <el-form-item label="参加工作时间" prop="first_work_time">
+                  <el-date-picker v-model="rawFormData.first_work_time" type="date" placeholder="" />
                </el-form-item>
             </el-col>
             <el-col :span="8">
-               <el-form-item label="参加工作时间" prop="first_work_time">
-                  <el-date-picker v-model="rawFormData.first_work_time" type="date" placeholder="" />
+               <el-form-item label="原单位" prop="former_employer">
+                  <el-input v-model="rawFormData.former_employer"> </el-input>
                </el-form-item>
             </el-col>
          </el-row>
@@ -558,7 +560,8 @@ const rules = reactive<FormRules>({
                <el-form-item label="备注" prop="comments">
                   <el-input
                      v-model="rawFormData.comments"
-                     maxlength="800"
+                     maxlength="8888"
+                     :rows="5"
                      placeholder="填写了解的情况"
                      show-word-limit
                      type="textarea" />

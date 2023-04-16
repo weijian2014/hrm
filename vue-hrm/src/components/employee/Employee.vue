@@ -97,8 +97,8 @@ const handleRowClick = (row: Employee) => {
 }
 
 const handleAdd = () => {
-   console.log("新增")
-   title.value = "新增"
+   console.log("员工新增")
+   title.value = "员工新增"
    rowData.value = {} as Employee
    isShow.value = true
 }
@@ -108,7 +108,7 @@ const handleEdit = (index: number, row: Employee | undefined) => {
    if (row) {
       rowData.value = row
       console.log("handleEdit", rowData.value)
-      title.value = "修改"
+      title.value = "员工修改"
       isShow.value = true
    }
 }
@@ -121,7 +121,7 @@ const handleDelete = async (index: number, row: Employee) => {
          h("i", { style: "color: red" }, row.name),
          h("span", null, " 的记录?"),
       ]),
-      "删除确认",
+      "员工删除确认",
       {
          confirmButtonText: "确认",
          cancelButtonText: "取消",
@@ -162,7 +162,7 @@ const handleBatchDelete = () => {
          h("i", { style: "color: red" }, names),
          h("span", null, " 共" + selections.value.length + "条记录?"),
       ]),
-      "删除确认",
+      "员工删除确认",
       {
          confirmButtonText: "确认",
          cancelButtonText: "取消",
