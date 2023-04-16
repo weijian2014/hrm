@@ -44,3 +44,29 @@ export function getAgeByBirthday(stringBirthday: string) {
    }
    return returnAge // 返回周岁年龄
 }
+
+export const newDefaultEmployee = (): Employee => {
+   const e: Employee = {
+      id: 0,
+      name: "",
+      gender: "",
+      birthday: "",
+      height: 0,
+      weight: 0,
+      degree: "",
+      identifier: "",
+      phone: "",
+      political_status: "",
+      social_security: "",
+      current_address: "",
+      first_work_time: "",
+      former_employer: "",
+      post: "",
+      salary: 0,
+      security_card: "",
+      comments: "",
+      updated_at: "",
+   }
+
+   return e
+}

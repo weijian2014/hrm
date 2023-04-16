@@ -27,6 +27,9 @@ const state = reactive<{
    rawFormData: {} as Employee,
 })
 
+// 解构
+const { isEscapeClose, isShowClose, isClickModalToClose, dialogVisible, rawFormData } = toRefs(state)
+
 // 标签的长度
 const labelWidth = ref("90px")
 // 表单对齐方式, 'left' | 'right' | 'top'
@@ -43,9 +46,6 @@ const isInlineMessage = ref(true)
 const isStatusIcon = ref(false)
 // 当校验失败时，滚动到第一个错误表单项
 const isScrollToError = ref(true)
-
-// 解构
-const { isEscapeClose, isShowClose, isClickModalToClose, dialogVisible, rawFormData } = toRefs(state)
 
 // watch写法上支持一个或者多个监听源, 这些监听源必须只能是getter/effect函数, ref数据, reactive对象或者数组类型
 watch(

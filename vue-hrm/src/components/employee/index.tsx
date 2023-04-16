@@ -207,10 +207,14 @@ export function useData() {
    // 搜索框的值
    const seachInputValue = ref("")
 
-   // Add组件属性
-   const isShow = ref(false)
-   const title = ref("修改员工")
-   const rowData = ref<Employee>({} as Employee)
+   // AddOrEdit组件属性
+   const isAddOrEditShow = ref(false)
+   const addOrEditTitle = ref("修改员工")
+   const addOrEditData = ref<Employee>({} as Employee)
+
+   // Import组件属性
+   const isImportShow = ref(false)
+   const importTitle = ref("导入员工表格")
 
    // 表格选中的行
    const selections = ref<Employee[]>([] as Employee[])
@@ -220,12 +224,34 @@ export function useData() {
       tableData,
       isButtonDisabled,
       seachInputValue,
-      isShow,
-      title,
-      rowData,
+      isAddOrEditShow,
+      addOrEditTitle,
+      addOrEditData,
       selections,
+      isImportShow,
+      importTitle,
    }
 }
+
+export const excelPosition = new Map([
+   ["name", "B2"],
+   ["gender", "D2"],
+   ["birthday", "F2"],
+   ["height", "B3"],
+   ["weight", "D3"],
+   ["degree", "F3"],
+   ["identifier", "B4"],
+   ["phone", "D4"],
+   ["political_status", "F4"],
+   ["social_security", "B5"],
+   ["current_address", "D5"],
+   ["first_work_time", "B6"],
+   ["former_employer", "D6"],
+   ["post", "B7"],
+   ["salary", "D7"],
+   ["security_card", "F7"],
+   ["comments", "A8"],
+])
 
 export function dateFormatter(row: any, column: TableColumnCtx<any>, cellValue: any, index: number) {
    var date = row[column.property]

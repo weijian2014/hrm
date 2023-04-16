@@ -1,12 +1,24 @@
 <script lang="ts" setup>
 import AddOrEdit from "@/components/employee/AddOrEdit.vue"
+import Import from "@/components/employee/Import.vue"
 import { employeeListApi, employeeDeleteApi } from "@/utils/employee"
-import type { CheckboxValueType } from "element-plus"
+import type { CheckboxValueType, UploadUserFile } from "element-plus"
 import { useSettings, useData } from "./index"
 
 const { table, columns, pagination, checkList } = useSettings()
 
-const { tableRef, tableData, isButtonDisabled, seachInputValue, isShow, title, rowData, selections } = useData()
+const {
+   tableRef,
+   tableData,
+   isButtonDisabled,
+   seachInputValue,
+   isAddOrEditShow,
+   addOrEditTitle,
+   addOrEditData,
+   selections,
+   isImportShow,
+   importTitle,
+} = useData()
 
 employeeListApi()
    .then((res) => {
@@ -18,6 +30,7 @@ employeeListApi()
    })
    .catch((res) => {
       console.log(res)
+      return new Promise(() => {})
    })
 
 const deleteAndRefresh = async (ids: number[]) => {
@@ -98,18 +111,18 @@ const handleRowClick = (row: Employee) => {
 
 const handleAdd = () => {
    console.log("新增员工")
-   title.value = "新增员工"
-   rowData.value = {} as Employee
-   isShow.value = true
+   addOrEditTitle.value = "新增员工"
+   addOrEditData.value = {} as Employee
+   isAddOrEditShow.value = true
 }
 
 const handleEdit = (index: number, row: Employee | undefined) => {
    console.log("handleEdit", index, row)
    if (row) {
-      rowData.value = row
-      console.log("handleEdit", rowData.value)
-      title.value = "修改员工"
-      isShow.value = true
+      addOrEditData.value = row
+      console.log("handleEdit", addOrEditData.value)
+      addOrEditTitle.value = "修改员工"
+      isAddOrEditShow.value = true
    }
 }
 
@@ -188,8 +201,8 @@ const handleBatchDelete = () => {
 // AddVue组件发送的保存事件
 const handleSave = async (message: string) => {
    // todo 更新表格数据
-   isShow.value = false
-   console.log("handleSave", message, rowData.value)
+   isAddOrEditShow.value = false
+   console.log("handleSave", message, addOrEditData.value)
 
    // 从数据库中读取最新的数据
    await employeeListApi()
@@ -210,9 +223,15 @@ const handleSave = async (message: string) => {
 
 // AddVue组件发送的消息事件
 const handleCancel = (message: string) => {
-   isShow.value = false
-   console.log("handleCancel", message, rowData.value)
+   isAddOrEditShow.value = false
+   console.log("handleCancel", message, addOrEditData.value)
    ElMessage.info(message)
+}
+
+// Excel导入导出
+const fileList = ref<UploadUserFile[]>([] as UploadUserFile[])
+const importClick = () => {
+   isImportShow.value = true
 }
 </script>
 
@@ -225,7 +244,7 @@ const handleCancel = (message: string) => {
                <IEpPlus />
                <span style="vertical-align: middle">新增</span>
             </el-button>
-            <el-button type="primary">
+            <el-button type="primary" accept=".xls,.xlsx" @click="importClick()">
                <IEpUpload />
                <span style="vertical-align: middle">导入</span>
             </el-button>
@@ -297,8 +316,14 @@ const handleCancel = (message: string) => {
          </el-table-column>
       </el-table>
    </div>
-   <AddOrEdit :isShow="isShow" :title="title" :formData="rowData" @save="handleSave" @cancel="handleCancel">
+   <AddOrEdit
+      :isShow="isAddOrEditShow"
+      :title="addOrEditTitle"
+      :formData="addOrEditData"
+      @save="handleSave"
+      @cancel="handleCancel">
    </AddOrEdit>
+   <Import :isShow="isImportShow" :title="importTitle" :fileList="fileList"></Import>
 </template>
 
 <style lang="scss" scoped></style>
