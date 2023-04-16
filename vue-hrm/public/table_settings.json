@@ -48,7 +48,7 @@
       },
       {
          "prop": "first_work_time",
-         "label": "参加工作时间",
+         "label": "首次工作",
          "visible": true,
          "sortable": true,
          "align": "center"

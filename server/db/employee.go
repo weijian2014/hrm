@@ -42,7 +42,7 @@ type Employee struct {
 	Name            string    `json:"name" description:"姓名"`
 	Gender          string    `json:"gender" description:"性别"`
 	Birthday        time.Time `json:"birthday" description:"出生日期"`
-	FirstWorkTime   time.Time `json:"first_work_time" description:"参加工作时间"`
+	FirstWorkTime   time.Time `json:"first_work_time" description:"首次工作"`
 	Salary          uint64    `json:"salary" description:"工资"`
 	Post            string    `json:"post" description:"岗位"`
 	SocialSecurity  string    `json:"social_security" description:"社保"`

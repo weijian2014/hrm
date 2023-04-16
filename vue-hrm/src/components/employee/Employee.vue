@@ -97,8 +97,8 @@ const handleRowClick = (row: Employee) => {
 }
 
 const handleAdd = () => {
-   console.log("员工新增")
-   title.value = "员工新增"
+   console.log("新增员工")
+   title.value = "新增员工"
    rowData.value = {} as Employee
    isShow.value = true
 }
@@ -108,7 +108,7 @@ const handleEdit = (index: number, row: Employee | undefined) => {
    if (row) {
       rowData.value = row
       console.log("handleEdit", rowData.value)
-      title.value = "员工修改"
+      title.value = "修改员工"
       isShow.value = true
    }
 }

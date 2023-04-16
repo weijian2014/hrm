@@ -51,7 +51,7 @@ export function useSettings() {
       },
       {
          prop: "first_work_time",
-         label: "参加工作时间",
+         label: "首次工作",
          visible: true,
          disable: false,
          sortable: true,
@@ -209,7 +209,7 @@ export function useData() {
 
    // Add组件属性
    const isShow = ref(false)
-   const title = ref("员工修改")
+   const title = ref("修改员工")
    const rowData = ref<Employee>({} as Employee)
 
    // 表格选中的行
@@ -239,7 +239,7 @@ export function dateFormatter(row: any, column: TableColumnCtx<any>, cellValue: 
       // 生日
       return dateStr + " (" + age + "岁)"
    } else {
-      // 参加工作时间
+      // 首次工作
       return dateStr + " (" + age + "年)"
    }
 }

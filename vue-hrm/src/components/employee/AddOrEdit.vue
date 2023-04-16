@@ -28,7 +28,7 @@ const state = reactive<{
 })
 
 // 标签的长度
-const labelWidth = ref("110px")
+const labelWidth = ref("90px")
 // 表单对齐方式, 'left' | 'right' | 'top'
 const labelPosition = ref("right")
 // 行内表单模式
@@ -62,6 +62,7 @@ watch(
    () => props.isShow,
    (newValue) => {
       dialogVisible.value = newValue as boolean
+      // 清除校验信息
       formRef.value?.clearValidate()
    }
 )
@@ -103,7 +104,9 @@ const handleSave = async () => {
 }
 
 const handleCancel = () => {
+   // 清除校验信息
    formRef.value?.clearValidate()
+   // 恢复表单数据
    rawFormData.value = { ...props.formData }
    // 向外发送cancel(取消)事件
    emits("cancel", "已取消")
@@ -380,7 +383,7 @@ const rules = reactive<FormRules>({
    first_work_time: [
       {
          required: true,
-         message: "请选择参加工作时间",
+         message: "请选择首次工作",
          trigger: "blur",
       },
    ],
@@ -428,7 +431,6 @@ const rules = reactive<FormRules>({
          :inline-message="isInlineMessage"
          :status-icon="isStatusIcon"
          :scroll-to-error="isScrollToError">
-         <!-- 第1行 -->
          <el-row>
             <el-col :span="8">
                <el-form-item label="姓名" prop="name">
@@ -452,7 +454,6 @@ const rules = reactive<FormRules>({
                </el-form-item>
             </el-col>
          </el-row>
-         <!-- 第2行 -->
          <el-row>
             <el-col :span="8">
                <el-form-item label="身高(cm)" prop="height">
@@ -463,28 +464,6 @@ const rules = reactive<FormRules>({
                <el-form-item label="体重(kg)" prop="weight">
                   <el-input v-model.number="rawFormData.weight" placeholder=""> </el-input
                ></el-form-item>
-            </el-col>
-         </el-row>
-         <!-- 第3行 -->
-         <el-row>
-            <el-col :span="24">
-               <el-form-item label="现住址" prop="current_address">
-                  <el-input v-model="rawFormData.current_address"> </el-input>
-               </el-form-item>
-            </el-col>
-         </el-row>
-         <!-- 第4行 -->
-         <el-row>
-            <el-col :span="8">
-               <el-form-item label="政治面貌" prop="political_status">
-                  <el-select v-model="rawFormData.political_status" placeholder="">
-                     <el-option
-                        v-for="item in politicalStatusOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value" />
-                  </el-select>
-               </el-form-item>
             </el-col>
             <el-col :span="8">
                <el-form-item label="学历" prop="degree">
@@ -497,19 +476,7 @@ const rules = reactive<FormRules>({
                   </el-select>
                </el-form-item>
             </el-col>
-            <el-col :span="8">
-               <el-form-item label="社保" prop="social_security">
-                  <el-select v-model="rawFormData.social_security" placeholder="">
-                     <el-option
-                        v-for="item in socialSecurityOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value" />
-                  </el-select>
-               </el-form-item>
-            </el-col>
          </el-row>
-         <!-- 第5行 -->
          <el-row>
             <el-col :span="8">
                <el-form-item label="身份证号" prop="identifier">
@@ -521,21 +488,48 @@ const rules = reactive<FormRules>({
                   <el-input v-model.number="rawFormData.phone" placeholder=""> </el-input>
                </el-form-item>
             </el-col>
+            <el-col :span="8">
+               <el-form-item label="政治面貌" prop="political_status">
+                  <el-select v-model="rawFormData.political_status" placeholder="">
+                     <el-option
+                        v-for="item in politicalStatusOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value" />
+                  </el-select>
+               </el-form-item>
+            </el-col>
          </el-row>
-         <!-- 第6行 -->
          <el-row>
             <el-col :span="8">
-               <el-form-item label="参加工作时间" prop="first_work_time">
+               <el-form-item label="社保" prop="social_security">
+                  <el-select v-model="rawFormData.social_security" placeholder="">
+                     <el-option
+                        v-for="item in socialSecurityOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value" />
+                  </el-select>
+               </el-form-item>
+            </el-col>
+            <el-col :span="16">
+               <el-form-item label="现住址" prop="current_address">
+                  <el-input v-model="rawFormData.current_address"> </el-input>
+               </el-form-item>
+            </el-col>
+         </el-row>
+         <el-row>
+            <el-col :span="8">
+               <el-form-item label="首次工作" prop="first_work_time">
                   <el-date-picker v-model="rawFormData.first_work_time" type="date" placeholder="" />
                </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="16">
                <el-form-item label="原单位" prop="former_employer">
                   <el-input v-model="rawFormData.former_employer"> </el-input>
                </el-form-item>
             </el-col>
          </el-row>
-         <!-- 第7行 -->
          <el-row>
             <el-col :span="8">
                <el-form-item label="岗位" prop="post">

@@ -321,7 +321,7 @@ func Init(adminUsername, adminPassword string) error {
 		Align:    "center",
 	}, {
 		Prop:     "first_work_time",
-		Label:    "参加工作时间",
+		Label:    "首次工作",
 		Visible:  true,
 		Sortable: true,
 		Align:    "center",
