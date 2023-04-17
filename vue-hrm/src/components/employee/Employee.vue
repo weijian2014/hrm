@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import AddOrEdit from "@/components/employee/AddOrEdit.vue"
-import Import from "@/components/employee/Import.vue"
 import { employeeListApi, employeeDeleteApi } from "@/utils/employee"
 import type { CheckboxValueType, UploadUserFile } from "element-plus"
 import { useSettings, useData } from "./index"
@@ -16,8 +15,6 @@ const {
    addOrEditTitle,
    addOrEditData,
    selections,
-   isImportShow,
-   importTitle,
 } = useData()
 
 employeeListApi()
@@ -109,9 +106,9 @@ const handleRowClick = (row: Employee) => {
    // console.log("handleRowClick", row)
 }
 
-const handleAdd = () => {
-   console.log("新增员工")
-   addOrEditTitle.value = "新增员工"
+const handleAddOrImport = () => {
+   console.log("新增或导入员工")
+   addOrEditTitle.value = "新增或导入员工"
    addOrEditData.value = {} as Employee
    isAddOrEditShow.value = true
 }
@@ -240,21 +237,21 @@ const importClick = () => {
       <!-- 表头工具 -->
       <el-row class="mb-4">
          <el-col :span="12">
-            <el-button type="primary" @click="handleAdd">
+            <el-button type="primary" @click="handleAddOrImport">
                <IEpPlus />
-               <span style="vertical-align: middle">新增</span>
+               <span style="vertical-align: middle">新增或导入</span>
             </el-button>
-            <el-button type="primary" accept=".xls,.xlsx" @click="importClick()">
+            <!-- <el-button type="primary" accept=".xls,.xlsx" @click="importClick()">
                <IEpUpload />
                <span style="vertical-align: middle">导入</span>
-            </el-button>
+            </el-button> -->
             <el-button type="primary" :disabled="isButtonDisabled">
                <IEpDownload />
                <span style="vertical-align: middle">导出</span>
             </el-button>
             <el-button type="primary" :disabled="isButtonDisabled" @click="handleBatchDelete">
                <IEpDelete />
-               <span style="vertical-align: middle">删除</span>
+               <span style="vertical-align: middle">批量删除</span>
             </el-button>
          </el-col>
          <el-col :span="6">
@@ -323,7 +320,6 @@ const importClick = () => {
       @save="handleSave"
       @cancel="handleCancel">
    </AddOrEdit>
-   <Import :isShow="isImportShow" :title="importTitle" :fileList="fileList"></Import>
 </template>
 
 <style lang="scss" scoped></style>

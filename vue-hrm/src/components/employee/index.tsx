@@ -212,10 +212,6 @@ export function useData() {
    const addOrEditTitle = ref("修改员工")
    const addOrEditData = ref<Employee>({} as Employee)
 
-   // Import组件属性
-   const isImportShow = ref(false)
-   const importTitle = ref("导入员工表格")
-
    // 表格选中的行
    const selections = ref<Employee[]>([] as Employee[])
 
@@ -228,8 +224,6 @@ export function useData() {
       addOrEditTitle,
       addOrEditData,
       selections,
-      isImportShow,
-      importTitle,
    }
 }
 
@@ -310,4 +304,14 @@ export default class Validator {
          /^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$/
       return phoneRegExp.test(phone)
    }
+}
+
+export function readFile(file: UploadFile) {
+   return new Promise(function (resolve, reject) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+         resolve(e.target?.result)
+      }
+      reader.readAsBinaryString(file.raw as Blob)
+   })
 }

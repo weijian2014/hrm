@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { employeeUpdateApi, employeeAddApi } from "@/utils/employee"
 import Validator from "./index"
+import { excelPosition, readFile } from "./index"
 import type { FormRules } from "element-plus"
 import { toIsoString } from "@/utils/common"
+import { newDefaultEmployee } from "@/utils/common"
+import * as XLSX from "xlsx"
+import type { UploadFile, UploadUserFile } from "element-plus"
 
 // defineProps定义了当前组件的属性, 外部组件使用当前组件可以绑定传递进来
 const props = defineProps<{
@@ -20,16 +24,18 @@ const state = reactive<{
    isClickModalToClose: boolean
    dialogVisible: boolean
    rawFormData: Employee
+   isImportDisabled: boolean
 }>({
    isEscapeClose: false, // 是否按ESC关闭
    isShowClose: false, // 是否显示右上角的关闭
    isClickModalToClose: false, // 是否可以通过点击 modal 关闭 Dialog (对话框以外的任意位置)
    dialogVisible: false, // 是否显示对话框
    rawFormData: {} as Employee,
+   isImportDisabled: false, // 是否禁用导入按钮
 })
 
 // 解构
-const { isEscapeClose, isShowClose, isClickModalToClose, dialogVisible, rawFormData } = toRefs(state)
+const { isEscapeClose, isShowClose, isClickModalToClose, dialogVisible, rawFormData, isImportDisabled } = toRefs(state)
 
 // 标签的长度
 const labelWidth = ref("90px")
@@ -62,6 +68,12 @@ watch(
 watch(
    () => props.isShow,
    (newValue) => {
+      if (props.title === "修改员工") {
+         isImportDisabled.value = true
+      } else {
+         isImportDisabled.value = false
+      }
+
       dialogVisible.value = newValue as boolean
       // 清除校验信息
       formRef.value?.clearValidate()
@@ -139,6 +151,92 @@ const handleCancel = () => {
    rawFormData.value = { ...props.formData }
    // 向外发送cancel(取消)事件
    emits("cancel", "已取消")
+}
+
+//// upload组件
+const fileList = ref<UploadUserFile[]>([] as UploadUserFile[])
+const handleChange = async (uploadFile: UploadFile) => {
+   await readFile(uploadFile)
+      .then(async (rawData) => {
+         // 解析二进制格式数据
+         let workbook = XLSX.read(rawData, { type: "binary", cellDates: true })
+         // 获取第一个Sheet
+         let worksheet = workbook.Sheets[workbook.SheetNames[0]]
+
+         // 转成json对象
+         // let json = XLSX.utils.sheet_to_json(worksheet, { defval: "", header: 1, blankrows: false })
+
+         let employee = newDefaultEmployee()
+
+         excelPosition.forEach((v, k) => {
+            const cell = worksheet[v]
+            if (!cell) {
+               ElMessage.warning("无法读取" + uploadFile.name + "的" + v + "单元格")
+               return
+            }
+            const val = cell.v
+            switch (k) {
+               case "name":
+                  employee.name = val
+                  break
+               case "gender":
+                  employee.gender = val
+                  break
+               case "birthday":
+                  employee.birthday = val
+                  break
+               case "height":
+                  employee.height = val
+                  break
+               case "weight":
+                  employee.weight = val
+                  break
+               case "degree":
+                  employee.degree = val
+                  break
+               case "identifier":
+                  employee.identifier = val
+                  break
+               case "phone":
+                  employee.phone = val
+                  break
+               case "political_status":
+                  employee.political_status = val
+                  break
+               case "social_security":
+                  employee.social_security = val
+                  break
+               case "current_address":
+                  employee.current_address = val
+                  break
+               case "first_work_time":
+                  employee.first_work_time = val
+                  break
+               case "former_employer":
+                  employee.former_employer = val
+                  break
+               case "post":
+                  employee.post = val
+                  break
+               case "salary":
+                  employee.salary = val
+                  break
+               case "security_card":
+                  employee.security_card = val
+                  break
+               case "comments":
+                  employee.comments = val
+                  break
+            }
+         })
+
+         console.log(employee)
+         rawFormData.value = employee
+      })
+      .catch((error) => {
+         ElMessage.error(uploadFile.name + "读取失败, " + error)
+         return new Promise(() => {})
+      })
 }
 
 const genderOptions = [
@@ -600,7 +698,7 @@ const rules = reactive<FormRules>({
                   <el-input
                      v-model="rawFormData.comments"
                      maxlength="8888"
-                     :rows="5"
+                     :rows="3"
                      placeholder="填写了解的情况"
                      show-word-limit
                      type="textarea" />
@@ -608,12 +706,22 @@ const rules = reactive<FormRules>({
             </el-col>
          </el-row>
       </el-form>
-      <template #footer>
-         <span class="dialog-footer">
-            <el-button type="primary" :loading="isLoading" @click="handleSave">保存</el-button>
-            <el-button type="danger" :loading="isLoading" @click="handleCancel">取消</el-button>
-         </span>
-      </template>
+      <el-upload
+         v-model.file-list="fileList"
+         accept=".xls, .xlsx"
+         :multiple="false"
+         :show-file-list="false"
+         :auto-upload="false"
+         :disabled="isImportDisabled"
+         :on-change="handleChange">
+         <template #trigger>
+            <el-button class="ml-130" type="primary" :loading="isLoading" :disabled="isImportDisabled"
+               >导入表格</el-button
+            >
+         </template>
+         <el-button class="ml-3 mb-1.3" type="primary" :loading="isLoading" @click="handleSave">保存</el-button>
+         <el-button class="mb-1.3" type="danger" :loading="isLoading" @click="handleCancel">取消</el-button>
+      </el-upload>
    </el-dialog>
 </template>
 
