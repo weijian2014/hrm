@@ -2,7 +2,10 @@
 import type { UploadFile, UploadUserFile } from "element-plus"
 import { excelPosition } from "./index"
 import { newDefaultEmployee } from "@/utils/common"
+import { employeeAddApi } from "@/utils/employee"
+import moment from "moment"
 import * as XLSX from "xlsx"
+import { useData } from "./index"
 
 // defineProps定义了当前组件的属性, 外部组件使用当前组件可以绑定传递进来
 const props = defineProps<{
@@ -46,6 +49,8 @@ const {
    importFiles,
 } = toRefs(state)
 
+const { isAddOrEditShow, addOrEditTitle, addOrEditData } = useData()
+
 // 当props.isShow变化时会传递给dialogVisible, 而dialogVisible被绑定给了el-dialog, 从而达到外部控制显示隐藏el-dialog的目的
 watch(
    () => props.isShow,
@@ -73,7 +78,7 @@ function readFile(file: UploadFile) {
 
 const handleChange = async (uploadFile: UploadFile) => {
    await readFile(uploadFile)
-      .then((rawData) => {
+      .then(async (rawData) => {
          // 解析二进制格式数据
          let workbook = XLSX.read(rawData, { type: "binary", cellDates: true })
          // 获取第一个Sheet
@@ -147,11 +152,40 @@ const handleChange = async (uploadFile: UploadFile) => {
          })
 
          console.log(employee)
+
+         addOrEditData.value = employee
+         addOrEditTitle.value = "从表格中导入"
+         isAddOrEditShow.value = true
+         // await employeeAddApi(employee)
+         //    .then((res) => {
+         //       if (res.code === 200) {
+         //          ElMessage.success(uploadFile.name + "导入成功, 姓名:" + employee.name + ", 性别:" + employee.gender)
+         //       }
+         //    })
+         //    .catch((res) => {
+         //       console.log(res)
+         //       ElMessage.warning(uploadFile.name + "导入失败, 姓名:" + employee.name + ", 性别:" + employee.gender)
+         //       return new Promise(() => {})
+         //    })
       })
       .catch((error) => {
          ElMessage.error(uploadFile.name + "读取失败, " + error)
          return new Promise(() => {})
       })
+}
+
+// AddVue组件发送的保存事件
+const handleSave = async (message: string) => {
+   // todo 更新表格数据
+   isAddOrEditShow.value = false
+   console.log("handleSave", message, addOrEditData.value)
+}
+
+// AddVue组件发送的消息事件
+const handleCancel = (message: string) => {
+   isAddOrEditShow.value = false
+   console.log("handleCancel", message, addOrEditData.value)
+   ElMessage.info(message)
 }
 </script>
 
@@ -176,6 +210,13 @@ const handleChange = async (uploadFile: UploadFile) => {
             <div class="el-upload__tip">选择需要导入的员工表格, 支持xls和xlsx格式</div>
          </template>
       </el-upload>
+      <AddOrEdit
+         :isShow="isAddOrEditShow"
+         :title="addOrEditTitle"
+         :formData="addOrEditData"
+         @save="handleSave"
+         @cancel="handleCancel">
+      </AddOrEdit>
    </el-dialog>
 </template>
 

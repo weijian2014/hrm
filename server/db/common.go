@@ -4,9 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"hrm/common"
-	"io"
 	"math/rand"
-	"net/http"
 	"os"
 	"strconv"
 	"time"
@@ -18,19 +16,16 @@ import (
 var (
 	DatabaseName     = "hrm.db"
 	DatabaseFullPath = common.CurrDir + "/" + DatabaseName
-
-	// test
-	// /opt/idgen_linux_amd64 server -l 0.0.0.0 -p 7070 -m json &
-	api = "http://0.0.0.0:7070/api"
 )
 
 type Gen struct {
-	Name   string
-	Mobile string
-	IdNo   string
-	Bank   string
-	Email  string
-	Addr   string
+	Name             string
+	Phone            string
+	Identifier       string
+	Address          string
+	Company          string
+	Email            string
+	CreditCardNumber string `json:"credit_card_number"`
 }
 
 func Init(adminUsername, adminPassword string) error {
@@ -214,25 +209,22 @@ func Init(adminUsername, adminPassword string) error {
 	fmt.Printf("Inserted rows into table [role_menus]\n")
 
 	// 表employees
-	var employees [100]Employee
+	const count = 30
+	var employees [count]Employee
+
+	jsonData, err := common.Command(common.CurrDir+"/doc/faker_gen.py", strconv.Itoa(count))
+	if err != nil {
+		return err
+	}
+	fmt.Printf("jsonData=[%v]\n", string(jsonData))
+
+	var g []Gen
+	if err = json.Unmarshal(jsonData, &g); err != nil {
+		return err
+	}
+
 	for i := range employees {
-		r, err := http.Get(api)
-		if err != nil {
-			return err
-		}
-
-		data, err := io.ReadAll(r.Body)
-		if err != nil {
-			return err
-		}
-		// fmt.Printf("data=[%v]\n", string(data))
-
-		var g Gen
-		if err = json.Unmarshal(data, &g); err != nil {
-			return err
-		}
-
-		employees[i].Name = g.Name
+		employees[i].Name = g[i].Name
 		if i%2 == 0 {
 			employees[i].Gender = "男"
 		} else {
@@ -249,17 +241,17 @@ func Init(adminUsername, adminPassword string) error {
 		ss := []string{"有", "无"}
 		employees[i].SocialSecurity = ss[rand.Intn(len(ss))]
 		employees[i].Phone = fmt.Sprintf("138%v%v", rand.Intn(9999-1000)+1000, rand.Intn(9999-1000)+1000)
-		employees[i].FormerEmployer = fmt.Sprintf("原单位%v-%v", i, g.Email)
+		employees[i].FormerEmployer = fmt.Sprintf("原单位%v-%v", i, g[i].Email)
 		employees[i].Height = uint64(rand.Intn(220-150) + 150)
 		employees[i].Weight = uint64(rand.Intn(120-45) + 45)
 		d := []string{"小学", "初中", "高中", "中专", "大专", "专升本", "本科", "研究生", "博士", "博士后"}
 		employees[i].Degree = d[rand.Intn(len(d))]
 		ps := []string{"群众", "无党派人士", "民主党派成员", "共青团员", "党员"}
 		employees[i].PoliticalStatus = ps[rand.Intn(len(ps))]
-		employees[i].Identifier = fmt.Sprintf("%v%v%v", g.IdNo[0:6], employees[i].Birthday.Format("20060102"), g.IdNo[14:])
+		employees[i].Identifier = fmt.Sprintf("%v%v%v", g[i].Identifier[0:6], employees[i].Birthday.Format("20060102"), g[i].Identifier[14:])
 		employees[i].SecurityCard = strconv.Itoa(rand.Intn(99999999-10000000) + 10000000)
-		employees[i].CurrentAddress = g.Addr
-		employees[i].Comments = g.Bank + " " + g.Email
+		employees[i].CurrentAddress = g[i].Address
+		employees[i].Comments = g[i].CreditCardNumber + " " + g[i].Email
 		// fmt.Printf("employee=[%v]\n", employees[i])
 	}
 	err = CreateTable(&Employee{})

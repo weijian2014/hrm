@@ -1,3 +1,5 @@
+import moment from "moment"
+
 export interface ApiResponse<T> {
    code: number
    message: string
@@ -50,7 +52,7 @@ export const newDefaultEmployee = (): Employee => {
       id: 0,
       name: "",
       gender: "",
-      birthday: "",
+      birthday: new Date().toISOString(),
       height: 0,
       weight: 0,
       degree: "",
@@ -59,14 +61,39 @@ export const newDefaultEmployee = (): Employee => {
       political_status: "",
       social_security: "",
       current_address: "",
-      first_work_time: "",
+      first_work_time: new Date().toISOString(),
       former_employer: "",
       post: "",
       salary: 0,
       security_card: "",
       comments: "",
-      updated_at: "",
+      updated_at: new Date().toISOString(),
    }
 
    return e
+}
+
+export function toIsoString(date: Date) {
+   var tzo = -date.getTimezoneOffset(),
+      dif = tzo >= 0 ? "+" : "-",
+      pad = function (num: number) {
+         return (num < 10 ? "0" : "") + num
+      }
+   return (
+      date.getFullYear() +
+      "-" +
+      pad(date.getMonth() + 1) +
+      "-" +
+      pad(date.getDate()) +
+      "T" +
+      pad(date.getHours()) +
+      ":" +
+      pad(date.getMinutes()) +
+      ":" +
+      pad(date.getSeconds()) +
+      dif +
+      pad(Math.floor(Math.abs(tzo) / 60)) +
+      ":" +
+      pad(Math.abs(tzo) % 60)
+   )
 }

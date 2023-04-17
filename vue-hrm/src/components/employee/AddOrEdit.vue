@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { employeeUpdateApi } from "@/utils/employee"
+import { employeeUpdateApi, employeeAddApi } from "@/utils/employee"
 import Validator from "./index"
 import type { FormRules } from "element-plus"
+import { toIsoString } from "@/utils/common"
 
 // defineProps定义了当前组件的属性, 外部组件使用当前组件可以绑定传递进来
 const props = defineProps<{
@@ -72,7 +73,6 @@ watch(
 const formRef = ref()
 const isLoading = ref(false)
 const handleSave = async () => {
-   console.log("handleSave", rawFormData.value)
    isLoading.value = true
 
    // 表格输入规则校验, 通过进入than, 不通过则进入catch
@@ -81,20 +81,49 @@ const handleSave = async () => {
       .then(async () => {
          console.log("表单校验成功")
 
-         await employeeUpdateApi(rawFormData.value)
-            .then((res) => {
-               if (res.code === 200) {
+         // 转换成Golang一致的时间格式 -- ISO 8601 格式
+         rawFormData.value.birthday = toIsoString(new Date(rawFormData.value.birthday))
+         rawFormData.value.first_work_time = toIsoString(new Date(rawFormData.value.first_work_time))
+         if (rawFormData.value.updated_at) {
+            rawFormData.value.updated_at = toIsoString(new Date(rawFormData.value.updated_at))
+         }
+
+         // 转换Golang一致的类型
+         rawFormData.value.phone = rawFormData.value.phone.toString()
+         rawFormData.value.security_card = rawFormData.value.security_card.toString()
+
+         console.log("handleSave", rawFormData.value)
+         if (props.title === "修改员工") {
+            await employeeUpdateApi(rawFormData.value)
+               .then((res) => {
+                  if (res.code === 200) {
+                     console.log(res)
+                     emits("save", "保存成功")
+                     isLoading.value = false
+                  }
+               })
+               .catch((res) => {
                   console.log(res)
-                  // 向外发送save(保存)事件
-                  emits("save", "保存成功")
                   isLoading.value = false
-               }
-            })
-            .catch((res) => {
-               console.log(res)
-               isLoading.value = false
-               return new Promise(() => {})
-            })
+                  ElMessage.error("保存失败, " + res)
+                  return new Promise(() => {})
+               })
+         } else {
+            await employeeAddApi(rawFormData.value)
+               .then((res) => {
+                  if (res.code === 200) {
+                     console.log(res)
+                     emits("save", "保存成功")
+                     isLoading.value = false
+                  }
+               })
+               .catch((res) => {
+                  console.log(res)
+                  isLoading.value = false
+                  ElMessage.error("保存失败, " + res)
+                  return new Promise(() => {})
+               })
+         }
       })
       .catch((err: any) => {
          isLoading.value = false
@@ -307,6 +336,21 @@ const isSecurityCardValid = (rule: unknown, value: string | undefined, callback:
    callback()
 }
 
+const isSalaryValid = (rule: unknown, value: string | undefined, callback: (msg?: string) => void) => {
+   if (!value) {
+      callback("请输入工资")
+      return
+   }
+
+   let s = Number(value)
+   if (s < 0) {
+      callback("工资是大于等于0的数字, 单位人民币元")
+      return
+   }
+
+   callback()
+}
+
 // 校验规则
 const rules = reactive<FormRules>({
    name: [
@@ -373,7 +417,6 @@ const rules = reactive<FormRules>({
       },
    ],
    phone: [
-      // { type: "number", message: "手机号是数字", trigger: "change" },
       {
          required: true,
          validator: isPhoneValid,
@@ -395,11 +438,13 @@ const rules = reactive<FormRules>({
       },
    ],
    salary: [
-      { required: true, message: "请输入工资", trigger: "blur" },
-      { type: "number", message: "工资是数字, 单位人民币元", trigger: "change" },
+      {
+         required: true,
+         validator: isSalaryValid,
+         trigger: "blur",
+      },
    ],
    security_card: [
-      // { type: "number", message: "保安证是数字", trigger: "change" },
       {
          required: false,
          validator: isSecurityCardValid,
@@ -412,7 +457,7 @@ const rules = reactive<FormRules>({
 <template>
    <!-- 当点击对话框右上角关闭时, 向外部发送canel事件 -->
    <el-dialog
-      width="50%"
+      width="55%"
       draggable
       v-model="dialogVisible"
       :title="title"
