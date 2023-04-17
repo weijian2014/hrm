@@ -264,48 +264,6 @@ export function dateFormatter(row: any, column: TableColumnCtx<any>, cellValue: 
    }
 }
 
-export default class Validator {
-   /**
-    * @description 根据身份证号前17位计算出最后一位
-    * @param { string } n 身份证号前17位
-    * @returns { string } 最后一位
-    */
-   private static computeLastNum(n: string): string {
-      const computeNums = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2]
-      const remainderToLast = ["1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2"]
-      let total = 0
-      n.split("").forEach((n, i) => {
-         total += Number(n) * computeNums[i]
-      })
-      return remainderToLast[total % 11]
-   }
-
-   /**
-    * @description 检验身份证号格式是否正确
-    * @param { string } n 身份证号
-    * @returns { boolean }
-    */
-   static isIdentifierValid(n: string): boolean {
-      // 检验长度
-      if (n.length !== 18) return false
-      // 地区是否存在(需要有地区的库，可以查看开源项目)
-      // if(!Area.validateAreaCodeExist(n.substr(0, 6))) return false
-      // 校验最后一位
-      return this.computeLastNum(n.substr(0, 17)) === n.substr(17, 1)
-   }
-
-   /**
-    * @description 校验手机号格式是否正确
-    * @param { string } phone 手机号
-    * @returns { boolean }
-    */
-   static isPhoneValid(phone: string): boolean {
-      const phoneRegExp: RegExp =
-         /^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$/
-      return phoneRegExp.test(phone)
-   }
-}
-
 export function readFile(file: UploadFile) {
    return new Promise(function (resolve, reject) {
       const reader = new FileReader()

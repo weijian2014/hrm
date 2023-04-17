@@ -17,18 +17,22 @@ const {
    selections,
 } = useData()
 
-employeeListApi()
-   .then((res) => {
-      if (res.code === 200) {
+const refresh = async () => {
+   await employeeListApi()
+      .then((res) => {
+         if (res.code === 200) {
+            console.log(res)
+            // totalRows.value = res.data.total
+            tableData.value = res.data.rows
+         }
+      })
+      .catch((res) => {
          console.log(res)
-         // totalRows.value = res.data.total
-         tableData.value = res.data.rows
-      }
-   })
-   .catch((res) => {
-      console.log(res)
-      return new Promise(() => {})
-   })
+         return new Promise(() => {})
+      })
+}
+
+refresh()
 
 const deleteAndRefresh = async (ids: number[]) => {
    for (let i = 0; i < ids.length; ++i) {
@@ -45,17 +49,7 @@ const deleteAndRefresh = async (ids: number[]) => {
          })
    }
 
-   await employeeListApi()
-      .then((res) => {
-         if (res.code === 200) {
-            console.log(res)
-            tableData.value = res.data.rows
-         }
-      })
-      .catch((res) => {
-         console.log(res)
-         return new Promise(() => {})
-      })
+   await refresh()
 }
 
 // 可显示的列
@@ -193,6 +187,12 @@ const handleBatchDelete = () => {
       })
 }
 
+// 刷新
+const handleRefresh = async () => {
+   console.log("handleRefresh")
+   await refresh()
+}
+
 ////// Add组件
 
 // AddVue组件发送的保存事件
@@ -224,27 +224,17 @@ const handleCancel = (message: string) => {
    console.log("handleCancel", message, addOrEditData.value)
    ElMessage.info(message)
 }
-
-// Excel导入导出
-const fileList = ref<UploadUserFile[]>([] as UploadUserFile[])
-const importClick = () => {
-   isImportShow.value = true
-}
 </script>
 
 <template>
    <div>
       <!-- 表头工具 -->
       <el-row class="mb-4">
-         <el-col :span="12">
+         <el-col :span="7">
             <el-button type="primary" @click="handleAddOrImport">
                <IEpPlus />
                <span style="vertical-align: middle">新增或导入</span>
             </el-button>
-            <!-- <el-button type="primary" accept=".xls,.xlsx" @click="importClick()">
-               <IEpUpload />
-               <span style="vertical-align: middle">导入</span>
-            </el-button> -->
             <el-button type="primary" :disabled="isButtonDisabled">
                <IEpDownload />
                <span style="vertical-align: middle">导出</span>
@@ -254,7 +244,7 @@ const importClick = () => {
                <span style="vertical-align: middle">批量删除</span>
             </el-button>
          </el-col>
-         <el-col :span="6">
+         <el-col :span="7">
             <el-input v-model="seachInputValue" placeholder="" clearable>
                <template #suffix>
                   <el-icon><IEpSearch /></el-icon>
@@ -262,8 +252,14 @@ const importClick = () => {
                <template #prepend>模糊搜索</template>
             </el-input>
          </el-col>
-         <el-col :offset="1" :span="5">
-            <el-popover placement="left-end" title="列筛选" :width="300" trigger="click">
+         <el-col class="ml-4" :span="1">
+            <el-button type="primary">
+               <IEpRefresh />
+               <span style="vertical-align: middle" @click="handleRefresh">刷新</span>
+            </el-button>
+         </el-col>
+         <el-col class="ml-8" :span="1">
+            <el-popover placement="right-end" title="列筛选" :width="300" trigger="click">
                <template #reference>
                   <el-button type="primary" style="vertical-align: middle"><IEpPlus />列筛选</el-button>
                </template>
