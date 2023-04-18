@@ -291,9 +291,14 @@ const excelHeader = computed(() => {
    return header
 })
 
-export function convertForExport(rows: Employee[]) {
+export function convertForExport(rows: Employee[]): {
+   excelHeaders: string[]
+   excelBodys: any[]
+   excelColumnsWidth: any[]
+} {
    const excelData: any = []
-   excelData.push(excelHeader.value)
+   const maxLenght: number[] = [30, 50, 30, 70, 40, 40, 70, 125, 90, 80, 30, 220, 90, 160, 40, 55, 70, 300]
+
    rows.map((row) => {
       let rowData = [
          row.id,
@@ -315,9 +320,15 @@ export function convertForExport(rows: Employee[]) {
          row.security_card,
          row.comments,
       ]
+
+      // 根据单元格内容的长度计算列宽
+      // rowData.forEach((v, i) => {
+      //    maxLenght[i] = Math.max(v.toString().length, maxLenght[i])
+      // })
+
       excelData.push(rowData)
    })
-   return excelData
+   return { excelHeaders: excelHeader.value, excelBodys: excelData, excelColumnsWidth: maxLenght }
 }
 
 export function dateFormatter(row: any, column: TableColumnCtx<any>, cellValue: any, index: number) {

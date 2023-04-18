@@ -26,4 +26,6 @@ interface TableColumn {
    sortable: boolean = true
    align: string = "center"
    formatter?: any | undefined
+   importPos?: string
+   emportPos?: string
 }

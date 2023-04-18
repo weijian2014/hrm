@@ -115,11 +115,20 @@ const handleExport = () => {
    }
 
    // excelData包含表头和行数据
-   const excelData = convertForExport(selections.value)
-   console.log("handleExport", excelData)
+   const { excelHeaders, excelBodys, excelColumnsWidth } = convertForExport(selections.value)
+   console.log("handleExport", excelHeaders, excelBodys, excelColumnsWidth)
 
    // 创建工作表, skipHeader=true, 因为excelData中已经包含表头
-   const workSheet = XLSX.utils.json_to_sheet(excelData, { skipHeader: true })
+   const workSheet = XLSX.utils.json_to_sheet([excelHeaders, ...excelBodys], { skipHeader: true })
+
+   // 设置列宽度
+   let colsWidth: XLSX.ColInfo[] = []
+   excelColumnsWidth.forEach((w) => {
+      let col = { wpx: w }
+      colsWidth.push(col)
+   })
+   workSheet["!cols"] = colsWidth
+
    // 创建工作簿
    const workBook = XLSX.utils.book_new()
    // 将工作表放入工作簿中
