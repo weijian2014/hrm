@@ -2,9 +2,9 @@
 import AddOrEdit from "@/components/employee/AddOrEdit.vue"
 import { employeeListApi, employeeDeleteApi } from "@/utils/employee"
 import type { CheckboxValueType } from "element-plus"
-import { useSettings, useData } from "./index"
+import { useSettings, useData, convertForExport } from "./index"
+import moment from "moment"
 import * as XLSX from "xlsx"
-import FileSaver from "file-saver"
 
 const { table, columns, pagination, checkList } = useSettings()
 
@@ -114,16 +114,20 @@ const handleExport = () => {
       return
    }
 
-   console.log("handleExport", selections.value)
+   // excelData包含表头和行数据
+   const excelData = convertForExport(selections.value)
+   console.log("handleExport", excelData)
 
-   // 创建工作表
-   const data = XLSX.utils.json_to_sheet(selections.value)
+   // 创建工作表, skipHeader=true, 因为excelData中已经包含表头
+   const workSheet = XLSX.utils.json_to_sheet(excelData, { skipHeader: true })
    // 创建工作簿
-   const wb = XLSX.utils.book_new()
+   const workBook = XLSX.utils.book_new()
    // 将工作表放入工作簿中
-   XLSX.utils.book_append_sheet(wb, data, "data")
+   XLSX.utils.book_append_sheet(workBook, workSheet, "员工信息")
+   let excelFileName = "员工信息_" + moment(new Date()).format("YYYY-MM-DD") + ".xlsx"
    // 生成文件并下载
-   XLSX.writeFile(wb, "导出的员工.xlsx")
+   XLSX.writeFile(workBook, excelFileName)
+   tableRef.value.clearSelection()
 }
 
 const handleEdit = (index: number, row: Employee | undefined) => {

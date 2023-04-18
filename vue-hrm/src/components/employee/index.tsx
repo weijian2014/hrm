@@ -1,6 +1,5 @@
 import { getAgeByBirthday } from "@/utils/common"
 import type { TableColumnCtx, UploadFile } from "element-plus"
-import { timePanelSharedProps } from "element-plus/es/components/time-picker/src/props/shared"
 import moment from "moment"
 
 export function useSettings() {
@@ -197,7 +196,7 @@ export function useSettings() {
 
 export function useData() {
    // el-table组件对象, 自动关联到el-table组件
-   const tableRef = {}
+   const tableRef = ref()
 
    // 表格数据
    const tableData = ref<Employee[]>([] as Employee[])
@@ -268,6 +267,59 @@ export const excelFeilds = new Map([
    ["保安证", "E7"],
 ])
 
+// const propToLableMap = computed(() => {
+//    let pl = new Map<string, string>()
+//    useSettings().columns.forEach((item) => {
+//       pl.set(item.prop, item.label)
+//    })
+//    return pl
+// })
+
+// const lableToPropMap = computed(() => {
+//    let lp = new Map<string, string>()
+//    useSettings().columns.forEach((item) => {
+//       lp.set(item.label, item.prop)
+//    })
+//    return lp
+// })
+
+const excelHeader = computed(() => {
+   let header: string[] = []
+   useSettings().columns.forEach((item) => {
+      header.push(item.label)
+   })
+   return header
+})
+
+export function convertForExport(rows: Employee[]) {
+   const excelData: any = []
+   excelData.push(excelHeader.value)
+   rows.map((row) => {
+      let rowData = [
+         row.id,
+         row.name,
+         row.gender,
+         moment(row.birthday).format("YYYY-MM-DD"),
+         row.height,
+         row.weight,
+         row.degree,
+         row.identifier,
+         row.phone,
+         row.political_status,
+         row.social_security,
+         row.current_address,
+         moment(row.first_work_time).format("YYYY-MM-DD"),
+         row.former_employer,
+         row.post,
+         row.salary,
+         row.security_card,
+         row.comments,
+      ]
+      excelData.push(rowData)
+   })
+   return excelData
+}
+
 export function dateFormatter(row: any, column: TableColumnCtx<any>, cellValue: any, index: number) {
    var date = row[column.property]
    if (date == undefined) {
@@ -294,19 +346,3 @@ export function readFile(file: UploadFile) {
       reader.readAsBinaryString(file.raw as Blob)
    })
 }
-
-export const propToLableMap = computed(() => {
-   let pl = new Map<string, string>()
-   useSettings().columns.forEach((item) => {
-      pl.set(item.prop, item.label)
-   })
-   return pl
-})
-
-export const lableToPropMap = computed(() => {
-   let lp = new Map<string, string>()
-   useSettings().columns.forEach((item) => {
-      lp.set(item.label, item.prop)
-   })
-   return lp
-})

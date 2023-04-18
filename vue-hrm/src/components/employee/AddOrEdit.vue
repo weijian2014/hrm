@@ -4,8 +4,8 @@ import { excelPosition, readFile, excelFeilds } from "./index"
 import { rules } from "./validation"
 import { toIsoString } from "@/utils/common"
 import { newDefaultEmployee } from "@/utils/common"
-import * as XLSX from "xlsx"
 import type { UploadFile, UploadUserFile } from "element-plus"
+import * as XLSX from "xlsx"
 
 // defineProps定义了当前组件的属性, 外部组件使用当前组件可以绑定传递进来
 const props = defineProps<{
