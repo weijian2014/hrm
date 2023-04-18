@@ -1,5 +1,6 @@
 import { getAgeByBirthday } from "@/utils/common"
-import type { TableColumnCtx } from "element-plus"
+import type { TableColumnCtx, UploadFile } from "element-plus"
+import { timePanelSharedProps } from "element-plus/es/components/time-picker/src/props/shared"
 import moment from "moment"
 
 export function useSettings() {
@@ -247,6 +248,26 @@ export const excelPosition = new Map([
    ["comments", "A8"],
 ])
 
+export const excelFeilds = new Map([
+   ["人员情况调查", "A1"],
+   ["姓名", "A2"],
+   ["性别", "C2"],
+   ["生日", "E2"],
+   ["身高(cm)", "A3"],
+   ["体重(kg)", "C3"],
+   ["学历", "E3"],
+   ["身份证号", "A4"],
+   ["手机号码", "C4"],
+   ["政治面貌", "E4"],
+   ["社保", "A5"],
+   ["现住址", "C5"],
+   ["首次工作日期", "A6"],
+   ["原单位", "C6"],
+   ["岗位", "A7"],
+   ["工资(¥)", "C7"],
+   ["保安证", "E7"],
+])
+
 export function dateFormatter(row: any, column: TableColumnCtx<any>, cellValue: any, index: number) {
    var date = row[column.property]
    if (date == undefined) {
@@ -273,3 +294,19 @@ export function readFile(file: UploadFile) {
       reader.readAsBinaryString(file.raw as Blob)
    })
 }
+
+export const propToLableMap = computed(() => {
+   let pl = new Map<string, string>()
+   useSettings().columns.forEach((item) => {
+      pl.set(item.prop, item.label)
+   })
+   return pl
+})
+
+export const lableToPropMap = computed(() => {
+   let lp = new Map<string, string>()
+   useSettings().columns.forEach((item) => {
+      lp.set(item.label, item.prop)
+   })
+   return lp
+})

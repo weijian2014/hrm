@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { employeeUpdateApi, employeeAddApi } from "@/utils/employee"
-import { excelPosition, readFile } from "./index"
+import { excelPosition, readFile, excelFeilds } from "./index"
 import { rules } from "./validation"
 import { toIsoString } from "@/utils/common"
 import { newDefaultEmployee } from "@/utils/common"
@@ -162,12 +162,23 @@ const handleChange = async (uploadFile: UploadFile) => {
          // 获取第一个Sheet
          let worksheet = workbook.Sheets[workbook.SheetNames[0]]
 
+         // 检查表格格式
+         console.log("isExcelValid")
+         if (!isExcelValid(worksheet)) {
+            console.log("无法读取表格, 请使用模板导入")
+            ElMessage.warning("无法读取表格, 请使用模板导入")
+            return
+         }
+
          // 转成json对象
-         // let json = XLSX.utils.sheet_to_json(worksheet, { defval: "", header: 1, blankrows: false })
+         // let rows = XLSX.utils.sheet_to_json(worksheet, { defval: "", header: 1, blankrows: false })
+         // console.log("sheet_to_json", rows)
 
          let employee = newDefaultEmployee()
 
-         excelPosition.forEach((v, k) => {
+         for (let ep of excelPosition) {
+            const k = ep[0]
+            const v = ep[1]
             const cell = worksheet[v]
             if (!cell) {
                ElMessage.warning("无法读取" + uploadFile.name + "的" + v + "单元格")
@@ -227,9 +238,9 @@ const handleChange = async (uploadFile: UploadFile) => {
                   employee.comments = val
                   break
             }
-         })
+         }
 
-         console.log(employee)
+         console.log("读取表格完成", employee)
          // 清除校验信息
          formRef.value?.clearValidate()
          rawFormData.value = employee
@@ -238,6 +249,23 @@ const handleChange = async (uploadFile: UploadFile) => {
          ElMessage.error(uploadFile.name + "读取失败, " + error)
          return new Promise(() => {})
       })
+}
+
+const isExcelValid = (worksheet: XLSX.WorkSheet): boolean => {
+   let isOk = true
+   // 这里不要用forEach
+   for (let item of excelFeilds) {
+      const k = item[0]
+      const v = item[1]
+      const cell = worksheet[v]
+      console.log(cell.v, k, v)
+      if (!cell || cell.v != k) {
+         isOk = false
+         break
+      }
+   }
+
+   return isOk
 }
 
 const genderOptions = [

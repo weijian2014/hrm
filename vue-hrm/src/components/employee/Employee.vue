@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import AddOrEdit from "@/components/employee/AddOrEdit.vue"
 import { employeeListApi, employeeDeleteApi } from "@/utils/employee"
-import type { CheckboxValueType, UploadUserFile } from "element-plus"
+import type { CheckboxValueType } from "element-plus"
 import { useSettings, useData } from "./index"
+import * as XLSX from "xlsx"
+import FileSaver from "file-saver"
 
 const { table, columns, pagination, checkList } = useSettings()
 
@@ -101,10 +103,27 @@ const handleRowClick = (row: Employee) => {
 }
 
 const handleAddOrImport = () => {
-   console.log("新增或导入员工")
+   console.log("handleAddOrImport")
    addOrEditTitle.value = "新增或导入员工"
    addOrEditData.value = {} as Employee
    isAddOrEditShow.value = true
+}
+
+const handleExport = () => {
+   if (selections.value.length === 0) {
+      return
+   }
+
+   console.log("handleExport", selections.value)
+
+   // 创建工作表
+   const data = XLSX.utils.json_to_sheet(selections.value)
+   // 创建工作簿
+   const wb = XLSX.utils.book_new()
+   // 将工作表放入工作簿中
+   XLSX.utils.book_append_sheet(wb, data, "data")
+   // 生成文件并下载
+   XLSX.writeFile(wb, "导出的员工.xlsx")
 }
 
 const handleEdit = (index: number, row: Employee | undefined) => {
@@ -237,7 +256,7 @@ const handleCancel = (message: string) => {
             </el-button>
             <el-button type="primary" :disabled="isButtonDisabled">
                <IEpDownload />
-               <span style="vertical-align: middle">导出</span>
+               <span style="vertical-align: middle" @click="handleExport">导出</span>
             </el-button>
             <el-button type="primary" :disabled="isButtonDisabled" @click="handleBatchDelete">
                <IEpDelete />
