@@ -286,15 +286,15 @@ const handleCancel = (message: string) => {
          <el-col :span="7">
             <el-button type="primary" @click="handleAddOrImport">
                <IEpPlus />
-               <span style="vertical-align: middle">新增或导入</span>
+               <span>新增或导入</span>
             </el-button>
             <el-button type="primary" :disabled="isButtonDisabled">
                <IEpDownload />
-               <span style="vertical-align: middle" @click="handleExport">导出</span>
+               <span @click="handleExport">导出</span>
             </el-button>
             <el-button type="primary" :disabled="isButtonDisabled" @click="handleBatchDelete">
                <IEpDelete />
-               <span style="vertical-align: middle">批量删除</span>
+               <span>批量删除</span>
             </el-button>
          </el-col>
          <el-col :span="7">

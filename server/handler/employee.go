@@ -68,7 +68,7 @@ func employeeSearch(c *gin.Context) {
 	// 模糊查询
 	err := db.Find(employees,
 		-1,
-		"name || height || weight || degree || identifier || phone || current_address || former_employer || salary || security_card || comments like ?",
+		"name || gender || birthday || height || weight || degree || identifier || phone || political_status || social_security || current_address || first_work_time || former_employer || post || salary || security_card || comments like ?",
 		"%"+r.Key+"%")
 	if err != nil {
 		log.Warn("职工信息获取失败, %v", err)
