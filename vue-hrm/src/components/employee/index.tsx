@@ -281,76 +281,25 @@ export function useData() {
    }
 }
 
-// export const excelPosition = new Map([
-//    ["name", "B2"],
-//    ["gender", "D2"],
-//    ["birthday", "F2"],
-//    ["height", "B3"],
-//    ["weight", "D3"],
-//    ["degree", "F3"],
-//    ["identifier", "B4"],
-//    ["phone", "D4"],
-//    ["political_status", "F4"],
-//    ["social_security", "B5"],
-//    ["current_address", "D5"],
-//    ["first_work_time", "B6"],
-//    ["former_employer", "D6"],
-//    ["post", "B7"],
-//    ["salary", "D7"],
-//    ["security_card", "F7"],
-//    ["comments", "A8"],
-// ])
-
-// export const excelFeilds = new Map([
-//    ["姓名", "A2"],
-//    ["性别", "C2"],
-//    ["生日", "E2"],
-//    ["身高(cm)", "A3"],
-//    ["体重(kg)", "C3"],
-//    ["学历", "E3"],
-//    ["身份证号", "A4"],
-//    ["手机号码", "C4"],
-//    ["政治面貌", "E4"],
-//    ["社保", "A5"],
-//    ["现住址", "C5"],
-//    ["首次工作日期", "A6"],
-//    ["原单位", "C6"],
-//    ["岗位", "A7"],
-//    ["工资(¥)", "C7"],
-//    ["保安证", "E7"],
-// ])
-
-export const excelPosition = computed(() => {
-   let positions = new Map()
+export const excelKeyPosition = computed(() => {
+   let ekp = new Map()
    useSettings().columns.forEach((item) => {
-      positions.set(item.prop, item.valuePosition)
+      if (item.prop != "id" && item.prop != "comments") {
+         ekp.set(item.label, item.keyPosition)
+      }
    })
-   return positions
+   return ekp
 })
 
-export const excelFeilds = computed(() => {
-   let feilds = new Map()
+export const excelValuePosition = computed(() => {
+   let evp = new Map()
    useSettings().columns.forEach((item) => {
-      feilds.set(item.label, item.keyPosition)
+      if (item.prop != "id") {
+         evp.set(item.prop, item.valuePosition)
+      }
    })
-   return feilds
+   return evp
 })
-
-// const propToLableMap = computed(() => {
-//    let pl = new Map<string, string>()
-//    useSettings().columns.forEach((item) => {
-//       pl.set(item.prop, item.label)
-//    })
-//    return pl
-// })
-
-// const lableToPropMap = computed(() => {
-//    let lp = new Map<string, string>()
-//    useSettings().columns.forEach((item) => {
-//       lp.set(item.label, item.prop)
-//    })
-//    return lp
-// })
 
 const excelHeader = computed(() => {
    let header: string[] = []

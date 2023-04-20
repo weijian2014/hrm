@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { employeeUpdateApi, employeeAddApi } from "@/utils/employee"
-import { excelPosition, readFile, excelFeilds } from "./index"
+import { excelKeyPosition, excelValuePosition, readFile } from "./index"
 import { rules } from "./validation"
 import { toIsoString } from "@/utils/common"
 import { newDefaultEmployee } from "@/utils/common"
-import type { UploadFile, UploadUserFile } from "element-plus"
+import type { UploadFile, UploadFiles, UploadUserFile } from "element-plus"
 import * as XLSX from "xlsx"
 
 // defineProps定义了当前组件的属性, 外部组件使用当前组件可以绑定传递进来
@@ -154,9 +154,11 @@ const handleCancel = () => {
 
 //// upload组件
 const fileList = ref<UploadUserFile[]>([] as UploadUserFile[])
-const handleChange = async (uploadFile: UploadFile) => {
-   await readFile(uploadFile)
-      .then(async (rawData) => {
+const handleChange = async (file: UploadFile, files: UploadFiles) => {
+   isLoading.value = true
+   console.log("handleChange", file, files)
+   await readFile(file)
+      .then((rawData) => {
          // 解析二进制格式数据
          let workbook = XLSX.read(rawData, { type: "binary", cellDates: true })
          // 获取第一个Sheet
@@ -166,9 +168,9 @@ const handleChange = async (uploadFile: UploadFile) => {
          if (!isExcelValid(worksheet)) {
             console.log("无法读取表格, 请使用模板导入")
             ElMessage.warning("无法读取表格, 请使用模板导入")
+            isLoading.value = false
             return
          }
-         console.log("表格模板正确")
 
          // 转成json对象
          // let rows = XLSX.utils.sheet_to_json(worksheet, { defval: "", header: 1, blankrows: false })
@@ -176,12 +178,13 @@ const handleChange = async (uploadFile: UploadFile) => {
 
          let employee = newDefaultEmployee()
 
-         for (let ep of excelPosition.value) {
+         for (let ep of excelValuePosition.value) {
             const k = ep[0]
             const v = ep[1]
             const cell = worksheet[v]
             if (!cell) {
-               ElMessage.warning("无法读取" + uploadFile.name + "的" + v + "单元格")
+               ElMessage.warning("无法读取" + file.name + "的" + v + "单元格")
+               isLoading.value = false
                return
             }
             const val = cell.v
@@ -244,9 +247,11 @@ const handleChange = async (uploadFile: UploadFile) => {
          // 清除校验信息
          formRef.value?.clearValidate()
          rawFormData.value = employee
+         isLoading.value = false
       })
       .catch((error) => {
-         ElMessage.error(uploadFile.name + "读取失败, " + error)
+         isLoading.value = false
+         ElMessage.error(file.name + "读取失败, " + error)
          return new Promise(() => {})
       })
 }
@@ -254,7 +259,7 @@ const handleChange = async (uploadFile: UploadFile) => {
 const isExcelValid = (worksheet: XLSX.WorkSheet): boolean => {
    let isOk = true
    // 这里不要用forEach
-   for (let item of excelFeilds.value) {
+   for (let item of excelKeyPosition.value) {
       const k = item[0]
       const v = item[1]
       const cell = worksheet[v]
@@ -296,20 +301,20 @@ const politicalStatusOptions = [
       label: "群众",
    },
    {
-      value: "无党派人士",
-      label: "无党派人士",
-   },
-   {
-      value: "民主党派成员",
-      label: "民主党派成员",
-   },
-   {
       value: "共青团员",
       label: "共青团员",
    },
    {
       value: "党员",
       label: "党员",
+   },
+   {
+      value: "无党派人士",
+      label: "无党派人士",
+   },
+   {
+      value: "民主党派成员",
+      label: "民主党派成员",
    },
 ]
 
