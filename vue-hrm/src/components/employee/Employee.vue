@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import AddOrEdit from "@/components/employee/AddOrEdit.vue"
-import { employeeListApi, employeeDeleteApi } from "@/utils/employee"
+import { employeeListApi, employeeSearchApi, employeeDeleteApi } from "@/utils/employee"
 import type { CheckboxValueType } from "element-plus"
 import { useSettings, useData, convertForExport } from "./index"
 import moment from "moment"
@@ -12,7 +12,7 @@ const {
    tableRef,
    tableData,
    isButtonDisabled,
-   seachInputValue,
+   searchInputValue,
    isAddOrEditShow,
    addOrEditTitle,
    addOrEditData,
@@ -58,6 +58,27 @@ const deleteAndRefresh = async (ids: number[]) => {
 const visibleColumns = computed(() => {
    return columns.filter((column: { visible: boolean }) => column.visible)
 })
+
+// 查询输入变化时
+watch(
+   () => searchInputValue.value,
+   async (newValue) => {
+      if (newValue && newValue.length != 0) {
+         await employeeSearchApi({ key: newValue })
+            .then((res) => {
+               if (res.code === 200) {
+                  tableData.value = res.data.rows
+               }
+            })
+            .catch((err) => {
+               console.log(err)
+               return new Promise(() => {})
+            })
+      } else {
+         await refresh()
+      }
+   }
+)
 
 ////// 表头工具栏
 let lastCheckList = checkList.value as CheckboxValueType[]
@@ -277,7 +298,7 @@ const handleCancel = (message: string) => {
             </el-button>
          </el-col>
          <el-col :span="7">
-            <el-input v-model="seachInputValue" placeholder="" clearable>
+            <el-input v-model="searchInputValue" placeholder="" clearable>
                <template #suffix>
                   <el-icon><IEpSearch /></el-icon>
                </template>
@@ -320,7 +341,7 @@ const handleCancel = (message: string) => {
          :empty-text="table.empty_text"
          :highlight-current-row="table.highlight_current_row"
          :row-key="table.row_key"
-         :default-sort="{ prop: 'name', order: 'descending' }"
+         :default-sort="{ prop: 'id', order: 'descending' }"
          @selection-change="handleSelectChange"
          @row-click="handleRowClick">
          <el-table-column type="selection" align="center" />

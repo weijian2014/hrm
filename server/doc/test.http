@@ -113,3 +113,12 @@ Authorization: {{adminAccessToken}}
   "comments": "1) 简化流程： 设计简洁直观的操作流程；\n2) 清晰明确： 语言表达清晰且表意明确，让用户快速理解进而作出决策；\n3) 帮助用户识别： 界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。",
   "updated_at": "2023-04-17T15:32:19+08:00"
 }
+
+### 模糊查询
+POST http://{{host}}/employee/search
+Content-Type: application/json
+Authorization: {{adminAccessToken}}
+
+{
+   "key": "212"
+}

@@ -259,7 +259,7 @@ export function useData() {
    const isButtonDisabled = ref(true)
 
    // 搜索框的值
-   const seachInputValue = ref("")
+   const searchInputValue = ref("")
 
    // AddOrEdit组件属性
    const isAddOrEditShow = ref(false)
@@ -273,7 +273,7 @@ export function useData() {
       tableRef,
       tableData,
       isButtonDisabled,
-      seachInputValue,
+      searchInputValue,
       isAddOrEditShow,
       addOrEditTitle,
       addOrEditData,

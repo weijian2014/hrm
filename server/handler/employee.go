@@ -16,6 +16,7 @@ func registerEmployeeRouter(r *gin.Engine) {
 
 	// 以下接口登陆后才能访问, 加中间件
 	employeeRouter.GET("list", middleware.AccessTokenAuthenticator, employeeList)
+	employeeRouter.POST("search", middleware.AccessTokenAuthenticator, employeeSearch)
 	employeeRouter.POST("add", middleware.AccessTokenAuthenticator, employeeAdd)
 	employeeRouter.PUT("update", middleware.AccessTokenAuthenticator, employeeUpdate)
 	employeeRouter.DELETE(":id", middleware.AccessTokenAuthenticator, employeeDel)
@@ -24,6 +25,51 @@ func registerEmployeeRouter(r *gin.Engine) {
 func employeeList(c *gin.Context) {
 	employees := new([]db.Employee)
 	err := db.Find(employees, -1)
+	if err != nil {
+		log.Warn("职工信息获取失败, %v", err)
+		c.JSON(http.StatusNotFound, gin.H{
+			"code":    http.StatusNotFound,
+			"message": fmt.Sprintf("职工信息获取失败, %v", err),
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":    http.StatusOK,
+		"message": "职工信息获取成功",
+		"data": gin.H{
+			"total": len(*employees),
+			"rows":  employees,
+		},
+	})
+}
+
+type searchRequest struct {
+	Key string `json:"key" description:"模糊搜索的关键字"`
+}
+
+func employeeSearch(c *gin.Context) {
+	r := new(searchRequest)
+	if err := c.ShouldBindJSON(r); err != nil {
+		log.Warn("请求数据格式错误")
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "请求数据格式错误",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+	log.Debug("employeeSearch request data [%v]", r)
+
+	employees := new([]db.Employee)
+	// 模糊查询
+	err := db.Find(employees,
+		-1,
+		"name || height || weight || degree || identifier || phone || current_address || former_employer || salary || security_card || comments like ?",
+		"%"+r.Key+"%")
 	if err != nil {
 		log.Warn("职工信息获取失败, %v", err)
 		c.JSON(http.StatusNotFound, gin.H{
