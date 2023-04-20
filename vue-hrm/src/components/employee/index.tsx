@@ -227,6 +227,7 @@ export function useSettings() {
       default_page_size: 10,
       default_current_page: 1,
       hide_on_single_page: false,
+      background: true,
    })
 
    // 需要显示列的lable
@@ -254,6 +255,7 @@ export function useData() {
 
    // 表格数据
    const tableData = ref<Employee[]>([] as Employee[])
+   const tableRows = ref(0)
 
    // 是否禁用表头的修改和删除按钮
    const isButtonDisabled = ref(true)
@@ -272,6 +274,7 @@ export function useData() {
    return {
       tableRef,
       tableData,
+      tableRows,
       isButtonDisabled,
       searchInputValue,
       isAddOrEditShow,

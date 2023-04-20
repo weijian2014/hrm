@@ -11,6 +11,7 @@ const { table, columns, pagination, checkList } = useSettings()
 const {
    tableRef,
    tableData,
+   tableRows,
    isButtonDisabled,
    searchInputValue,
    isAddOrEditShow,
@@ -24,8 +25,8 @@ const refresh = async () => {
       .then((res) => {
          if (res.code === 200) {
             console.log(res)
-            // totalRows.value = res.data.total
             tableData.value = res.data.rows
+            tableRows.value = res.data.total
          }
       })
       .catch((res) => {
@@ -68,6 +69,7 @@ watch(
             .then((res) => {
                if (res.code === 200) {
                   tableData.value = res.data.rows
+                  tableRows.value = res.data.total
                }
             })
             .catch((err) => {
@@ -259,8 +261,8 @@ const handleSave = async (message: string) => {
       .then((res) => {
          if (res.code === 200) {
             console.log(res)
-            // totalRows.value = res.data.total
             tableData.value = res.data.rows
+            tableRows.value = res.data.total
          }
       })
       .catch((res) => {
@@ -277,6 +279,18 @@ const handleCancel = (message: string) => {
    console.log("handleCancel", message, addOrEditData.value)
    ElMessage.info(message)
 }
+
+// 分页
+const currentPage = ref(1)
+const pageSize = ref(10)
+const handleCurrentChange = (value: number) => {
+   console.log("handleCurrentChange", value)
+   currentPage.value = value
+}
+const handleSizeChange = (value: number) => {
+   console.log("handleSizeChange", value)
+   pageSize.value = value
+}
 </script>
 
 <template>
@@ -288,11 +302,11 @@ const handleCancel = (message: string) => {
                <IEpPlus />
                <span>新增或导入</span>
             </el-button>
-            <el-button type="primary" :disabled="isButtonDisabled">
+            <el-button type="primary" @click="handleExport" :disabled="isButtonDisabled">
                <IEpDownload />
-               <span @click="handleExport">导出</span>
+               <span>批量导出</span>
             </el-button>
-            <el-button type="primary" :disabled="isButtonDisabled" @click="handleBatchDelete">
+            <el-button type="primary" @click="handleBatchDelete" :disabled="isButtonDisabled">
                <IEpDelete />
                <span>批量删除</span>
             </el-button>
@@ -333,10 +347,9 @@ const handleCancel = (message: string) => {
       <el-table
          ref="tableRef"
          style="width: 100%"
-         :data="tableData"
+         :data="tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)"
          :border="table.border"
          :fit="table.fit"
-         :height="table.height"
          :table-layout="table.table_layout"
          :empty-text="table.empty_text"
          :highlight-current-row="table.highlight_current_row"
@@ -361,6 +374,18 @@ const handleCancel = (message: string) => {
             </template>
          </el-table-column>
       </el-table>
+      <el-pagination
+         v-model:current-page="currentPage"
+         v-model:page-size="pageSize"
+         :background="pagination.background"
+         :hide-on-single-page="pagination.hide_on_single_page"
+         :page-sizes="pagination.page_sizes"
+         :layout="pagination.layout"
+         :total="tableRows"
+         :prev-text="pagination.prev_text"
+         :next-text="pagination.next_text"
+         @size-change="handleSizeChange"
+         @current-change="handleCurrentChange" />
    </div>
    <AddOrEdit
       :isShow="isAddOrEditShow"

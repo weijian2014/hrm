@@ -1,11 +1,12 @@
 interface PaginationSettings {
    layout: string = "" // 分页器布局
-   prev_text: string = ""
-   next_text: string = ""
-   page_sizes: number[] = [10, 20, 30, 40, 50, 100] // 每一页展示多少条数据
-   default_page_size: number = 10 // 代表的是每一页需要展示多少条数据, 与page-size属性相同
-   default_current_page: number = 1 // 当前第几页, 与current-page属性相同
-   hide_on_single_page: boolean = false
+   prev_text: string = "" // 替代图标显示的上一页文字
+   next_text: string = "" // 替代图标显示的下一页文字
+   page_sizes: number[] = [10, 20, 30, 40, 50, 100] // 每一页展示多少条数据选项
+   default_page_size: number = 10 //  默认每一页需要展示多少条数据
+   default_current_page: number = 1 // 默认当前第几页
+   hide_on_single_page: boolean = false // 只有一页时是否隐藏
+   background: boolean = true // 显示当前页背景颜色
 }
 
 interface TableSettings {
