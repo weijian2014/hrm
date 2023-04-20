@@ -290,6 +290,7 @@ const handleCurrentChange = (value: number) => {
 const handleSizeChange = (value: number) => {
    console.log("handleSizeChange", value)
    pageSize.value = value
+   currentPage.value = 1
 }
 </script>
 
