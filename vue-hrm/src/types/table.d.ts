@@ -25,7 +25,8 @@ interface TableColumn {
    disable: boolean = false
    sortable: boolean = true
    align: string = "center"
+   keyPosition: string
+   valuePosition: string
+   width: number
    formatter?: any | undefined
-   importPos?: string
-   emportPos?: string
 }

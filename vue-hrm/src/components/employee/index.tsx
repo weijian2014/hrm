@@ -23,6 +23,9 @@ export function useSettings() {
          disable: true,
          sortable: false,
          align: "center",
+         keyPosition: "",
+         valuePosition: "",
+         width: 30,
       },
       {
          prop: "name",
@@ -31,6 +34,9 @@ export function useSettings() {
          disable: true,
          sortable: true,
          align: "center",
+         keyPosition: "A2",
+         valuePosition: "B2",
+         width: 50,
       },
       {
          prop: "gender",
@@ -39,6 +45,9 @@ export function useSettings() {
          disable: false,
          sortable: true,
          align: "center",
+         keyPosition: "C2",
+         valuePosition: "D2",
+         width: 30,
       },
       {
          prop: "birthday",
@@ -47,23 +56,32 @@ export function useSettings() {
          disable: false,
          sortable: true,
          align: "center",
+         keyPosition: "E2",
+         valuePosition: "F2",
+         width: 70,
          formatter: dateFormatter,
       },
       {
          prop: "height",
-         label: "身高",
+         label: "身高(cm)",
          visible: true,
          disable: false,
          sortable: true,
          align: "center",
+         keyPosition: "A3",
+         valuePosition: "B3",
+         width: 50,
       },
       {
          prop: "weight",
-         label: "体重",
+         label: "体重(kg)",
          visible: true,
          disable: false,
          sortable: true,
          align: "center",
+         keyPosition: "C3",
+         valuePosition: "D3",
+         width: 50,
       },
       {
          prop: "degree",
@@ -72,6 +90,9 @@ export function useSettings() {
          disable: false,
          sortable: true,
          align: "center",
+         keyPosition: "E3",
+         valuePosition: "F3",
+         width: 70,
       },
       {
          prop: "identifier",
@@ -80,6 +101,9 @@ export function useSettings() {
          disable: false,
          sortable: false,
          align: "center",
+         keyPosition: "A4",
+         valuePosition: "B4",
+         width: 125,
       },
       {
          prop: "phone",
@@ -88,6 +112,9 @@ export function useSettings() {
          disable: false,
          sortable: true,
          align: "center",
+         keyPosition: "C4",
+         valuePosition: "D4",
+         width: 90,
       },
       {
          prop: "political_status",
@@ -96,6 +123,9 @@ export function useSettings() {
          disable: false,
          sortable: true,
          align: "left",
+         keyPosition: "E4",
+         valuePosition: "F4",
+         width: 80,
       },
       {
          prop: "social_security",
@@ -104,6 +134,9 @@ export function useSettings() {
          disable: false,
          sortable: true,
          align: "center",
+         keyPosition: "A5",
+         valuePosition: "B5",
+         width: 30,
       },
       {
          prop: "current_address",
@@ -112,6 +145,9 @@ export function useSettings() {
          disable: false,
          sortable: false,
          align: "left",
+         keyPosition: "C5",
+         valuePosition: "D5",
+         width: 220,
       },
       {
          prop: "first_work_time",
@@ -120,6 +156,9 @@ export function useSettings() {
          disable: false,
          sortable: true,
          align: "center",
+         keyPosition: "A6",
+         valuePosition: "B6",
+         width: 90,
          formatter: dateFormatter,
       },
       {
@@ -129,6 +168,9 @@ export function useSettings() {
          disable: false,
          sortable: true,
          align: "left",
+         keyPosition: "C6",
+         valuePosition: "D6",
+         width: 160,
       },
       {
          prop: "post",
@@ -137,14 +179,20 @@ export function useSettings() {
          disable: false,
          sortable: true,
          align: "center",
+         keyPosition: "A7",
+         valuePosition: "B7",
+         width: 40,
       },
       {
          prop: "salary",
-         label: "工资",
+         label: "工资(¥)",
          visible: true,
          disable: false,
          sortable: true,
          align: "center",
+         keyPosition: "C7",
+         valuePosition: "D7",
+         width: 55,
       },
       {
          prop: "security_card",
@@ -153,6 +201,9 @@ export function useSettings() {
          disable: false,
          sortable: false,
          align: "center",
+         keyPosition: "E7",
+         valuePosition: "F7",
+         width: 70,
       },
       {
          prop: "comments",
@@ -161,6 +212,9 @@ export function useSettings() {
          disable: false,
          sortable: false,
          align: "left",
+         keyPosition: "",
+         valuePosition: "A8",
+         width: 300,
       },
    ])
 
@@ -227,45 +281,60 @@ export function useData() {
    }
 }
 
-export const excelPosition = new Map([
-   ["name", "B2"],
-   ["gender", "D2"],
-   ["birthday", "F2"],
-   ["height", "B3"],
-   ["weight", "D3"],
-   ["degree", "F3"],
-   ["identifier", "B4"],
-   ["phone", "D4"],
-   ["political_status", "F4"],
-   ["social_security", "B5"],
-   ["current_address", "D5"],
-   ["first_work_time", "B6"],
-   ["former_employer", "D6"],
-   ["post", "B7"],
-   ["salary", "D7"],
-   ["security_card", "F7"],
-   ["comments", "A8"],
-])
+// export const excelPosition = new Map([
+//    ["name", "B2"],
+//    ["gender", "D2"],
+//    ["birthday", "F2"],
+//    ["height", "B3"],
+//    ["weight", "D3"],
+//    ["degree", "F3"],
+//    ["identifier", "B4"],
+//    ["phone", "D4"],
+//    ["political_status", "F4"],
+//    ["social_security", "B5"],
+//    ["current_address", "D5"],
+//    ["first_work_time", "B6"],
+//    ["former_employer", "D6"],
+//    ["post", "B7"],
+//    ["salary", "D7"],
+//    ["security_card", "F7"],
+//    ["comments", "A8"],
+// ])
 
-export const excelFeilds = new Map([
-   ["人员情况调查", "A1"],
-   ["姓名", "A2"],
-   ["性别", "C2"],
-   ["生日", "E2"],
-   ["身高(cm)", "A3"],
-   ["体重(kg)", "C3"],
-   ["学历", "E3"],
-   ["身份证号", "A4"],
-   ["手机号码", "C4"],
-   ["政治面貌", "E4"],
-   ["社保", "A5"],
-   ["现住址", "C5"],
-   ["首次工作日期", "A6"],
-   ["原单位", "C6"],
-   ["岗位", "A7"],
-   ["工资(¥)", "C7"],
-   ["保安证", "E7"],
-])
+// export const excelFeilds = new Map([
+//    ["姓名", "A2"],
+//    ["性别", "C2"],
+//    ["生日", "E2"],
+//    ["身高(cm)", "A3"],
+//    ["体重(kg)", "C3"],
+//    ["学历", "E3"],
+//    ["身份证号", "A4"],
+//    ["手机号码", "C4"],
+//    ["政治面貌", "E4"],
+//    ["社保", "A5"],
+//    ["现住址", "C5"],
+//    ["首次工作日期", "A6"],
+//    ["原单位", "C6"],
+//    ["岗位", "A7"],
+//    ["工资(¥)", "C7"],
+//    ["保安证", "E7"],
+// ])
+
+export const excelPosition = computed(() => {
+   let positions = new Map()
+   useSettings().columns.forEach((item) => {
+      positions.set(item.prop, item.valuePosition)
+   })
+   return positions
+})
+
+export const excelFeilds = computed(() => {
+   let feilds = new Map()
+   useSettings().columns.forEach((item) => {
+      feilds.set(item.label, item.keyPosition)
+   })
+   return feilds
+})
 
 // const propToLableMap = computed(() => {
 //    let pl = new Map<string, string>()
@@ -291,13 +360,20 @@ const excelHeader = computed(() => {
    return header
 })
 
+const cexelWidth = computed(() => {
+   let widthArr: number[] = []
+   useSettings().columns.forEach((item) => {
+      widthArr.push(item.width)
+   })
+   return widthArr
+})
+
 export function convertForExport(rows: Employee[]): {
    excelHeaders: string[]
    excelBodys: any[]
    excelColumnsWidth: any[]
 } {
    const excelData: any = []
-   const maxLenght: number[] = [30, 50, 30, 70, 40, 40, 70, 125, 90, 80, 30, 220, 90, 160, 40, 55, 70, 300]
 
    rows.map((row) => {
       let rowData = [
@@ -328,7 +404,7 @@ export function convertForExport(rows: Employee[]): {
 
       excelData.push(rowData)
    })
-   return { excelHeaders: excelHeader.value, excelBodys: excelData, excelColumnsWidth: maxLenght }
+   return { excelHeaders: excelHeader.value, excelBodys: excelData, excelColumnsWidth: cexelWidth.value }
 }
 
 export function dateFormatter(row: any, column: TableColumnCtx<any>, cellValue: any, index: number) {

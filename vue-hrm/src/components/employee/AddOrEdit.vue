@@ -163,12 +163,12 @@ const handleChange = async (uploadFile: UploadFile) => {
          let worksheet = workbook.Sheets[workbook.SheetNames[0]]
 
          // 检查表格格式
-         console.log("isExcelValid")
          if (!isExcelValid(worksheet)) {
             console.log("无法读取表格, 请使用模板导入")
             ElMessage.warning("无法读取表格, 请使用模板导入")
             return
          }
+         console.log("表格模板正确")
 
          // 转成json对象
          // let rows = XLSX.utils.sheet_to_json(worksheet, { defval: "", header: 1, blankrows: false })
@@ -176,7 +176,7 @@ const handleChange = async (uploadFile: UploadFile) => {
 
          let employee = newDefaultEmployee()
 
-         for (let ep of excelPosition) {
+         for (let ep of excelPosition.value) {
             const k = ep[0]
             const v = ep[1]
             const cell = worksheet[v]
@@ -254,7 +254,7 @@ const handleChange = async (uploadFile: UploadFile) => {
 const isExcelValid = (worksheet: XLSX.WorkSheet): boolean => {
    let isOk = true
    // 这里不要用forEach
-   for (let item of excelFeilds) {
+   for (let item of excelFeilds.value) {
       const k = item[0]
       const v = item[1]
       const cell = worksheet[v]

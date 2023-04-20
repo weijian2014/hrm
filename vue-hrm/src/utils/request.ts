@@ -54,7 +54,7 @@ request.interceptors.response.use(
          } else {
             // 刷新Token失败, 跳转至登录页
             console.log("刷新Token失败, 请重新登录")
-            ElMessage.error("刷新Token失败, 请重新登录")
+            ElMessage.error("令牌过期, 请重新登录")
             router.push({ name: "login", query: { redirect: router.currentRoute.value.fullPath } })
             return
          }
