@@ -314,10 +314,10 @@ const handleSizeChange = (value: number) => {
          </el-col>
          <el-col :span="7">
             <el-input v-model="searchInputValue" placeholder="" clearable>
-               <template #suffix>
-                  <el-icon><IEpSearch /></el-icon>
-               </template>
-               <template #prepend>模糊搜索</template>
+               <template #suffix> </template>
+               <template #prepend
+                  >模糊搜索<el-icon><IEpSearch /></el-icon
+               ></template>
             </el-input>
          </el-col>
          <el-col class="ml-4" :span="1">
