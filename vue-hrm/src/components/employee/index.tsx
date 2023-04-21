@@ -312,7 +312,7 @@ const excelHeader = computed(() => {
    return header
 })
 
-const cexelWidth = computed(() => {
+const excelWidth = computed(() => {
    let widthArr: number[] = []
    useSettings().columns.forEach((item) => {
       widthArr.push(item.width)
@@ -320,10 +320,19 @@ const cexelWidth = computed(() => {
    return widthArr
 })
 
+const excelAlignment = computed(() => {
+   let alignmentArr: string[] = []
+   useSettings().columns.forEach((item) => {
+      alignmentArr.push(item.align)
+   })
+   return alignmentArr
+})
+
 export function convertForExport(rows: Employee[]): {
    excelHeaders: string[]
    excelBodys: any[]
    excelColumnsWidth: any[]
+   excelColumnsAlignment: any[]
 } {
    const excelData: any = []
 
@@ -356,7 +365,12 @@ export function convertForExport(rows: Employee[]): {
 
       excelData.push(rowData)
    })
-   return { excelHeaders: excelHeader.value, excelBodys: excelData, excelColumnsWidth: cexelWidth.value }
+   return {
+      excelHeaders: excelHeader.value,
+      excelBodys: excelData,
+      excelColumnsWidth: excelWidth.value,
+      excelColumnsAlignment: excelAlignment.value,
+   }
 }
 
 export function dateFormatter(row: any, column: TableColumnCtx<any>, cellValue: any, index: number) {

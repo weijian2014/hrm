@@ -132,33 +132,103 @@ const handleAddOrImport = () => {
    isAddOrEditShow.value = true
 }
 
+function setExcelStyle(workSheet: XLSX.WorkSheet, excelColumnsWidth: any[], excelColumnsAlignment: any[]) {
+   if (excelColumnsWidth.length != excelColumnsAlignment.length) {
+      console.log("表格样式错误", excelColumnsWidth, excelColumnsAlignment)
+      return workSheet
+   }
+
+   const borderAll = {
+      //单元格外侧框线
+      color: { auto: 1 },
+      top: {
+         style: "thin",
+      },
+      bottom: {
+         style: "thin",
+      },
+      left: {
+         style: "thin",
+      },
+      right: {
+         style: "thin",
+      },
+   }
+
+   const style = {
+      // 表头样式
+      hs: {
+         border: borderAll,
+         font: { sz: 14, color: { rgb: "409EFF" }, bold: true },
+         alignment: { horizontal: "center", vertical: "center", wrapText: true },
+         fill: { bgColor: { indexed: 64 }, fgColor: { rgb: "FFFF00" } },
+      },
+      // 内容样式
+      bs: {
+         border: borderAll,
+         font: { sz: 11 },
+         alignment: { horizontal: "center", vertical: "center", wrapText: true },
+      },
+      // 注释行样式
+      ts: {
+         font: { sz: 10, bold: true },
+         alignment: { vertical: "center", wrapText: true },
+         fill: { bgColor: { indexed: 64 }, fgColor: { rgb: "00B050" } },
+      },
+   }
+
+   // 设置列宽度
+   let colsWidth: XLSX.ColInfo[] = []
+   excelColumnsWidth.forEach((w) => {
+      const col = { wpx: w }
+      colsWidth.push(col)
+   })
+   workSheet["!cols"] = colsWidth
+
+   // 设置边框, 对齐, 字体等样式
+   for (const key in workSheet) {
+      // 第一行, 即表头
+      if (Number(key.slice(1)) == 1 && workSheet[key].t) {
+         workSheet[key].s = style.hs
+      }
+   }
+   return workSheet
+}
+
 const handleExport = () => {
    if (selections.value.length === 0) {
       return
    }
 
    // excelData包含表头和行数据
-   const { excelHeaders, excelBodys, excelColumnsWidth } = convertForExport(selections.value)
-   console.log("handleExport", excelHeaders, excelBodys, excelColumnsWidth)
-
-   // 创建工作表, skipHeader=true, 因为excelData中已经包含表头
-   const workSheet = XLSX.utils.json_to_sheet([excelHeaders, ...excelBodys], { skipHeader: true })
-
-   // 设置列宽度
-   let colsWidth: XLSX.ColInfo[] = []
-   excelColumnsWidth.forEach((w) => {
-      let col = { wpx: w }
-      colsWidth.push(col)
-   })
-   workSheet["!cols"] = colsWidth
+   const { excelHeaders, excelBodys, excelColumnsWidth, excelColumnsAlignment } = convertForExport(selections.value)
+   console.log("handleExport", excelHeaders, excelBodys, excelColumnsWidth, excelColumnsAlignment)
 
    // 创建工作簿
    const workBook = XLSX.utils.book_new()
+
+   // 创建工作表, skipHeader=true, 因为excelData中已经包含表头
+   const workSheet = XLSX.utils.json_to_sheet([excelHeaders, ...excelBodys], { skipHeader: true })
+   setExcelStyle(workSheet, excelColumnsWidth, excelColumnsAlignment)
+
    // 将工作表放入工作簿中
    XLSX.utils.book_append_sheet(workBook, workSheet, "员工信息")
-   let excelFileName = "员工信息_" + moment(new Date()).format("YYYY-MM-DD") + ".xlsx"
-   // 生成文件并下载
+
+   const excelFileName = "员工信息_" + moment(new Date()).format("YYYY-MM-DD") + ".xlsx"
+
+   // 第一种生成文件并下载
    XLSX.writeFile(workBook, excelFileName)
+
+   // 第二种生成文件并下载
+   // const ws = XLSXS.writeFile(workBook, {
+   //    bookType: "xlsx",
+   //    booSST: true,
+   //    type: "binary",
+   //    cellStyles: true,
+   // })
+   // FileSaver.saveAs(new Blob([ws], { type: "application/octet-stream" }), excelFileName)
+
+   // 清除行选中
    tableRef.value.clearSelection()
 }
 
