@@ -133,7 +133,7 @@ npm install --save-dev @types/promise.prototype.finall   # main.ts要引入shim(
 npm install @vitejs/plugin-vue-jsx -D
 
 # Excel表格导入导出
-npm install --save xlsx xlsx-style file-saver
+npm install --save xlsx-js-style
 
 # js-cookie, https://github.com/js-cookie/js-cookie
 npm i js-cookie

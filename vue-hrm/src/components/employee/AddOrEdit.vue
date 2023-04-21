@@ -5,7 +5,7 @@ import { rules } from "./validation"
 import { toIsoString } from "@/utils/common"
 import { newDefaultEmployee } from "@/utils/common"
 import type { UploadFile, UploadFiles, UploadUserFile } from "element-plus"
-import * as XLSX from "xlsx"
+import XLSXS from "xlsx-js-style"
 
 // defineProps定义了当前组件的属性, 外部组件使用当前组件可以绑定传递进来
 const props = defineProps<{
@@ -160,7 +160,7 @@ const handleChange = async (file: UploadFile, files: UploadFiles) => {
    await readFile(file)
       .then((rawData) => {
          // 解析二进制格式数据
-         let workbook = XLSX.read(rawData, { type: "binary", cellDates: true })
+         let workbook = XLSXS.read(rawData, { type: "binary", cellDates: true })
          // 获取第一个Sheet
          let worksheet = workbook.Sheets[workbook.SheetNames[0]]
 
@@ -256,7 +256,7 @@ const handleChange = async (file: UploadFile, files: UploadFiles) => {
       })
 }
 
-const isExcelValid = (worksheet: XLSX.WorkSheet): boolean => {
+const isExcelValid = (worksheet: XLSXS.WorkSheet): boolean => {
    let isOk = true
    // 这里不要用forEach
    for (let item of excelKeyPosition.value) {

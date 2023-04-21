@@ -25,7 +25,7 @@ export function useSettings() {
          align: "center",
          keyPosition: "",
          valuePosition: "",
-         width: 30,
+         width: 35,
       },
       {
          prop: "name",
@@ -36,7 +36,7 @@ export function useSettings() {
          align: "center",
          keyPosition: "A2",
          valuePosition: "B2",
-         width: 50,
+         width: 55,
       },
       {
          prop: "gender",
@@ -70,7 +70,7 @@ export function useSettings() {
          align: "center",
          keyPosition: "A3",
          valuePosition: "B3",
-         width: 50,
+         width: 55,
       },
       {
          prop: "weight",
@@ -81,7 +81,7 @@ export function useSettings() {
          align: "center",
          keyPosition: "C3",
          valuePosition: "D3",
-         width: 50,
+         width: 55,
       },
       {
          prop: "degree",
@@ -92,7 +92,7 @@ export function useSettings() {
          align: "center",
          keyPosition: "E3",
          valuePosition: "F3",
-         width: 70,
+         width: 75,
       },
       {
          prop: "identifier",
@@ -125,7 +125,7 @@ export function useSettings() {
          align: "left",
          keyPosition: "E4",
          valuePosition: "F4",
-         width: 80,
+         width: 85,
       },
       {
          prop: "social_security",
@@ -147,7 +147,7 @@ export function useSettings() {
          align: "left",
          keyPosition: "C5",
          valuePosition: "D5",
-         width: 220,
+         width: 230,
       },
       {
          prop: "first_work_time",
@@ -170,7 +170,7 @@ export function useSettings() {
          align: "left",
          keyPosition: "C6",
          valuePosition: "D6",
-         width: 160,
+         width: 170,
       },
       {
          prop: "post",
@@ -181,7 +181,7 @@ export function useSettings() {
          align: "center",
          keyPosition: "A7",
          valuePosition: "B7",
-         width: 40,
+         width: 70,
       },
       {
          prop: "salary",
@@ -192,7 +192,7 @@ export function useSettings() {
          align: "center",
          keyPosition: "C7",
          valuePosition: "D7",
-         width: 55,
+         width: 60,
       },
       {
          prop: "security_card",
@@ -203,7 +203,7 @@ export function useSettings() {
          align: "center",
          keyPosition: "E7",
          valuePosition: "F7",
-         width: 70,
+         width: 80,
       },
       {
          prop: "comments",
@@ -214,7 +214,7 @@ export function useSettings() {
          align: "left",
          keyPosition: "",
          valuePosition: "A8",
-         width: 300,
+         width: 200,
       },
    ])
 
