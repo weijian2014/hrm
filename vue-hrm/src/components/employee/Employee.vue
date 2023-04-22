@@ -3,8 +3,8 @@ import EmployeeAddOrEdit from "@/components/employee/EmployeeAddOrEdit.vue"
 import { employeeListApi, employeeSearchApi, employeeDeleteApi } from "@/utils/employee"
 import type { CheckboxValueType } from "element-plus"
 import { useSettings, useData, convertForExport } from "./index"
-import * as moment from "moment"
-import * as XLSXS from "xlsx-js-style"
+import moment from "moment"
+import XLSXS from "xlsx-js-style"
 
 const { table, columns, pagination, checkList } = useSettings()
 

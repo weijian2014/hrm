@@ -19,8 +19,11 @@ import { isCollapse } from "./index"
 
             <el-sub-menu index="/permission">
                <template #title
-                  ><el-icon><IEpKey /></el-icon><span>权限管理</span>
+                  ><el-icon><IEpKey /></el-icon><span>后台管理</span>
                </template>
+               <el-menu-item index="post">
+                  <el-icon><IEpStamp /></el-icon><span>岗位列表</span>
+               </el-menu-item>
                <el-menu-item index="menu">
                   <el-icon><IEpMenu /></el-icon><span>菜单列表</span>
                </el-menu-item>

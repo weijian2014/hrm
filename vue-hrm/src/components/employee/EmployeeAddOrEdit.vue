@@ -376,7 +376,7 @@ postListApi()
    })
 
 const postOptions = computed(() => {
-   let p = []
+   let p: any[] = []
    posts.value.forEach((item) => {
       const o = {
          value: item.name,

@@ -1,53 +1,63 @@
 <script setup lang="ts">
-import { menuListApi } from "@/utils/menu"
-import type { Menu } from "@/utils/menu"
-import MenuAddOrEdit from "./MenuAddOrEdit.vue"
+import { postListApi } from "@/utils/post"
+import PostAddOrEdit from "./PostAddOrEdit.vue"
+import moment from "moment"
+import { TableColumnCtx } from "element-plus"
 
 const state = reactive<{
    // 弹窗
    isShow: boolean
    title: string
-   rowData: Menu
+   rowData: Post
 
-   menus: Menu[] // 从数据库读取出来的所有菜单
+   posts: Post[] // 从数据库读取出来的所有菜单
 }>({
    isShow: false,
    title: "新增菜单",
-   rowData: {} as Menu,
-   menus: [],
+   rowData: {} as Post,
+   posts: [],
 })
 
-const { isShow, title, rowData, menus } = toRefs(state)
+const { isShow, title, rowData, posts } = toRefs(state)
 
-menuListApi()
+postListApi()
    .then((res) => {
       if (res.code === 200) {
          console.log(res)
-         menus.value = res.data.menus
+         posts.value = res.data.posts
       }
    })
    .catch((res) => {
       console.log(res)
    })
 
+function dateFormatter(row: any, column: TableColumnCtx<any>, cellValue: any, index: number) {
+   var date = row[column.property]
+   if (date == undefined) {
+      return "未知"
+   }
+
+   return moment(date).format("YYYY-MM-DD")
+}
+
 const handleAdd = () => {
-   console.log("新增菜单")
-   title.value = "新增菜单"
-   rowData.value = {} as Menu
+   console.log("新增岗位")
+   title.value = "新增岗位"
+   rowData.value = {} as Post
    isShow.value = true
 }
 
-const handleEdit = (index: number, row: Menu | undefined) => {
+const handleEdit = (index: number, row: Post | undefined) => {
    console.log("handleEdit", index, row)
    if (row) {
       rowData.value = row
       console.log("handleEdit", rowData.value)
-      title.value = "修改菜单"
+      title.value = "修改岗位"
       isShow.value = true
    }
 }
 
-const handleDelete = (index: number, row: Menu) => {
+const handleDelete = (index: number, row: Post) => {
    console.log("handleDelete", index, row)
 }
 
@@ -74,16 +84,14 @@ const handleCancel = (message: string) => {
             <div class="card-header">
                <el-button type="primary" @click="handleAdd">
                   <IEpPlus />
-                  <span style="vertical-align: middle">新增菜单</span>
+                  <span style="vertical-align: middle">新增岗位</span>
                </el-button>
             </div>
          </template>
-         <el-table :data="menus" border style="width: 100%">
+         <el-table :data="posts" border style="width: 100%">
             <el-table-column prop="id" label="序号" align="center" />
-            <el-table-column prop="name" label="菜单名" align="center" />
-            <el-table-column prop="parent_id" label="父菜单序号" align="center" />
-            <el-table-column prop="icon" label="菜单图标" align="center" />
-            <el-table-column prop="url" label="链接" align="center" />
+            <el-table-column prop="name" label="岗位名称" align="center" />
+            <el-table-column prop="updated_at" label="最后更新日期" :formatter="dateFormatter" align="center" />
             <el-table-column width="180" label="操作" align="center">
                <template #default="scope">
                   <el-button size="small" type="primary" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
@@ -92,14 +100,8 @@ const handleCancel = (message: string) => {
             </el-table-column>
          </el-table>
       </el-card>
-      <MenuAddOrEdit
-         :isShow="isShow"
-         :title="title"
-         :formData="rowData"
-         :allMenu="menus"
-         @save="handleSave"
-         @cancel="handleCancel">
-      </MenuAddOrEdit>
+      <PostAddOrEdit :isShow="isShow" :title="title" :formData="rowData" @save="handleSave" @cancel="handleCancel">
+      </PostAddOrEdit>
    </div>
 </template>
 

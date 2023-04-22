@@ -8,7 +8,7 @@ import Components from "unplugin-vue-components/vite"
 import IconsResolver from "unplugin-icons/resolver"
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers"
 import WindiCSS from "vite-plugin-windicss"
-import path from "node:path"
+import path from "path"
 
 const pathSrc = path.resolve(__dirname, "src")
 
