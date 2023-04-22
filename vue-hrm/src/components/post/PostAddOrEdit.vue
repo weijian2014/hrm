@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { postUpdateApi, postAddApi } from "@/utils/post"
+
 // defineProps定义了当前组件的属性, 外部组件使用当前组件可以绑定传递进来
 const props = defineProps<{
    isShow: boolean
@@ -31,6 +33,9 @@ const state = reactive<{
 const { isEscapeClose, isShowClose, isClickModalToClose, dialogVisible, formLabelWidth, rawFormData, posts } =
    toRefs(state)
 
+const formRef = ref()
+const isLoading = ref(false)
+
 // watch写法上支持一个或者多个监听源, 这些监听源必须只能是getter/effect函数, ref数据, reactive对象或者数组类型
 watch(
    () => props.formData,
@@ -49,10 +54,39 @@ watch(
    }
 )
 
-const handleSave = () => {
-   // todo 保存到数据库
-   // 向外发送save(保存)事件
-   emits("save", "保存成功")
+const handleSave = async () => {
+   isLoading.value = true
+   if (props.title === "修改岗位") {
+      await postUpdateApi(rawFormData.value)
+         .then((res) => {
+            if (res.code === 200) {
+               console.log(res)
+               emits("save", "保存成功")
+               isLoading.value = false
+            }
+         })
+         .catch((res) => {
+            console.log(res)
+            isLoading.value = false
+            ElMessage.error("保存失败, " + res)
+            return new Promise(() => {})
+         })
+   } else {
+      await postAddApi(rawFormData.value)
+         .then((res) => {
+            if (res.code === 200) {
+               console.log(res)
+               emits("save", "保存成功")
+               isLoading.value = false
+            }
+         })
+         .catch((res) => {
+            console.log(res)
+            isLoading.value = false
+            ElMessage.error("保存失败, " + res)
+            return new Promise(() => {})
+         })
+   }
 }
 
 const handleCancel = () => {
@@ -79,8 +113,8 @@ const handleCancel = () => {
          </el-form>
          <template #footer>
             <span class="dialog-footer">
-               <el-button type="primary" @click="handleSave">保存</el-button>
-               <el-button type="danger" @click="handleCancel">取消</el-button>
+               <el-button type="primary" @click="handleSave" :loading="isLoading">保存</el-button>
+               <el-button type="danger" @click="handleCancel" :loading="isLoading">取消</el-button>
             </span>
          </template>
       </el-dialog>

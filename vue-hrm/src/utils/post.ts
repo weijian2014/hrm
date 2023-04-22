@@ -8,4 +8,8 @@ export interface PostListResponse {
 
 export const postListApi = (): PromiseResponse<PostListResponse> => request.get("/post/list")
 
-export const menuAddApi = (data: Post): PromiseResponse<Post> => request.post("/post/add")
+export const postAddApi = (data: Post): PromiseResponse<Post> => request.post("/post/add", data)
+
+export const postUpdateApi = (data: Post): PromiseResponse<string> => request.put("/post/update", data)
+
+export const postDeleteApi = (id: number): PromiseResponse<string> => request.delete("/post/" + id)

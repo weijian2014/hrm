@@ -351,24 +351,11 @@ const handleRefresh = async () => {
 
 // AddVue组件发送的保存事件
 const handleSave = async (message: string) => {
-   // todo 更新表格数据
    isAddOrEditShow.value = false
    console.log("handleSave", message, addOrEditData.value)
 
    // 从数据库中读取最新的数据
-   await employeeListApi()
-      .then((res) => {
-         if (res.code === 200) {
-            console.log(res)
-            tableData.value = res.data.rows
-            tableRows.value = res.data.total
-         }
-      })
-      .catch((res) => {
-         console.log(res)
-         return new Promise(() => {})
-      })
-
+   await refresh()
    ElMessage.success(message)
 }
 

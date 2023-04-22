@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { postListApi } from "@/utils/post"
+import { postListApi, postDeleteApi } from "@/utils/post"
 import PostAddOrEdit from "./PostAddOrEdit.vue"
 import moment from "moment"
 import { TableColumnCtx } from "element-plus"
@@ -10,26 +10,32 @@ const state = reactive<{
    title: string
    rowData: Post
 
+   isButtonDisabled: boolean
    posts: Post[] // 从数据库读取出来的所有菜单
 }>({
    isShow: false,
    title: "新增菜单",
    rowData: {} as Post,
+   isButtonDisabled: true,
    posts: [],
 })
 
-const { isShow, title, rowData, posts } = toRefs(state)
+const { isShow, title, rowData, isButtonDisabled, posts } = toRefs(state)
 
-postListApi()
-   .then((res) => {
-      if (res.code === 200) {
+const refresh = async () => {
+   await postListApi()
+      .then((res) => {
+         if (res.code === 200) {
+            console.log(res)
+            posts.value = res.data.posts
+         }
+      })
+      .catch((res) => {
          console.log(res)
-         posts.value = res.data.posts
-      }
-   })
-   .catch((res) => {
-      console.log(res)
-   })
+      })
+}
+
+refresh()
 
 function dateFormatter(row: any, column: TableColumnCtx<any>, cellValue: any, index: number) {
    var date = row[column.property]
@@ -57,15 +63,55 @@ const handleEdit = (index: number, row: Post | undefined) => {
    }
 }
 
-const handleDelete = (index: number, row: Post) => {
+const handleDelete = async (index: number, row: Post) => {
    console.log("handleDelete", index, row)
+   await ElMessageBox.confirm(
+      h("p", null, [
+         h("span", null, "确认删除岗位 "),
+         h("i", { style: "color: red" }, row.name),
+         h("span", null, " 的记录?"),
+      ]),
+      "岗位删除确认",
+      {
+         confirmButtonText: "确认",
+         cancelButtonText: "取消",
+         type: "warning",
+      }
+   ).catch(() => {
+      ElMessage.info("操作已取消")
+      return new Promise(() => {})
+   })
+
+   const ids = [row.id]
+   deleteAndRefresh(ids)
+   ElMessage.success("删除成功")
+}
+
+const deleteAndRefresh = async (ids: number[]) => {
+   for (let i = 0; i < ids.length; ++i) {
+      await postDeleteApi(ids[i])
+         .then((res) => {
+            if (res.code === 200) {
+               console.log(res)
+            }
+         })
+         .catch((res) => {
+            console.log(res)
+            isButtonDisabled.value = false
+            return new Promise(() => {})
+         })
+   }
+
+   await refresh()
 }
 
 // 组件发送的保存事件
-const handleSave = (message: string) => {
-   // todo 更新表格数据
+const handleSave = async (message: string) => {
    isShow.value = false
    console.log("handleSave", message, rowData.value)
+
+   // 从数据库中读取最新的数据
+   await refresh()
    ElMessage.success(message)
 }
 
