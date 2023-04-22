@@ -123,30 +123,6 @@ func userRefresh(c *gin.Context) {
 }
 
 func userLogout(c *gin.Context) {
-	// _, isExists := c.Get("ContextInfo")
-	// if !isExists {
-	// 	c.JSON(http.StatusBadRequest, gin.H{
-	// 		"code":    http.StatusBadRequest,
-	// 		"message": "用户不存在",
-	// 		"data":    "",
-	// 	})
-	// 	c.Abort()
-	// 	return
-	// }
-	// userInfo := info.(middleware.UserInfo)
-
-	// user := new(db.User)
-	// if err := db.Take(user, "name = ?", userInfo.UserName); err != nil {
-	// 	log.Warn("用户不存在")
-	// 	c.JSON(http.StatusBadRequest, gin.H{
-	// 		"code":    http.StatusBadRequest,
-	// 		"message": "用户不存在",
-	// 		"data":    "",
-	// 	})
-	// 	c.Abort()
-	// 	return
-	// }
-
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
 		"message": "退出成功",

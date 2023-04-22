@@ -24,7 +24,7 @@ func registerRoleRouter(r *gin.Engine) {
 	roleRouter := r.Group("/role")
 
 	// 以下接口登陆后才能访问, 加中间件
-	roleRouter.POST("add", roleAdd)
+	roleRouter.POST("add", middleware.AccessTokenAuthenticator, roleAdd)
 	roleRouter.PUT("update", middleware.AccessTokenAuthenticator, roleUpdate)
 	roleRouter.DELETE(":id", middleware.AccessTokenAuthenticator, roleDel)
 }

@@ -11,24 +11,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func registerMenuRouter(r *gin.Engine) {
-	menuRouter := r.Group("/menu")
+func registerPostRouter(r *gin.Engine) {
+	roleRouter := r.Group("/post")
 
 	// 以下接口登陆后才能访问, 加中间件
-	menuRouter.GET("list", middleware.AccessTokenAuthenticator, menuList)
-	menuRouter.POST("add", middleware.AccessTokenAuthenticator, menuAdd)
-	menuRouter.PUT("update", middleware.AccessTokenAuthenticator, menuUpdate)
-	menuRouter.DELETE(":id", middleware.AccessTokenAuthenticator, menuDel)
+	roleRouter.GET("list", middleware.AccessTokenAuthenticator, postList)
+	roleRouter.POST("add", middleware.AccessTokenAuthenticator, postAdd)
+	roleRouter.PUT("update", middleware.AccessTokenAuthenticator, postUpdate)
+	roleRouter.DELETE(":id", middleware.AccessTokenAuthenticator, postDel)
 }
 
-func menuList(c *gin.Context) {
-	menus := new([]db.Menu)
-	err := db.Find(menus, -1)
+func postList(c *gin.Context) {
+	posts := new([]db.Post)
+	err := db.Find(posts, -1)
 	if err != nil {
-		log.Warn("菜单信息获取失败, %v", err)
+		log.Warn("岗位信息获取失败, %v", err)
 		c.JSON(http.StatusNotFound, gin.H{
 			"code":    http.StatusNotFound,
-			"message": fmt.Sprintf("菜单信息获取失败, %v", err),
+			"message": fmt.Sprintf("岗位信息获取失败, %v", err),
 			"data":    "",
 		})
 		c.Abort()
@@ -37,16 +37,16 @@ func menuList(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"message": "菜单信息获取成功",
+		"message": "岗位信息获取成功",
 		"data": gin.H{
-			"total": len(*menus),
-			"menus": menus,
+			"total": len(*posts),
+			"posts": posts,
 		},
 	})
 }
 
-func menuAdd(c *gin.Context) {
-	r := new(db.Menu)
+func postAdd(c *gin.Context) {
+	r := new(db.Post)
 	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -57,18 +57,13 @@ func menuAdd(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	log.Debug("menuAdd request data [%v]", r)
+	log.Debug("postAdd request data [%v]", r)
 
-	menu := &db.Menu{
-		Name:     r.Name,
-		Url:      r.Url,
-		ParentId: r.ParentId,
-	}
-	if err := db.Insert(menu); err != nil {
-		log.Warn("菜单增加失败, %v", err)
+	if err := db.Insert(r); err != nil {
+		log.Warn("岗位增加失败, %v", err)
 		c.JSON(http.StatusNotAcceptable, gin.H{
 			"code":    http.StatusNotAcceptable,
-			"message": fmt.Sprintf("菜单增加失败, %v", err),
+			"message": fmt.Sprintf("岗位增加失败, %v", err),
 			"data":    "",
 		})
 		c.Abort()
@@ -77,45 +72,44 @@ func menuAdd(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"message": "菜单增加成功",
-		"data":    menu,
-	})
-}
-
-func menuUpdate(c *gin.Context) {
-	r := new(db.Menu)
-	if err := c.ShouldBindJSON(r); err != nil {
-		log.Warn("请求数据格式错误")
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
-			"message": "请求数据格式错误",
-			"data":    "",
-		})
-		c.Abort()
-		return
-	}
-	log.Debug("menuUpdate request data [%v]", r)
-
-	menu := &db.Menu{Id: r.Id, Name: r.Name, Url: r.Url, ParentId: r.ParentId}
-	if err := db.UpdateRow(menu); err != nil {
-		log.Warn("菜单更新失败, %v", err)
-		c.JSON(http.StatusNotAcceptable, gin.H{
-			"code":    http.StatusNotAcceptable,
-			"message": fmt.Sprintf("菜单更新失败, %v", err),
-			"data":    "",
-		})
-		c.Abort()
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
-		"message": "菜单更新成功",
+		"message": "岗位增加成功",
 		"data":    "",
 	})
 }
 
-func menuDel(c *gin.Context) {
+func postUpdate(c *gin.Context) {
+	r := new(db.Post)
+	if err := c.ShouldBindJSON(r); err != nil {
+		log.Warn("请求数据格式错误")
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "请求数据格式错误",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+	log.Debug("postUpdate request data [%v]", r)
+
+	if err := db.UpdateRow(r); err != nil {
+		log.Warn("岗位更新失败, %v", err)
+		c.JSON(http.StatusNotAcceptable, gin.H{
+			"code":    http.StatusNotAcceptable,
+			"message": fmt.Sprintf("岗位更新失败, %v", err),
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":    http.StatusOK,
+		"message": "岗位更新成功",
+		"data":    "",
+	})
+}
+
+func postDel(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -125,15 +119,15 @@ func menuDel(c *gin.Context) {
 		})
 		c.Abort()
 	}
-	log.Debug("menuDel id [%v]", id)
+	log.Debug("postDel id [%v]", id)
 
-	menu := &db.Menu{Id: id}
-	err = db.Delete(menu, "id = ?", menu.Id)
+	p := &db.Post{Id: id}
+	err = db.Delete(p, "id = ?", p.Id)
 	if err != nil {
-		log.Warn("菜单删除失败")
+		log.Warn("岗位删除失败")
 		c.JSON(http.StatusNoContent, gin.H{
 			"code":    http.StatusNoContent,
-			"message": "菜单删除失败",
+			"message": "岗位删除失败",
 			"data":    "",
 		})
 		c.Abort()
@@ -142,7 +136,7 @@ func menuDel(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"message": "菜单删除成功",
+		"message": "岗位删除成功",
 		"data":    "",
 	})
 }

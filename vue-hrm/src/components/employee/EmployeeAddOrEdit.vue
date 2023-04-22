@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { employeeUpdateApi, employeeAddApi } from "@/utils/employee"
+import { postListApi } from "@/utils/post"
 import { excelKeyPosition, excelValuePosition, readFile } from "./index"
 import { rules } from "./validation"
 import { toIsoString } from "@/utils/common"
 import { newDefaultEmployee } from "@/utils/common"
 import type { UploadFile, UploadFiles, UploadUserFile } from "element-plus"
-import XLSXS from "xlsx-js-style"
+import * as XLSXS from "xlsx-js-style"
 
 // defineProps定义了当前组件的属性, 外部组件使用当前组件可以绑定传递进来
 const props = defineProps<{
@@ -361,32 +362,31 @@ const degreeOptions = [
    },
 ]
 
-const postOptions = [
-   {
-      value: "前台",
-      label: "前台",
-   },
-   {
-      value: "巡逻",
-      label: "巡逻",
-   },
-   {
-      value: "消防",
-      label: "消防",
-   },
-   {
-      value: "教练",
-      label: "教练",
-   },
-   {
-      value: "保安",
-      label: "保安",
-   },
-   {
-      value: "银保",
-      label: "银保",
-   },
-]
+const posts = ref<Post[]>([] as Post[])
+postListApi()
+   .then((res) => {
+      if (res.code === 200) {
+         console.log(res)
+         posts.value = res.data.posts
+      }
+   })
+   .catch((res) => {
+      console.log(res)
+      return new Promise(() => {})
+   })
+
+const postOptions = computed(() => {
+   let p = []
+   posts.value.forEach((item) => {
+      const o = {
+         value: item.name,
+         label: item.name,
+      }
+
+      p.push(o)
+   })
+   return p
+})
 </script>
 
 <template>

@@ -4,8 +4,9 @@
    "jsx": "preserve",
    "jsxFactory": "h",
    "jsxFragmentFactory": "Fragment",
-   "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "auto-imports.d.tsx", "components.d.ts"],
+   "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "auto-imports.d.tsx", "components.d.ts", "./src/*"],
    "compilerOptions": {
+      "jsx": "preserve",
       "ignoreDeprecations": "5.0",
       "baseUrl": ".",
       "paths": {

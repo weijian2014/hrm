@@ -208,8 +208,40 @@ func Init(adminUsername, adminPassword string) error {
 	}
 	fmt.Printf("Inserted rows into table [role_menus]\n")
 
+	// 表posts
+	p := []Post{
+		{
+			Name: "前台",
+		},
+		{
+			Name: "巡逻",
+		},
+		{
+			Name: "消防",
+		},
+		{
+			Name: "教练",
+		},
+		{
+			Name: "保安",
+		},
+		{
+			Name: "银保",
+		},
+	}
+	err = CreateTable(&Post{})
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Table [posts] has been created\n")
+	err = Insert(&p)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Inserted rows into table [posts]\n")
+
 	// 表employees
-	const count = 30
+	const count = 100
 	var employees [count]Employee
 
 	jsonData, err := common.Command(common.CurrDir+"/doc/faker_gen.py", strconv.Itoa(count))
@@ -263,7 +295,7 @@ func Init(adminUsername, adminPassword string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Inserted rows into table [employees]\n")
+	fmt.Printf("Inserted rows[%+v] into table [employees]\n", len(employees))
 
 	return nil
 }

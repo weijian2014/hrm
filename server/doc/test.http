@@ -122,3 +122,8 @@ Authorization: {{adminAccessToken}}
 {
    "key": "212"
 }
+
+### 获取岗位
+GET http://{{host}}/post/list
+Content-Type: application/json
+Authorization: {{adminAccessToken}}

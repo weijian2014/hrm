@@ -9,4 +9,5 @@ func Init(r *gin.Engine) {
 	registerRoleRouter(r)
 	registerMenuRouter(r)
 	registerEmployeeRouter(r)
+	registerPostRouter(r)
 }

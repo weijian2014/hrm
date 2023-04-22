@@ -92,8 +92,8 @@ func employeeSearch(c *gin.Context) {
 }
 
 func employeeAdd(c *gin.Context) {
-	e := new(db.Employee)
-	if err := c.ShouldBindJSON(e); err != nil {
+	r := new(db.Employee)
+	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code":    http.StatusBadRequest,
@@ -103,9 +103,9 @@ func employeeAdd(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	log.Debug("employeeAdd request data [%v]", e)
+	log.Debug("employeeAdd request data [%v]", r)
 
-	if err := db.Insert(e); err != nil {
+	if err := db.Insert(r); err != nil {
 		log.Warn("职工增加失败, %v", err)
 		c.JSON(http.StatusNotAcceptable, gin.H{
 			"code":    http.StatusNotAcceptable,
@@ -124,8 +124,8 @@ func employeeAdd(c *gin.Context) {
 }
 
 func employeeUpdate(c *gin.Context) {
-	e := new(db.Employee)
-	if err := c.ShouldBindJSON(e); err != nil {
+	r := new(db.Employee)
+	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code":    http.StatusBadRequest,
@@ -135,9 +135,9 @@ func employeeUpdate(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	log.Debug("employeeUpdate request data [%v]", e)
+	log.Debug("employeeUpdate request data [%v]", r)
 
-	if err := db.UpdateRow(e); err != nil {
+	if err := db.UpdateRow(r); err != nil {
 		log.Warn("职工更新失败, %v", err)
 		c.JSON(http.StatusNotAcceptable, gin.H{
 			"code":    http.StatusNotAcceptable,

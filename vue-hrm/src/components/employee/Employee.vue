@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import AddOrEdit from "@/components/employee/AddOrEdit.vue"
+import EmployeeAddOrEdit from "@/components/employee/EmployeeAddOrEdit.vue"
 import { employeeListApi, employeeSearchApi, employeeDeleteApi } from "@/utils/employee"
 import type { CheckboxValueType } from "element-plus"
 import { useSettings, useData, convertForExport } from "./index"
-import moment from "moment"
-import XLSXS from "xlsx-js-style"
+import * as moment from "moment"
+import * as XLSXS from "xlsx-js-style"
 
 const { table, columns, pagination, checkList } = useSettings()
 
@@ -208,28 +208,57 @@ const handleExport = () => {
       return
    }
 
-   // excelData包含表头和行数据
-   const { excelHeaders, excelBodys, excelColumnsWidth, excelColumnsAlignment } = convertForExport(selections.value)
-   console.log("handleExport", excelHeaders, excelBodys, excelColumnsWidth, excelColumnsAlignment)
+   let names: string = ""
+   selections.value.forEach((item, i) => {
+      names += item.name
+      if (i != selections.value.length - 1) {
+         names += ", "
+      }
+   })
+   ElMessageBox.confirm(
+      h("p", null, [
+         h("span", null, "确认导出姓名 "),
+         h("i", { style: "color: red" }, names),
+         h("span", null, " 共" + selections.value.length + "条记录?"),
+      ]),
+      "员工导出确认",
+      {
+         confirmButtonText: "确认",
+         cancelButtonText: "取消",
+         type: "info",
+      }
+   )
+      .then(() => {
+         // excelData包含表头和行数据
+         const { excelHeaders, excelBodys, excelColumnsWidth, excelColumnsAlignment } = convertForExport(
+            selections.value
+         )
+         console.log("handleExport", excelHeaders, excelBodys, excelColumnsWidth, excelColumnsAlignment)
 
-   // 创建工作簿
-   const book = XLSXS.utils.book_new()
+         // 创建工作簿
+         const book = XLSXS.utils.book_new()
 
-   // 创建工作表, skipHeader=true, 因为excelData中已经包含表头
-   const sheet = XLSXS.utils.json_to_sheet([excelHeaders, ...excelBodys], { skipHeader: true })
+         // 创建工作表, skipHeader=true, 因为excelData中已经包含表头
+         const sheet = XLSXS.utils.json_to_sheet([excelHeaders, ...excelBodys], { skipHeader: true })
 
-   // 设置表格样式
-   setExcelStyle(sheet, excelHeaders, excelBodys, excelColumnsWidth, excelColumnsAlignment)
+         // 设置表格样式
+         setExcelStyle(sheet, excelHeaders, excelBodys, excelColumnsWidth, excelColumnsAlignment)
 
-   // 将工作表放入工作簿中
-   XLSXS.utils.book_append_sheet(book, sheet, "员工信息")
+         // 将工作表放入工作簿中
+         XLSXS.utils.book_append_sheet(book, sheet, "员工信息")
 
-   // 生成文件并下载
-   const excelFileName = "员工信息_" + moment(new Date()).format("YYYY-MM-DD") + ".xlsx"
-   XLSXS.writeFile(book, excelFileName)
+         // 生成文件并下载
+         const excelFileName = "员工信息_" + moment(new Date()).format("YYYY-MM-DD") + ".xlsx"
+         XLSXS.writeFile(book, excelFileName)
 
-   // 清除行选中
-   tableRef.value.clearSelection()
+         // 清除行选中
+         tableRef.value.clearSelection()
+      })
+      .catch(() => {
+         ElMessage.info("操作已取消")
+         isButtonDisabled.value = false
+         return new Promise(() => {})
+      })
 }
 
 const handleEdit = (index: number, row: Employee | undefined) => {
@@ -458,13 +487,13 @@ const handleSizeChange = (value: number) => {
          @size-change="handleSizeChange"
          @current-change="handleCurrentChange" />
    </div>
-   <AddOrEdit
+   <EmployeeAddOrEdit
       :isShow="isAddOrEditShow"
       :title="addOrEditTitle"
       :formData="addOrEditData"
       @save="handleSave"
       @cancel="handleCancel">
-   </AddOrEdit>
+   </EmployeeAddOrEdit>
 </template>
 
 <style lang="scss" scoped></style>

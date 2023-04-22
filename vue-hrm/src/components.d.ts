@@ -9,7 +9,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    AddOrEdit: typeof import('./components/employee/AddOrEdit.vue')['default']
+    AddOrEdit: typeof import('./components/menu/AddOrEdit.vue')['default']
     Aside: typeof import('./components/layout/Aside.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAutoResizer: typeof import("element-plus/es")["ElAutoResizer"]
@@ -50,6 +50,7 @@ declare module '@vue/runtime-core' {
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElUpload: typeof import('element-plus/es')['ElUpload']
     Employee: typeof import('./components/employee/Employee.vue')['default']
+    EmployeeAddOrEdit: typeof import('./components/employee/EmployeeAddOrEdit.vue')['default']
     Error: typeof import('./components/Error.vue')['default']
     Header: typeof import('./components/layout/Header.vue')['default']
     IEpArrowDown: typeof import('~icons/ep/arrow-down')['default']
