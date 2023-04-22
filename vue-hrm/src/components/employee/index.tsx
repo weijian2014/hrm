@@ -1,6 +1,6 @@
 import { getAgeByBirthday } from "@/utils/common"
 import type { TableColumnCtx, UploadFile } from "element-plus"
-import moment from "moment"
+import * as moment from "moment"
 
 export function useSettings() {
    // 表格配置
