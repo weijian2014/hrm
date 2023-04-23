@@ -37,6 +37,7 @@ export function useSettings() {
          keyPosition: "A2",
          valuePosition: "B2",
          width: 55,
+         formatter: formatter,
       },
       {
          prop: "gender",
@@ -48,6 +49,7 @@ export function useSettings() {
          keyPosition: "C2",
          valuePosition: "D2",
          width: 30,
+         formatter: formatter,
       },
       {
          prop: "birthday",
@@ -59,7 +61,7 @@ export function useSettings() {
          keyPosition: "E2",
          valuePosition: "F2",
          width: 70,
-         formatter: dateFormatter,
+         formatter: formatter,
       },
       {
          prop: "height",
@@ -71,6 +73,7 @@ export function useSettings() {
          keyPosition: "A3",
          valuePosition: "B3",
          width: 55,
+         formatter: formatter,
       },
       {
          prop: "weight",
@@ -82,6 +85,7 @@ export function useSettings() {
          keyPosition: "C3",
          valuePosition: "D3",
          width: 55,
+         formatter: formatter,
       },
       {
          prop: "degree",
@@ -93,6 +97,7 @@ export function useSettings() {
          keyPosition: "E3",
          valuePosition: "F3",
          width: 75,
+         formatter: formatter,
       },
       {
          prop: "identifier",
@@ -104,6 +109,7 @@ export function useSettings() {
          keyPosition: "A4",
          valuePosition: "B4",
          width: 125,
+         formatter: formatter,
       },
       {
          prop: "phone",
@@ -115,6 +121,7 @@ export function useSettings() {
          keyPosition: "C4",
          valuePosition: "D4",
          width: 90,
+         formatter: formatter,
       },
       {
          prop: "political_status",
@@ -126,6 +133,7 @@ export function useSettings() {
          keyPosition: "E4",
          valuePosition: "F4",
          width: 85,
+         formatter: formatter,
       },
       {
          prop: "social_security",
@@ -137,6 +145,7 @@ export function useSettings() {
          keyPosition: "A5",
          valuePosition: "B5",
          width: 30,
+         formatter: formatter,
       },
       {
          prop: "current_address",
@@ -148,6 +157,7 @@ export function useSettings() {
          keyPosition: "C5",
          valuePosition: "D5",
          width: 230,
+         formatter: formatter,
       },
       {
          prop: "first_work_time",
@@ -159,7 +169,7 @@ export function useSettings() {
          keyPosition: "A6",
          valuePosition: "B6",
          width: 90,
-         formatter: dateFormatter,
+         formatter: formatter,
       },
       {
          prop: "former_employer",
@@ -171,6 +181,7 @@ export function useSettings() {
          keyPosition: "C6",
          valuePosition: "D6",
          width: 170,
+         formatter: formatter,
       },
       {
          prop: "post",
@@ -182,6 +193,7 @@ export function useSettings() {
          keyPosition: "A7",
          valuePosition: "B7",
          width: 70,
+         formatter: formatter,
       },
       {
          prop: "salary",
@@ -193,6 +205,7 @@ export function useSettings() {
          keyPosition: "C7",
          valuePosition: "D7",
          width: 60,
+         formatter: formatter,
       },
       {
          prop: "security_card",
@@ -204,6 +217,7 @@ export function useSettings() {
          keyPosition: "E7",
          valuePosition: "F7",
          width: 80,
+         formatter: formatter,
       },
       {
          prop: "comments",
@@ -215,6 +229,7 @@ export function useSettings() {
          keyPosition: "",
          valuePosition: "A8",
          width: 200,
+         formatter: formatter,
       },
    ])
 
@@ -373,20 +388,32 @@ export function convertForExport(rows: Employee[]): {
    }
 }
 
-export function dateFormatter(row: any, column: TableColumnCtx<any>, cellValue: any, index: number) {
-   var date = row[column.property]
-   if (date == undefined) {
+function formatter(row: any, property: string, searchKey: string) {
+   console.log(property, searchKey)
+   var cellValue = row[property].toString()
+   if (!cellValue) {
       return "未知"
    }
 
-   const dateStr = moment(date).format("YYYY-MM-DD")
-   const age = getAgeByBirthday(dateStr)
-   if (column.property === "birthday") {
-      // 生日
-      return dateStr + " (" + age + "岁)"
+   if (property === "birthday" || property === "first_work_time") {
+      let dateStr = moment(cellValue).format("YYYY-MM-DD")
+      if (searchKey && dateStr.indexOf(searchKey) !== -1) {
+         dateStr = dateStr.replace(searchKey, '<font color="red">' + searchKey + "</font>")
+      }
+      const year = getAgeByBirthday(dateStr)
+      if (property === "birthday") {
+         // 生日
+         return dateStr + " (" + year + "岁)"
+      } else {
+         // 首次工作
+         return dateStr + " (" + year + "年)"
+      }
    } else {
-      // 首次工作
-      return dateStr + " (" + age + "年)"
+      if (searchKey && cellValue.indexOf(searchKey) !== -1) {
+         return cellValue.replace(searchKey, '<font color="red">' + searchKey + "</font>")
+      } else {
+         return row[property]
+      }
    }
 }
 

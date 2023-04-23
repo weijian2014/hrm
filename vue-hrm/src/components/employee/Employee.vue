@@ -84,12 +84,13 @@ watch(
 
 ////// 表头工具栏
 let lastCheckList = checkList.value as CheckboxValueType[]
+// 列筛选
 const handleCheckedChange = (values: CheckboxValueType[]) => {
    // values为所有被选中的列
-   // 求出values与lastCheckedLables的差集--取消选中的lable
+   // 求出values与lastCheckedLables的差集--取消选中的列
    const diffA = values.concat(lastCheckList).filter((v) => !values.includes(v))
 
-   // 求出lastCheckedLables与values的差集--新增选中的lable
+   // 求出lastCheckedLables与values的差集--新增选中的列
    var diffB = lastCheckList.concat(values).filter((v) => !lastCheckList.includes(v))
 
    diffA.forEach((item1) => {
@@ -125,6 +126,7 @@ const handleRowClick = (row: Employee) => {
    // console.log("handleRowClick", row)
 }
 
+// 新增或导入
 const handleAddOrImport = () => {
    console.log("handleAddOrImport")
    addOrEditTitle.value = "新增或导入员工"
@@ -203,6 +205,7 @@ function setExcelStyle(
    }
 }
 
+// 批量导出
 const handleExport = () => {
    if (selections.value.length === 0) {
       return
@@ -261,40 +264,6 @@ const handleExport = () => {
       })
 }
 
-const handleEdit = (index: number, row: Employee | undefined) => {
-   console.log("handleEdit", index, row)
-   if (row) {
-      addOrEditData.value = row
-      console.log("handleEdit", addOrEditData.value)
-      addOrEditTitle.value = "修改员工"
-      isAddOrEditShow.value = true
-   }
-}
-
-const handleDelete = async (index: number, row: Employee) => {
-   console.log("handleDelete", index, row)
-   await ElMessageBox.confirm(
-      h("p", null, [
-         h("span", null, "确认删除姓名 "),
-         h("i", { style: "color: red" }, row.name),
-         h("span", null, " 的记录?"),
-      ]),
-      "员工删除确认",
-      {
-         confirmButtonText: "确认",
-         cancelButtonText: "取消",
-         type: "warning",
-      }
-   ).catch(() => {
-      ElMessage.info("操作已取消")
-      return new Promise(() => {})
-   })
-
-   const ids = [row.id]
-   deleteAndRefresh(ids)
-   ElMessage.success("删除成功")
-}
-
 // 批量删除
 const handleBatchDelete = () => {
    console.log("handleBatchDelete", selections)
@@ -341,6 +310,42 @@ const handleBatchDelete = () => {
       })
 }
 
+// 行编辑
+const handleEdit = (index: number, row: Employee | undefined) => {
+   console.log("handleEdit", index, row)
+   if (row) {
+      addOrEditData.value = row
+      console.log("handleEdit", addOrEditData.value)
+      addOrEditTitle.value = "修改员工"
+      isAddOrEditShow.value = true
+   }
+}
+
+// 行删除
+const handleDelete = async (index: number, row: Employee) => {
+   console.log("handleDelete", index, row)
+   await ElMessageBox.confirm(
+      h("p", null, [
+         h("span", null, "确认删除姓名 "),
+         h("i", { style: "color: red" }, row.name),
+         h("span", null, " 的记录?"),
+      ]),
+      "员工删除确认",
+      {
+         confirmButtonText: "确认",
+         cancelButtonText: "取消",
+         type: "warning",
+      }
+   ).catch(() => {
+      ElMessage.info("操作已取消")
+      return new Promise(() => {})
+   })
+
+   const ids = [row.id]
+   deleteAndRefresh(ids)
+   ElMessage.success("删除成功")
+}
+
 // 刷新
 const handleRefresh = async () => {
    console.log("handleRefresh")
@@ -383,7 +388,7 @@ const handleSizeChange = (value: number) => {
 <template>
    <div>
       <!-- 表头工具 -->
-      <el-row class="mb-4">
+      <el-row class="mb-2">
          <el-col :span="7">
             <el-button type="primary" @click="handleAddOrImport">
                <IEpPlus />
@@ -452,8 +457,12 @@ const handleSizeChange = (value: number) => {
             :label="column.label"
             :sortable="column.sortable"
             :align="column.align"
-            :formatter="column.formatter"
-            :index="index"></el-table-column>
+            :index="index">
+            <!-- v-html和formatter不能同时使用, 另外formatter不支持html样式 -->
+            <template #default="scope">
+               <span v-html="column.formatter(scope.row, column.prop, searchInputValue)" />
+            </template>
+         </el-table-column>
          <el-table-column width="140" label="操作" align="center">
             <template #default="scope">
                <el-button size="small" type="primary" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
@@ -462,6 +471,7 @@ const handleSizeChange = (value: number) => {
          </el-table-column>
       </el-table>
       <el-pagination
+         class="mt-2"
          v-model:current-page="currentPage"
          v-model:page-size="pageSize"
          :background="pagination.background"
