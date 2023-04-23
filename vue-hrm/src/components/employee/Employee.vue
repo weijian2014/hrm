@@ -112,6 +112,21 @@ const handleCheckedChange = (values: CheckboxValueType[]) => {
    lastCheckList = values
 }
 
+// 表格缩放
+const radioValue = ref("正常")
+watch(
+   () => radioValue.value,
+   (newValue) => {
+      if (newValue == "缩小") {
+         table.size = "small"
+      } else if (newValue === "正常") {
+         table.size = "default"
+      } else {
+         table.size = "large"
+      }
+   }
+)
+
 ////// 表格
 
 // 勾选表格的行时
@@ -404,7 +419,8 @@ const handleSizeChange = (value: number) => {
             </el-button>
          </el-col>
          <el-col :span="7">
-            <el-input v-model="searchInputValue" placeholder="" clearable>
+            <!-- v-model.trim 去掉左右两侧的空格 -->
+            <el-input v-model.trim="searchInputValue" placeholder="" clearable>
                <template #suffix> </template>
                <template #prepend
                   >模糊搜索<el-icon><IEpSearch /></el-icon
@@ -434,6 +450,13 @@ const handleSizeChange = (value: number) => {
                </el-checkbox-group>
             </el-popover>
          </el-col>
+         <el-col class="ml-12" :span="5">
+            <el-radio-group v-model="radioValue">
+               <el-radio-button label="缩小" />
+               <el-radio-button label="正常" />
+               <el-radio-button label="放大" />
+            </el-radio-group>
+         </el-col>
       </el-row>
       <!-- 表格, table-layout为auto时表头无法固定 -->
       <el-table
@@ -442,6 +465,7 @@ const handleSizeChange = (value: number) => {
          :data="tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)"
          :border="table.border"
          :fit="table.fit"
+         :size="table.size"
          :table-layout="table.table_layout"
          :empty-text="table.empty_text"
          :highlight-current-row="table.highlight_current_row"
@@ -456,6 +480,7 @@ const handleSizeChange = (value: number) => {
             :prop="column.prop"
             :label="column.label"
             :sortable="column.sortable"
+            :fixed="column.fixed"
             :align="column.align"
             :index="index">
             <!-- v-html和formatter不能同时使用, 另外formatter不支持html样式 -->
@@ -463,7 +488,7 @@ const handleSizeChange = (value: number) => {
                <span v-html="column.formatter(scope.row, column.prop, searchInputValue)" />
             </template>
          </el-table-column>
-         <el-table-column width="140" label="操作" align="center">
+         <el-table-column fixed="right" width="140" label="操作" align="center">
             <template #default="scope">
                <el-button size="small" type="primary" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
                <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>

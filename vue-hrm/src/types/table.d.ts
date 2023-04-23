@@ -11,6 +11,7 @@ interface PaginationSettings {
 
 interface TableSettings {
    border: boolean
+   size: "large" | "default" | "small"
    fit: boolean
    height: Number
    table_layout: "auto" | "fixed" | undefined
@@ -25,6 +26,7 @@ interface TableColumn {
    visible: boolean
    disable: boolean
    sortable: boolean
+   fixed?: true | "left" | "right" | undefined
    align: string
    keyPosition: string
    valuePosition: string

@@ -40,13 +40,13 @@ const { isEscapeClose, isShowClose, isClickModalToClose, dialogVisible, rawFormD
 // 标签的长度
 const labelWidth = ref("90px")
 // 表单对齐方式, 'left' | 'right' | 'top'
-const labelPosition = ref("right")
+const labelPosition = ref<"top" | "right" | "left">("right")
 // 行内表单模式
 const isInline = ref(false)
 // 是否隐藏必填字段标签旁边的红色星号
 const isHideRequiredAsterisk = ref(false)
 // 星号的位置, 'left' | 'right'
-const requireAsteriskPosition = ref("left")
+const requireAsteriskPosition = ref<"left" | "right">("left")
 // 是否以行内形式展示校验信息
 const isInlineMessage = ref(true)
 // 是否在输入框中显示校验结果反馈图标

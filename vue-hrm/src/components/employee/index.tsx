@@ -7,6 +7,7 @@ export function useSettings() {
    const table = reactive<TableSettings>({
       border: true,
       fit: true,
+      size: "default",
       highlight_current_row: true,
       height: 500,
       empty_text: "暂无数据",
@@ -21,6 +22,7 @@ export function useSettings() {
          label: "序号",
          visible: false,
          disable: true,
+         fixed: true,
          sortable: false,
          align: "center",
          keyPosition: "",
@@ -32,6 +34,7 @@ export function useSettings() {
          label: "姓名",
          visible: true,
          disable: true,
+         fixed: true,
          sortable: true,
          align: "center",
          keyPosition: "A2",
@@ -389,7 +392,6 @@ export function convertForExport(rows: Employee[]): {
 }
 
 function formatter(row: any, property: string, searchKey: string) {
-   console.log(property, searchKey)
    var cellValue = row[property].toString()
    if (!cellValue) {
       return "未知"
