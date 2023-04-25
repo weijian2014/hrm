@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { menuListApi } from "@/utils/menu"
-import type { Menu } from "@/utils/menu"
 import MenuAddOrEdit from "./MenuAddOrEdit.vue"
 
 const state = reactive<{

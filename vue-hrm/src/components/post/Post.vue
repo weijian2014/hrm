@@ -146,7 +146,13 @@ const handleCancel = (message: string) => {
             </el-table-column>
          </el-table>
       </el-card>
-      <PostAddOrEdit :isShow="isShow" :title="title" :formData="rowData" @save="handleSave" @cancel="handleCancel">
+      <PostAddOrEdit
+         :isShow="isShow"
+         :title="title"
+         :formData="rowData"
+         :posts="posts"
+         @save="handleSave"
+         @cancel="handleCancel">
       </PostAddOrEdit>
    </div>
 </template>

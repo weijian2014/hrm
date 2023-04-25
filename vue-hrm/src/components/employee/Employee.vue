@@ -488,7 +488,7 @@ const handleSizeChange = (value: number) => {
                <span v-html="column.formatter(scope.row, column.prop, searchInputValue)" />
             </template>
          </el-table-column>
-         <el-table-column fixed="right" width="140" label="操作" align="center">
+         <el-table-column fixed="right" width="145" label="操作" align="center">
             <template #default="scope">
                <el-button size="small" type="primary" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
                <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>

@@ -25,6 +25,15 @@ const state = reactive<{
    dialogVisible: boolean
    rawFormData: Employee
    isImportDisabled: boolean
+   // form参数
+   labelWidth: string
+   labelPosition: "top" | "right" | "left"
+   isInline: boolean
+   isHideRequiredAsterisk: boolean
+   requireAsteriskPosition: "left" | "right"
+   isInlineMessage: boolean
+   isStatusIcon: boolean
+   isScrollToError: boolean
 }>({
    isEscapeClose: false, // 是否按ESC关闭
    isShowClose: false, // 是否显示右上角的关闭
@@ -32,27 +41,34 @@ const state = reactive<{
    dialogVisible: false, // 是否显示对话框
    rawFormData: {} as Employee,
    isImportDisabled: false, // 是否禁用导入按钮
+   // form参数
+   labelWidth: "90px", // 标签的长度
+   labelPosition: "right", // 表单对齐方式
+   isInline: false, // 行内表单模式
+   isHideRequiredAsterisk: true, // 是否隐藏必填字段标签旁边的红色星号
+   requireAsteriskPosition: "left", // 星号的位置
+   isInlineMessage: true, // 是否以行内形式展示校验信息
+   isStatusIcon: false, // 是否在输入框中显示校验结果反馈图标
+   isScrollToError: true, // 当校验失败时，滚动到第一个错误表单项
 })
 
 // 解构
-const { isEscapeClose, isShowClose, isClickModalToClose, dialogVisible, rawFormData, isImportDisabled } = toRefs(state)
-
-// 标签的长度
-const labelWidth = ref("90px")
-// 表单对齐方式, 'left' | 'right' | 'top'
-const labelPosition = ref<"top" | "right" | "left">("right")
-// 行内表单模式
-const isInline = ref(false)
-// 是否隐藏必填字段标签旁边的红色星号
-const isHideRequiredAsterisk = ref(false)
-// 星号的位置, 'left' | 'right'
-const requireAsteriskPosition = ref<"left" | "right">("left")
-// 是否以行内形式展示校验信息
-const isInlineMessage = ref(true)
-// 是否在输入框中显示校验结果反馈图标
-const isStatusIcon = ref(false)
-// 当校验失败时，滚动到第一个错误表单项
-const isScrollToError = ref(true)
+const {
+   isEscapeClose,
+   isShowClose,
+   isClickModalToClose,
+   dialogVisible,
+   rawFormData,
+   isImportDisabled,
+   labelWidth,
+   labelPosition,
+   isInline,
+   isHideRequiredAsterisk,
+   requireAsteriskPosition,
+   isInlineMessage,
+   isStatusIcon,
+   isScrollToError,
+} = toRefs(state)
 
 // watch写法上支持一个或者多个监听源, 这些监听源必须只能是getter/effect函数, ref数据, reactive对象或者数组类型
 watch(
@@ -110,14 +126,14 @@ const handleSave = async () => {
                .then((res) => {
                   if (res.code === 200) {
                      console.log(res)
-                     emits("save", "保存成功")
+                     emits("save", props.title + "成功")
                      isLoading.value = false
                   }
                })
                .catch((res) => {
                   console.log(res)
                   isLoading.value = false
-                  ElMessage.error("保存失败, " + res)
+                  ElMessage.error(props.title + "失败, " + res)
                   return new Promise(() => {})
                })
          } else {
@@ -125,14 +141,14 @@ const handleSave = async () => {
                .then((res) => {
                   if (res.code === 200) {
                      console.log(res)
-                     emits("save", "保存成功")
+                     emits("save", props.title + "成功")
                      isLoading.value = false
                   }
                })
                .catch((res) => {
                   console.log(res)
                   isLoading.value = false
-                  ElMessage.error("保存失败, " + res)
+                  ElMessage.error(props.title + "失败, " + res)
                   return new Promise(() => {})
                })
          }
