@@ -31,9 +31,10 @@ type userLoginRequest struct {
 }
 
 type userUpdateRequest struct {
-	Id       uint64 `json:"id" description:"用户ID"`
-	Name     string `json:"username" description:"登录的用户名"`
-	Password string `json:"password" description:"登录的密码"`
+	Name              string `json:"username" description:"登录的用户名"`
+	OldPassword       string `json:"old_password" description:"旧密码"`
+	NewPassword       string `json:"new_password" description:"新密码"`
+	NewPasswordRepeat string `json:"new_password_repeat" description:"确认密码"`
 }
 
 type userRefreshRequest struct {
@@ -251,10 +252,17 @@ func userUpdate(c *gin.Context) {
 		return
 	}
 
-	user := &db.User{
-		Id:       r.Id,
-		Name:     r.Name,
-		Password: r.Password,
+	user := new(db.User)
+	err := db.Take(user, "name = ?", r.Name)
+	if err != nil || user.Password != r.OldPassword {
+		log.Warn("用户名或者密码不正确")
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "用户名或者密码不正确",
+			"data":    "",
+		})
+		c.Abort()
+		return
 	}
 
 	if err := db.UpdateSingleColumn(user, "password", user.Password); err != nil {
@@ -270,7 +278,7 @@ func userUpdate(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"message": "密码修改成功, 下次登录生效",
+		"message": "密码修改成功, 请重新登录",
 		"data":    "",
 	})
 }

@@ -46,7 +46,7 @@ const rules = reactive<FormRules>({
          message: "请输入用户名",
          trigger: "blur", // 失去焦点时
       },
-      { min: 3, max: 20, message: "用户名长度在3~20之间", trigger: "blur" },
+      { min: 4, max: 20, message: "用户名长度在4~20之间", trigger: "blur" },
    ],
    password: [
       {
@@ -54,7 +54,7 @@ const rules = reactive<FormRules>({
          validator: validatePassword,
          trigger: "blur",
       },
-      { min: 6, max: 20, message: "密码长度在3~20之间", trigger: "blur" },
+      { min: 8, max: 20, message: "密码长度在8~20之间", trigger: "blur" },
    ],
 })
 

@@ -74,7 +74,7 @@ const router = createRouter({
 // 路由拦截(路由变化时调用)
 router.beforeEach((to, from, next) => {
    // some遍历每一个路由是否需要登录后才能显示
-   if (to.matched.some((r) => r.meta?.requiresAuth)) {
+   if (to.matched.length > 0 && to.matched.some((r) => r.meta?.requiresAuth)) {
       const store = useUserStore()
       if (!store.tokenInfo.access_token) {
          // 跳转到login页, 登录成功后跳转回to.fullPath

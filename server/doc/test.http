@@ -59,9 +59,11 @@ Content-Type: application/json
 Authorization: {{adminAccessToken}}
 
 {
-   "id": {{weijianUserId}},
+   # "id": {{weijianUserId}},
    "username": "weijian",
-   "password": "12345678"
+   "old_password": "123456",
+   "new_password": "1234567890",
+   "new_password_repeat": "1234567890"
 }
 
 ### weijian用户登录

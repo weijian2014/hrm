@@ -11,6 +11,7 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AddOrEdit: typeof import('./components/menu/AddOrEdit.vue')['default']
     Aside: typeof import('./components/layout/Aside.vue')['default']
+    ChangePassword: typeof import('./components/layout/ChangePassword.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAutoResizer: typeof import("element-plus/es")["ElAutoResizer"]
     ElAvatar: typeof import('element-plus/es')['ElAvatar']

@@ -1,5 +1,5 @@
 import request from "@/utils/request"
-import type { ApiResponse, PromiseResponse } from "@/utils/common"
+import type { PromiseResponse } from "@/utils/common"
 
 //
 interface LoginRequest {
@@ -34,3 +34,6 @@ export const refreshToken = (data: RefreshRequest): PromiseResponse<TokenInfo> =
 
 //
 export const getUserInfo = (): PromiseResponse<string> => request.get("/user/info")
+
+export const changePasswordApi = (data: ChangePasswordRequest): PromiseResponse<string> =>
+   request.put("/user/update", data)

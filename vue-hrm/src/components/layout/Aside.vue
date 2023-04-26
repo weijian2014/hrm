@@ -24,7 +24,7 @@ import { isCollapse } from "./index"
                <el-menu-item index="post">
                   <el-icon><IEpStamp /></el-icon><span>岗位列表</span>
                </el-menu-item>
-               <el-menu-item index="menu">
+               <!-- <el-menu-item index="menu">
                   <el-icon><IEpMenu /></el-icon><span>菜单列表</span>
                </el-menu-item>
                <el-menu-item index="role">
@@ -32,7 +32,7 @@ import { isCollapse } from "./index"
                </el-menu-item>
                <el-menu-item index="user">
                   <el-icon><IEpAvatar /></el-icon><span>用户列表</span>
-               </el-menu-item>
+               </el-menu-item> -->
             </el-sub-menu>
 
             <el-menu-item index="setting">
