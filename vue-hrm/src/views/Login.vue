@@ -22,7 +22,7 @@ const formRef = ref()
 const state = reactive({
    form: {
       username: "admin",
-      password: "123456",
+      password: "12345678",
    },
    isLoading: false,
 })

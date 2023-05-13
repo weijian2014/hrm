@@ -19,7 +19,7 @@ func init() {
 	flag.StringVar(&common.FlagInfos.ConfigFileFullPath, "f", common.CurrDir+"/config.json", "The path of config.json file, support for absolute and relative paths")
 	flag.BoolVar(&common.FlagInfos.IsInitSystem, "init", false, "Init system and exit")
 	flag.StringVar(&common.FlagInfos.AdminUsername, "u", "admin", "User name for admin account")
-	flag.StringVar(&common.FlagInfos.AdminPassword, "p", "123456", "Password for admin account")
+	flag.StringVar(&common.FlagInfos.AdminPassword, "p", "12345678", "Password for admin account")
 	flag.Parse()
 }
 
