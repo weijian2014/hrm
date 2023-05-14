@@ -76,7 +76,7 @@ const logoutFn = async () => {
       <!-- 下拉菜单 -->
       <el-dropdown>
          <span class="el-dropdown-link">
-            <el-avatar :size="32" :src="'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'" />
+            <el-avatar :size="36" :src="store.logo" />
             <el-icon class="el-icon--right">
                <i-ep-arrow-down />
             </el-icon>

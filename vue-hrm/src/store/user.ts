@@ -4,6 +4,7 @@ const tokenInfoKey = "TokenInfo"
 
 export const useUserStore = defineStore("user", () => {
    const tokenJson = ref("")
+   const logo = ref("/src/assets/img/user_logo.png")
    const data = reactive({})
 
    const tokenInfo = computed<TokenInfo>(() => {
@@ -23,5 +24,5 @@ export const useUserStore = defineStore("user", () => {
       window.localStorage.setItem(tokenInfoKey, data)
    }
 
-   return { tokenInfo, saveToken, data }
+   return { tokenInfo, saveToken, logo, data }
 })

@@ -17,13 +17,17 @@ interface RefreshRequest {
 
 let refreshPromise: Promise<any>
 let isRefreshing = false
-export const refreshToken = (data: RefreshRequest): PromiseResponse<TokenInfo> => {
+export const Sleep = (ms: number) => {
+   return new Promise((resolve) => setTimeout(resolve, ms))
+}
+export const refreshToken = async (data: RefreshRequest): PromiseResponse<TokenInfo> => {
    // 防止重复刷新
    if (isRefreshing) {
       return refreshPromise
    }
 
    isRefreshing = true
+   await Sleep(500)
    refreshPromise = request.post("/user/refresh", data).finally(() => {
       // 无论成功还是失败都会走入finally
       isRefreshing = false
