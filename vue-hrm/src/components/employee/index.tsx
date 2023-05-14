@@ -289,6 +289,9 @@ export function useData() {
    // 表格选中的行
    const selections = ref<Employee[]>([] as Employee[])
 
+   // 表格加载状态
+   const isLoading = ref(true)
+
    return {
       tableRef,
       tableData,
@@ -299,6 +302,7 @@ export function useData() {
       addOrEditTitle,
       addOrEditData,
       selections,
+      isLoading,
    }
 }
 

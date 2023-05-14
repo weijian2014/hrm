@@ -77,13 +77,13 @@ const handleLogout = async () => {
 
 <template>
    <el-menu
-      class="el-menu-vertical-demo"
+      class="el-menu-class"
       :collapse="isCollapse"
       router
       unique-opened
       default-active="employee"
-      active-text-color="#409EFF"
-      background-color="#545c64"
+      active-text-color="#fff"
+      background-color="#2b2a33"
       text-color="#fff">
       <el-menu-item @click="isCollapse = !isCollapse">
          <el-icon @click="isCollapse = !isCollapse"
@@ -96,12 +96,12 @@ const handleLogout = async () => {
          <template #title>员工管理</template>
       </el-menu-item>
       <el-menu-item index="recruitment">
-         <el-icon><IEpCollectionTag /></el-icon>
+         <el-icon><IEpMessage /></el-icon>
          <template #title>招聘管理</template>
       </el-menu-item>
-      <el-sub-menu index="">
+      <el-sub-menu class="el-sub-menu-class" index="">
          <template #title>
-            <el-icon><IEpKey /></el-icon>
+            <el-icon><IEpOperation /></el-icon>
             <span>后台管理</span>
          </template>
          <el-menu-item index="post">
@@ -117,8 +117,9 @@ const handleLogout = async () => {
             <template #title>用户列表</template>
          </el-menu-item>
       </el-sub-menu>
+      <el-divider class="mt-24" border-style="dashed" />
       <el-menu-item index="" @click="handleChangePassword">
-         <el-icon><IEpSwitch /></el-icon>
+         <el-icon><IEpLock /></el-icon>
          <template #title>修改密码</template>
       </el-menu-item>
       <ChangePassword :is-show="isShow" :title="title" @save="handleSave" @cancel="handleCancel"></ChangePassword>
@@ -130,11 +131,18 @@ const handleLogout = async () => {
 </template>
 
 <style lang="scss" scoped>
-.el-menu-vertical-demo:not(.el-menu--collapse) {
+// 侧边栏展开时
+.el-menu-class:not(.el-menu--collapse) {
    width: 160px;
    min-height: 400px;
 }
 
+// 侧边栏收起时, 消除el-sub-menu宽度多出的1px
+.el-menu {
+   border-right-width: 0;
+}
+
+// 选中的菜单项
 .el-menu-item.is-active {
    color: #fff !important;
    background: #409eff !important;

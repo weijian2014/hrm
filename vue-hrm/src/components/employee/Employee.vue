@@ -18,9 +18,11 @@ const {
    addOrEditTitle,
    addOrEditData,
    selections,
+   isLoading,
 } = useData()
 
 const refresh = async () => {
+   isLoading.value = true
    await employeeListApi()
       .then((res) => {
          if (res.code === 200) {
@@ -33,6 +35,9 @@ const refresh = async () => {
       .catch((res) => {
          console.log(res)
          return new Promise(() => {})
+      })
+      .finally(() => {
+         isLoading.value = false
       })
 }
 
@@ -472,6 +477,7 @@ const handleSizeChange = (value: number) => {
          :highlight-current-row="table.highlight_current_row"
          :row-key="table.row_key"
          :default-sort="{ prop: 'id', order: 'descending' }"
+         v-loading="isLoading"
          @selection-change="handleSelectChange"
          @row-click="handleRowClick">
          <el-table-column type="selection" align="center" />
