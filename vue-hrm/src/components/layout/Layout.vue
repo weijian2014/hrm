@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Aside from "./Aside.vue"
-import Header from "./Header.vue"
 </script>
 
 <template>
@@ -8,7 +7,6 @@ import Header from "./Header.vue"
       <el-container>
          <Aside></Aside>
          <el-container class="header-and-main">
-            <Header>Header</Header>
             <el-main>
                <el-scrollbar>
                   <RouterView></RouterView>
@@ -26,6 +24,6 @@ import Header from "./Header.vue"
 }
 
 .el-main {
-   background-color: #d9ecff;
+   background-color: #ffffff;
 }
 </style>

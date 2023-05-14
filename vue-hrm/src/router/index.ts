@@ -20,10 +20,16 @@ const router = createRouter({
          meta: { requiresAuth: true },
          children: [
             {
+               // 首页默认显示的内容
                path: "",
-               name: "home",
+               name: "statistics",
                // 赖加载
-               component: () => import("@/components/summary/Summary.vue"),
+               component: () => import("@/components/statistics/Statistics.vue"),
+            },
+            {
+               path: "/employee",
+               name: "employee",
+               component: () => import("@/components/employee/Employee.vue"),
             },
             {
                path: "/recruitment",
@@ -49,16 +55,6 @@ const router = createRouter({
                path: "/user",
                name: "user",
                component: () => import("@/components/user/User.vue"),
-            },
-            {
-               path: "/employee",
-               name: "employee",
-               component: () => import("@/components/employee/Employee.vue"),
-            },
-            {
-               path: "/menu",
-               name: "menu",
-               component: () => import("@/components/menu/Menu.vue"),
             },
             {
                // 路由不匹配时显示此页面

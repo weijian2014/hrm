@@ -27,6 +27,7 @@ const refresh = async () => {
             console.log(res)
             tableData.value = res.data.rows
             tableRows.value = res.data.total
+            currentPage.value = 1
          }
       })
       .catch((res) => {

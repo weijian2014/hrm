@@ -168,7 +168,7 @@ const handleCancel = () => {
    formRef.value?.clearValidate()
    // 恢复表单数据
    // 向外发送cancel(取消)事件
-   emits("cancel", "已取消")
+   emits("cancel", "操作已取消")
 }
 </script>
 

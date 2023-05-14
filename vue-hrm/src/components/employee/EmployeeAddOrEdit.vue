@@ -166,7 +166,7 @@ const handleCancel = () => {
    // 恢复表单数据
    rawFormData.value = { ...props.formData }
    // 向外发送cancel(取消)事件
-   emits("cancel", "已取消")
+   emits("cancel", "操作已取消")
 }
 
 //// upload组件

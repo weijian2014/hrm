@@ -1,79 +1,142 @@
 <script setup lang="ts">
+import { useRouter } from "vue-router"
+import { useUserStore } from "@/store/user"
+import { storeToRefs } from "pinia"
 import { isCollapse } from "./index"
+import { logoutApi } from "@/utils/user"
+import ChangePassword from "./ChangePassword.vue"
+
+const router = useRouter()
+const store = useUserStore()
+const { tokenInfo } = storeToRefs(store)
+
+const state = reactive<{
+   // 弹窗
+   isShow: boolean
+   title: string
+}>({
+   isShow: false,
+   title: "修改 " + tokenInfo.value.user_name + " 的密码",
+})
+
+const { isShow, title } = toRefs(state)
+
+const changeFn = async () => {
+   console.log("changeFn")
+   isShow.value = true
+}
+
+// 组件发送的保存事件
+const handleSave = async (message: string) => {
+   isShow.value = false
+   console.log("handleSave", message)
+   ElMessage.success(message)
+   store.saveToken("")
+   router.push({ name: "login" })
+}
+
+// 组件发送的消息事件
+const handleCancel = (message: string) => {
+   isShow.value = false
+   ElMessage.info(message)
+}
+
+// 展开或收起侧边栏时, 改变标题
+const collapseTitle = ref("收起侧栏")
+watch(
+   () => isCollapse.value,
+   (newValue) => {
+      collapseTitle.value = isCollapse.value ? "展开侧栏" : "收起侧栏"
+   }
+)
+
+// 修改密码
+const handleChangePassword = () => {
+   console.log("handleChangePassword")
+   isShow.value = true
+}
+
+// 退出登录
+const handleLogout = async () => {
+   await ElMessageBox.confirm("确认退出?", "退出询问", {
+      cancelButtonText: "取消",
+      confirmButtonText: "确认",
+      type: "warning",
+   }).catch(() => {
+      ElMessage.info("操作已取消")
+      return new Promise(() => {})
+   })
+
+   await logoutApi().catch(() => {})
+
+   ElMessage.success("已退出")
+   store.saveToken("")
+   router.push({ name: "login" })
+}
 </script>
 
 <template>
-   <el-aside>
-      <el-scrollbar>
-         <el-menu router unique-opened :collapse="isCollapse">
-            <a href="/" class="logo">
-               <img src="@/assets/logo.svg" alt="" />
-               <h1>HRM管理系统</h1>
-            </a>
-            <el-menu-item index="/employee">
-               <el-icon><IEpUser /></el-icon><span>员工管理</span>
-            </el-menu-item>
-            <el-menu-item index="/recruitment">
-               <el-icon><IEpCollectionTag /></el-icon><span>招聘管理</span>
-            </el-menu-item>
-
-            <el-sub-menu index="/permission">
-               <template #title
-                  ><el-icon><IEpKey /></el-icon><span>后台管理</span>
-               </template>
-               <el-menu-item index="post">
-                  <el-icon><IEpStamp /></el-icon><span>岗位列表</span>
-               </el-menu-item>
-               <!-- <el-menu-item index="menu">
-                  <el-icon><IEpMenu /></el-icon><span>菜单列表</span>
-               </el-menu-item>
-               <el-menu-item index="role">
-                  <el-icon><IEpUserFilled /></el-icon><span>角色列表</span>
-               </el-menu-item>
-               <el-menu-item index="user">
-                  <el-icon><IEpAvatar /></el-icon><span>用户列表</span>
-               </el-menu-item> -->
-            </el-sub-menu>
-
-            <el-menu-item index="setting">
-               <el-icon><IEpSetting /></el-icon><span>系统设置</span>
-            </el-menu-item>
-         </el-menu>
-      </el-scrollbar>
-   </el-aside>
+   <el-menu
+      class="el-menu-vertical-demo"
+      :collapse="isCollapse"
+      router
+      unique-opened
+      default-active="employee"
+      active-text-color="#409EFF"
+      background-color="#545c64"
+      text-color="#fff">
+      <el-menu-item @click="isCollapse = !isCollapse">
+         <el-icon @click="isCollapse = !isCollapse"
+            ><IEpExpand v-show="isCollapse" /> <IEpFold v-show="!isCollapse" />
+         </el-icon>
+         <template #title>{{ collapseTitle }}</template>
+      </el-menu-item>
+      <el-menu-item index="employee">
+         <el-icon><IEpUser /></el-icon>
+         <template #title>员工管理</template>
+      </el-menu-item>
+      <el-menu-item index="recruitment">
+         <el-icon><IEpCollectionTag /></el-icon>
+         <template #title>招聘管理</template>
+      </el-menu-item>
+      <el-sub-menu index="">
+         <template #title>
+            <el-icon><IEpKey /></el-icon>
+            <span>后台管理</span>
+         </template>
+         <el-menu-item index="post">
+            <template #title>岗位列表</template>
+         </el-menu-item>
+         <el-menu-item index="menu">
+            <template #title>菜单列表</template>
+         </el-menu-item>
+         <el-menu-item index="role">
+            <template #title>角色列表</template>
+         </el-menu-item>
+         <el-menu-item index="user">
+            <template #title>用户列表</template>
+         </el-menu-item>
+      </el-sub-menu>
+      <el-menu-item index="" @click="handleChangePassword">
+         <el-icon><IEpSwitch /></el-icon>
+         <template #title>修改密码</template>
+      </el-menu-item>
+      <ChangePassword :is-show="isShow" :title="title" @save="handleSave" @cancel="handleCancel"></ChangePassword>
+      <el-menu-item index="" @click="handleLogout">
+         <el-icon><IEpClose /></el-icon>
+         <template #title>退出</template>
+      </el-menu-item>
+   </el-menu>
 </template>
 
 <style lang="scss" scoped>
-.el-aside {
-   background-color: #a0cfff;
-   height: 100vh;
-   width: auto;
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+   width: 160px;
+   min-height: 400px;
+}
 
-   .el-menu {
-      background-color: #a0cfff;
-      border-right: none;
-      width: 200px;
-      // 当el-menu的class有el-menu--collapse样式时, 修改侧边栏宽度
-      // &表示父元素
-      &.el-menu--collapse {
-         width: 60px;
-         // 不显示h1标签
-         & h1 {
-            display: none;
-         }
-      }
-
-      .logo {
-         display: flex; // 弹性
-         justify-content: center; // 水平居中显示
-         align-items: center;
-         height: 60px;
-         text-decoration: none; // 取消a标签的下划线
-         img {
-            width: 32px;
-            height: 32px;
-         }
-      }
-   }
+.el-menu-item.is-active {
+   color: #fff !important;
+   background: #409eff !important;
 }
 </style>
