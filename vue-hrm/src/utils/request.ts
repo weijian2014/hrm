@@ -41,13 +41,13 @@ request.interceptors.response.use(
 
       // Token过期
       if (err.response.status === 401) {
-         console.log("token过期, 需要刷新")
+         console.log("令牌过期, 需要刷新")
          const res = await refreshToken({
             refresh_token: useUserStore().tokenInfo.refresh_token,
          })
 
          if (res.code === 200) {
-            console.log("刷新token成功")
+            console.log("刷新令牌成功")
             // 保存新生成的Token
             useUserStore().saveToken(JSON.stringify(res.data))
 
@@ -55,7 +55,7 @@ request.interceptors.response.use(
             return request(err.config)
          } else {
             // 刷新Token失败, 跳转至登录页
-            console.log("刷新Token失败, 请重新登录")
+            console.log("刷新令牌失败, 请重新登录")
             ElMessage.error("令牌过期, 请重新登录")
             router.push({ name: "login", query: { redirect: router.currentRoute.value.fullPath } })
             return
