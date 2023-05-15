@@ -134,10 +134,21 @@ func employeeAdd(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	log.Debug("employeeAdd request data [%v]", r)
+	log.Debug("employeeAdd request data [%+v]", r)
+
+	if r.PostId == 0 {
+		log.Warn("请提供岗位ID")
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "请提供岗位ID",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
 
 	e := convertToServer([]EmployeeWithClient{*r})
-	if err := db.Insert(e[0]); err != nil {
+	if err := db.Insert(&e[0]); err != nil {
 		log.Warn("职工增加失败, %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusNotAcceptable,
@@ -167,10 +178,21 @@ func employeeUpdate(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	log.Debug("employeeUpdate request data [%v]", r)
+	log.Debug("employeeUpdate request data [%+v]", r)
+
+	if r.PostId == 0 {
+		log.Warn("请提供岗位ID")
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "请提供岗位ID",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
 
 	e := convertToServer([]EmployeeWithClient{*r})
-	if err := db.UpdateRow(e[0]); err != nil {
+	if err := db.UpdateRow(&e[0]); err != nil {
 		log.Warn("职工更新失败, %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusNotAcceptable,
@@ -198,7 +220,7 @@ func employeeDel(c *gin.Context) {
 		})
 		c.Abort()
 	}
-	log.Debug("employeeDel id [%v]", id)
+	log.Debug("employeeDel id [%+v]", id)
 
 	m := &db.Employee{Id: id}
 	err = db.Delete(m, "id = ?", m.Id)

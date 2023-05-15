@@ -113,7 +113,7 @@ Authorization: {{adminAccessToken}}
   "current_address": "广东省广州市天河区天景街道全天路188号",
   "first_work_time": "2018-07-01T00:00:00+08:00",
   "former_employer": "蓝盾股份",
-  "post": "保安",
+  "post_id": 5,
   "salary": 7000,
   "security_card": "88886666",
   "comments": "1) 简化流程： 设计简洁直观的操作流程；\n2) 清晰明确： 语言表达清晰且表意明确，让用户快速理解进而作出决策；\n3) 帮助用户识别： 界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。",
