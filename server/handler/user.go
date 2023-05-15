@@ -45,7 +45,7 @@ func userLogin(c *gin.Context) {
 	r := new(userLoginRequest)
 	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
 			"message": "请求数据格式错误",
 			"data":    "",
@@ -59,7 +59,7 @@ func userLogin(c *gin.Context) {
 	err := db.Take(user, "name = ?", r.Name)
 	if err != nil || user.Password != r.Password {
 		log.Warn("用户名或者密码不正确")
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
 			"message": "用户名或者密码不正确",
 			"data":    "",
@@ -72,7 +72,7 @@ func userLogin(c *gin.Context) {
 	info, err := middleware.GenerateToken(user.Id, user.Name, common.JsonConfigs.TokenExpiredSeconds)
 	if err != nil {
 		log.Warn("系统无法生成token")
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusInternalServerError,
 			"message": "系统无法生成token",
 			"data":    "",
@@ -94,8 +94,8 @@ func userRefresh(c *gin.Context) {
 	r := new(userRefreshRequest)
 	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
-		c.JSON(http.StatusResetContent, gin.H{
-			"code":    http.StatusResetContent,
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusBadRequest,
 			"message": "请求数据格式错误",
 			"data":    "",
 		})
@@ -106,8 +106,8 @@ func userRefresh(c *gin.Context) {
 
 	tokenInfo, err := middleware.RefreshToken(r.RefreshToken)
 	if err != nil {
-		c.JSON(http.StatusResetContent, gin.H{
-			"code":    http.StatusResetContent,
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusNotAcceptable,
 			"message": "重新生成token失败",
 			"data":    "",
 		})
@@ -134,7 +134,7 @@ func userLogout(c *gin.Context) {
 func userInfo(c *gin.Context) {
 	info, isExists := c.Get("ContextInfo")
 	if !isExists {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
 			"message": "用户不存在",
 			"data":    "",
@@ -147,8 +147,8 @@ func userInfo(c *gin.Context) {
 	user := new(db.User)
 	if err := db.Take(user, "id = ?", contextInfo.UserId); err != nil {
 		log.Warn("用户不存在")
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusNoContent,
 			"message": "用户不存在",
 			"data":    "",
 		})
@@ -164,10 +164,10 @@ func userInfo(c *gin.Context) {
 }
 
 func userAdd(c *gin.Context) {
-	ulr := new(userLoginRequest)
-	if err := c.ShouldBindJSON(ulr); err != nil {
+	r := new(userLoginRequest)
+	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
 			"message": "请求数据格式错误",
 			"data":    "",
@@ -175,15 +175,35 @@ func userAdd(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	log.Debug("userAdd request data [%v]", ulr)
+	log.Debug("userAdd request data [%v]", r)
 
-	// todo verify the username have add user permission
+	if !isUserNameValid(r.Name) {
+		log.Warn("用户增加出错, 无效用户名")
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "用户增加失败, 用户名长度在4~20之间",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+
+	if !isPasswordValid(r.Password) {
+		log.Warn("用户增加出错, 无效密码")
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "用户增加失败, 密码长度在8~20之间",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
 
 	// 检查用户已存在
 	user := new(db.User)
-	if err := db.Take(user, "name = ?", ulr.Name); err == nil {
+	if err := db.Take(user, "name = ?", r.Name); err == nil {
 		log.Warn("用户增加出错, 用户名已存在")
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
 			"message": "用户增加出错, 用户名已存在",
 			"data":    "",
@@ -192,12 +212,34 @@ func userAdd(c *gin.Context) {
 		return
 	}
 
-	user.Name = ulr.Name
-	user.Password = ulr.Password
+	info, isExists := c.Get("ContextInfo")
+	if !isExists {
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "用户不存在",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+	contextInfo := info.(middleware.ContextInfo)
+	if contextInfo.UserName != "admin" {
+		log.Warn("非管理员权限不允许增加用户")
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "非管理员权限不允许增加用户",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+
+	user.Name = r.Name
+	user.Password = r.Password
 	if err := db.Insert(user); err != nil {
 		log.Warn("用户增加出错, %v", err)
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusNotAcceptable,
 			"message": fmt.Sprintf("用户增加出错, %v", err),
 			"data":    "",
 		})
@@ -218,7 +260,7 @@ func userAdd(c *gin.Context) {
 func userUpdate(c *gin.Context) {
 	info, isExists := c.Get("ContextInfo")
 	if !isExists {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
 			"message": "用户不存在",
 			"data":    "",
@@ -231,7 +273,7 @@ func userUpdate(c *gin.Context) {
 	r := new(userUpdateRequest)
 	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
 			"message": "请求数据格式错误",
 			"data":    "",
@@ -243,9 +285,20 @@ func userUpdate(c *gin.Context) {
 	log.Debug("login user info[%+v], userUpdate request[%+v]", contextInfo.UserName, r)
 	if contextInfo.UserName != "admin" && r.Name != contextInfo.UserName {
 		log.Warn("非超级管理员只能修改自己的密码")
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
 			"message": "非超级管理员只能修改自己的密码",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+
+	if !isPasswordValid(r.NewPassword) {
+		log.Warn("密码修改失败, 无效密码")
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "密码修改失败, 密码长度在8~20之间",
 			"data":    "",
 		})
 		c.Abort()
@@ -256,7 +309,7 @@ func userUpdate(c *gin.Context) {
 	err := db.Take(user, "name = ?", r.Name)
 	if err != nil || user.Password != r.OldPassword {
 		log.Warn("用户名或者密码不正确")
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
 			"message": "用户名或者密码不正确",
 			"data":    "",
@@ -267,7 +320,7 @@ func userUpdate(c *gin.Context) {
 
 	if err := db.UpdateSingleColumn(user, "password", user.Password); err != nil {
 		log.Warn("密码修改失败, err[%v]", err)
-		c.JSON(http.StatusNotModified, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusNotModified,
 			"message": "密码修改失败",
 			"data":    "",
@@ -286,7 +339,7 @@ func userUpdate(c *gin.Context) {
 func userDel(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
 			"message": "请求数据格式错误",
 			"data":    "",
@@ -296,10 +349,32 @@ func userDel(c *gin.Context) {
 	}
 	log.Debug("Delete id [%v]", id)
 
+	info, isExists := c.Get("ContextInfo")
+	if !isExists {
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "用户不存在",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+	contextInfo := info.(middleware.ContextInfo)
+	if contextInfo.UserName != "admin" {
+		log.Warn("非管理员权限不允许删除用户")
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "非管理员权限不允许删除用户",
+			"data":    "",
+		})
+		c.Abort()
+		return
+	}
+
 	user := &db.User{Id: id}
 	if err = db.Delete(user, "id = ?", id); err != nil {
 		log.Warn("用户不存在")
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
 			"message": "用户不存在",
 			"data":    "",
@@ -313,4 +388,14 @@ func userDel(c *gin.Context) {
 		"message": "用户删除成功",
 		"data":    "",
 	})
+}
+
+func isUserNameValid(n string) bool {
+	len := len(n)
+	return len >= 4 && len <= 20
+}
+
+func isPasswordValid(p string) bool {
+	len := len(p)
+	return len >= 8 && len <= 20
 }

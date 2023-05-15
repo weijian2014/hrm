@@ -54,8 +54,8 @@ func employeeList(c *gin.Context) {
 		-1)
 	if err != nil {
 		log.Warn("职工信息获取失败, %v", err)
-		c.JSON(http.StatusNotFound, gin.H{
-			"code":    http.StatusNotFound,
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusNoContent,
 			"message": fmt.Sprintf("职工信息获取失败, %v", err),
 			"data":    "",
 		})
@@ -82,7 +82,7 @@ func employeeSearch(c *gin.Context) {
 	r := new(searchRequest)
 	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
 			"message": "请求数据格式错误",
 			"data":    "",
@@ -102,8 +102,8 @@ func employeeSearch(c *gin.Context) {
 		"%"+r.Key+"%")
 	if err != nil {
 		log.Warn("职工信息获取失败, %v", err)
-		c.JSON(http.StatusNotFound, gin.H{
-			"code":    http.StatusNotFound,
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusNoContent,
 			"message": fmt.Sprintf("职工信息获取失败, %v", err),
 			"data":    "",
 		})
@@ -126,7 +126,7 @@ func employeeAdd(c *gin.Context) {
 	r := new(EmployeeWithClient)
 	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
 			"message": "请求数据格式错误",
 			"data":    "",
@@ -139,7 +139,7 @@ func employeeAdd(c *gin.Context) {
 	e := convertToServer([]EmployeeWithClient{*r})
 	if err := db.Insert(e[0]); err != nil {
 		log.Warn("职工增加失败, %v", err)
-		c.JSON(http.StatusNotAcceptable, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusNotAcceptable,
 			"message": fmt.Sprintf("职工增加失败, %v", err),
 			"data":    "",
@@ -159,7 +159,7 @@ func employeeUpdate(c *gin.Context) {
 	r := new(EmployeeWithClient)
 	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
 			"message": "请求数据格式错误",
 			"data":    "",
@@ -172,7 +172,7 @@ func employeeUpdate(c *gin.Context) {
 	e := convertToServer([]EmployeeWithClient{*r})
 	if err := db.UpdateRow(e[0]); err != nil {
 		log.Warn("职工更新失败, %v", err)
-		c.JSON(http.StatusNotAcceptable, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusNotAcceptable,
 			"message": fmt.Sprintf("职工更新失败, %v", err),
 			"data":    "",
@@ -191,7 +191,7 @@ func employeeUpdate(c *gin.Context) {
 func employeeDel(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
 			"message": "请求数据格式错误",
 			"data":    "",
@@ -204,8 +204,8 @@ func employeeDel(c *gin.Context) {
 	err = db.Delete(m, "id = ?", m.Id)
 	if err != nil {
 		log.Warn("职工删除失败")
-		c.JSON(http.StatusNoContent, gin.H{
-			"code":    http.StatusNoContent,
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusNotAcceptable,
 			"message": "职工删除失败",
 			"data":    "",
 		})

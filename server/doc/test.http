@@ -133,3 +133,8 @@ Authorization: {{adminAccessToken}}
 GET http://{{host}}/post/list
 Content-Type: application/json
 Authorization: {{adminAccessToken}}
+
+### 删除岗位
+DELETE http://{{host}}/post/1
+Content-Type: application/json
+Authorization: {{adminAccessToken}}

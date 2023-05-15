@@ -84,19 +84,23 @@ const handleDelete = async (index: number, row: Post) => {
 
    const ids = [row.id]
    deleteAndRefresh(ids)
-   ElMessage.success("删除成功")
 }
 
 const deleteAndRefresh = async (ids: number[]) => {
    for (let i = 0; i < ids.length; ++i) {
       await postDeleteApi(ids[i])
          .then((res) => {
+            console.log("then", res)
             if (res.code === 200) {
                console.log(res)
+               ElMessage.success("删除成功")
+            } else {
+               ElMessage.error(res.message)
             }
          })
          .catch((res) => {
-            console.log(res)
+            console.log("catch", res)
+            ElMessage.error(res.message)
             isButtonDisabled.value = false
             return new Promise(() => {})
          })

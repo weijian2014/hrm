@@ -26,8 +26,8 @@ func menuList(c *gin.Context) {
 	err := db.Find1(menus, -1)
 	if err != nil {
 		log.Warn("菜单信息获取失败, %v", err)
-		c.JSON(http.StatusNotFound, gin.H{
-			"code":    http.StatusNotFound,
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusNoContent,
 			"message": fmt.Sprintf("菜单信息获取失败, %v", err),
 			"data":    "",
 		})
@@ -49,7 +49,7 @@ func menuAdd(c *gin.Context) {
 	r := new(db.Menu)
 	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
 			"message": "请求数据格式错误",
 			"data":    "",
@@ -66,7 +66,7 @@ func menuAdd(c *gin.Context) {
 	}
 	if err := db.Insert(menu); err != nil {
 		log.Warn("菜单增加失败, %v", err)
-		c.JSON(http.StatusNotAcceptable, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusNotAcceptable,
 			"message": fmt.Sprintf("菜单增加失败, %v", err),
 			"data":    "",
@@ -86,7 +86,7 @@ func menuUpdate(c *gin.Context) {
 	r := new(db.Menu)
 	if err := c.ShouldBindJSON(r); err != nil {
 		log.Warn("请求数据格式错误")
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
 			"message": "请求数据格式错误",
 			"data":    "",
@@ -99,7 +99,7 @@ func menuUpdate(c *gin.Context) {
 	menu := &db.Menu{Id: r.Id, Name: r.Name, Url: r.Url, ParentId: r.ParentId}
 	if err := db.UpdateRow(menu); err != nil {
 		log.Warn("菜单更新失败, %v", err)
-		c.JSON(http.StatusNotAcceptable, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusNotAcceptable,
 			"message": fmt.Sprintf("菜单更新失败, %v", err),
 			"data":    "",
@@ -118,7 +118,7 @@ func menuUpdate(c *gin.Context) {
 func menuDel(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
 			"message": "请求数据格式错误",
 			"data":    "",
@@ -131,8 +131,8 @@ func menuDel(c *gin.Context) {
 	err = db.Delete(menu, "id = ?", menu.Id)
 	if err != nil {
 		log.Warn("菜单删除失败")
-		c.JSON(http.StatusNoContent, gin.H{
-			"code":    http.StatusNoContent,
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusNotAcceptable,
 			"message": "菜单删除失败",
 			"data":    "",
 		})

@@ -35,7 +35,9 @@ request.interceptors.response.use(
       return response.data
    },
    async (err) => {
-      if (!err.response) return Promise.reject(err)
+      if (!err.response) {
+         return Promise.reject(err)
+      }
 
       // Token过期
       if (err.response.status === 401) {
