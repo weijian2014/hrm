@@ -119,6 +119,11 @@ const handleSave = async () => {
          // 转换Golang一致的类型
          rawFormData.value.phone = rawFormData.value.phone.toString()
          rawFormData.value.security_card = rawFormData.value.security_card.toString()
+         posts.value.forEach((item) => {
+            if (item.name === rawFormData.value.post) {
+               rawFormData.value.post_id = item.id
+            }
+         })
 
          console.log("handleSave", rawFormData.value)
          if (props.title === "修改员工") {

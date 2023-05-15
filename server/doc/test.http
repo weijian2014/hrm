@@ -9,7 +9,7 @@ Content-Type: application/json
 
 {
    "username": "admin",
-   "password": "123456"
+   "password": "12345678"
 }
 
 ### 刷新Admin Token
@@ -88,6 +88,10 @@ GET http://{{host}}/menu/list
 Content-Type: application/json
 Authorization: {{adminAccessToken}}
 
+### 获取员工
+GET http://{{host}}/employee/list
+Content-Type: application/json
+Authorization: {{adminAccessToken}}
 
 ### 增加员工
 POST http://{{host}}/employee/add

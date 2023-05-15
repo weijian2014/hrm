@@ -268,8 +268,7 @@ func Init(adminUsername, adminPassword string) error {
 		employees[i].Birthday = time.Now().AddDate(-age, 0, 0)
 		employees[i].FirstWorkTime = time.Now().AddDate(-(age - 20), 0, 0)
 		employees[i].Salary = uint64(age * 200)
-		posts := []string{"保安", "消防", "前台", "后勤", "保洁", "经理", "财务", "行政"}
-		employees[i].Post = posts[rand.Intn(len(posts))]
+		employees[i].PostId = uint64(rand.Intn(len(p)-1) + 1)
 		ss := []string{"有", "无"}
 		employees[i].SocialSecurity = ss[rand.Intn(len(ss))]
 		employees[i].Phone = fmt.Sprintf("138%v%v", rand.Intn(9999-1000)+1000, rand.Intn(9999-1000)+1000)
@@ -348,14 +347,34 @@ func Take(output interface{}, query interface{}, args ...interface{}) error {
 
 // 根据conds查找
 // 找不到记录时不返回错误
-// limit 为限制获取的行数, -1表示不限制, 相当于select *
-func Find(output interface{}, limit int, conds ...interface{}) error {
+// limit 为限制获取的行数, -1表示不限制
+func Find1(output interface{}, limit int, conds ...interface{}) error {
 	db, err := getDb()
 	if err != nil {
 		return err
 	}
 
 	result := db.Limit(limit).Find(output, conds...)
+	if limit != -1 && result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	} else {
+		return result.Error
+	}
+}
+
+// 根据conds查找
+// 找不到记录时不返回错误
+// join 连接的表名 string
+// joinConds 连接的条件 string
+// limit 为限制获取的行数, -1表示不限制
+// 查询条件
+func Find2(output interface{}, join string, joinConds interface{}, limit int, conds ...interface{}) error {
+	db, err := getDb()
+	if err != nil {
+		return err
+	}
+
+	result := db.Joins(join, joinConds).Limit(limit).Find(output, conds...)
 	if limit != -1 && result.RowsAffected == 0 {
 		return gorm.ErrRecordNotFound
 	} else {

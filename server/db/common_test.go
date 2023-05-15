@@ -285,7 +285,7 @@ func Test_Take(t *testing.T) {
 func Test_Find(t *testing.T) {
 	output1 := new(User)
 	// 第一条匹配的行
-	err := Find(output1, 1, "name = ?", user1.Name)
+	err := Find1(output1, 1, "name = ?", user1.Name)
 	if err != nil {
 		t.Error(err)
 		t.FailNow()
@@ -297,7 +297,7 @@ func Test_Find(t *testing.T) {
 	t.Logf("Find row[%+v]", output1)
 
 	output2 := new(User)
-	err = Find(output2, -1, "name = ?", user2.Name)
+	err = Find1(output2, -1, "name = ?", user2.Name)
 	if err != nil {
 		t.Error(err)
 		t.FailNow()
@@ -310,7 +310,7 @@ func Test_Find(t *testing.T) {
 
 	// 只使用id(主键), 不需要其它查询条件即可找到
 	output3 := &User{Id: 1}
-	err = Find(output3, 1, "")
+	err = Find1(output3, 1, "")
 	if err != nil {
 		t.Error(err)
 		t.FailNow()
@@ -319,7 +319,7 @@ func Test_Find(t *testing.T) {
 
 	// 找不到记录, 返回 ErrRecordNotFound 错误
 	output4 := new(User)
-	err = Find(output4, 1, "name = ?", "unknown")
+	err = Find1(output4, 1, "name = ?", "unknown")
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		t.Error(err)
 		t.FailNow()
@@ -327,7 +327,7 @@ func Test_Find(t *testing.T) {
 
 	// 查找多条1
 	outputs1 := new([]User)
-	err = Find(&outputs1, 3, "name = ?", user1.Name)
+	err = Find1(&outputs1, 3, "name = ?", user1.Name)
 	if err != nil || len(*outputs1) != 2 {
 		t.Error(err)
 		t.FailNow()
@@ -335,7 +335,7 @@ func Test_Find(t *testing.T) {
 	t.Logf("Find rows[%+v]", outputs1)
 
 	outputs2 := new([]User)
-	err = Find(&outputs2, -1)
+	err = Find1(&outputs2, -1)
 	if err != nil || len(*outputs2) != 3 {
 		t.Error(err)
 		t.FailNow()

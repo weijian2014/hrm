@@ -23,7 +23,7 @@ func registerMenuRouter(r *gin.Engine) {
 
 func menuList(c *gin.Context) {
 	menus := new([]db.Menu)
-	err := db.Find(menus, -1)
+	err := db.Find1(menus, -1)
 	if err != nil {
 		log.Warn("菜单信息获取失败, %v", err)
 		c.JSON(http.StatusNotFound, gin.H{

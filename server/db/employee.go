@@ -19,7 +19,8 @@ type Employee struct {
 	CurrentAddress  string    `json:"current_address" description:"现住址"`
 	FirstWorkTime   time.Time `json:"first_work_time" description:"首次工作"`
 	FormerEmployer  string    `json:"former_employer" description:"原单位"`
-	Post            string    `json:"post" description:"岗位"`
+	PostId          uint64    `json:"post_id" description:"岗位ID"`
+	Post            Post      `json:"post" description:"岗位" gorm:"foreignKey:PostId"`
 	Salary          uint64    `json:"salary" description:"工资"`
 	SecurityCard    string    `json:"security_card" description:"保安证"`
 	Comments        string    `json:"comments" description:"备注"`

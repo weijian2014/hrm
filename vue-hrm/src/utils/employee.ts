@@ -3,7 +3,7 @@ import type { PromiseResponse } from "@/utils/common"
 
 interface EmployeeListResponseData {
    total: number
-   rows: Employee[]
+   employees: Employee[]
 }
 export const employeeListApi = (): PromiseResponse<EmployeeListResponseData> => request.get("/employee/list")
 

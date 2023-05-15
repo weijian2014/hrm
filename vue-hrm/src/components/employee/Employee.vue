@@ -27,7 +27,7 @@ const refresh = async () => {
       .then((res) => {
          if (res.code === 200) {
             console.log(res)
-            tableData.value = res.data.rows
+            tableData.value = res.data.employees
             tableRows.value = res.data.total
             currentPage.value = 1
          }
@@ -74,7 +74,7 @@ watch(
          await employeeSearchApi({ key: newValue })
             .then((res) => {
                if (res.code === 200) {
-                  tableData.value = res.data.rows
+                  tableData.value = res.data.employees
                   tableRows.value = res.data.total
                }
             })

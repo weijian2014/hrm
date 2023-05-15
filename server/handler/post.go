@@ -23,7 +23,7 @@ func registerPostRouter(r *gin.Engine) {
 
 func postList(c *gin.Context) {
 	posts := new([]db.Post)
-	err := db.Find(posts, -1)
+	err := db.Find1(posts, -1)
 	if err != nil {
 		log.Warn("岗位信息获取失败, %v", err)
 		c.JSON(http.StatusNotFound, gin.H{

@@ -13,6 +13,7 @@ interface Employee {
    current_address: string
    first_work_time: string
    former_employer: string
+   post_id: number
    post: string
    salary: number
    security_card: string
