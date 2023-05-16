@@ -18,11 +18,11 @@ export default class Validator {
       }
       //区位码校验
       //出生年月日校验   前正则限制起始年份为1900;
-      var year = id.substr(6, 4), //身份证年
-         month = id.substr(10, 2), //身份证月
-         date = id.substr(12, 2), //身份证日
+      var year = Number(id.substring(6, 10)), //身份证年
+         month = Number(id.substring(10, 12)), //身份证月
+         date = Number(id.substring(12, 14)), //身份证日
          time = Date.parse(month + "-" + date + "-" + year), //身份证日期时间戳date
-         now_time = Date.parse(new Date()), //当前时间戳
+         now_time = Date.parse(new Date().toString()), //当前时间戳
          dates = new Date(year, month, 0).getDate() //身份证当月天数
       if (time > now_time || date > dates) {
          return false
@@ -33,7 +33,7 @@ export default class Validator {
       var id_array = id.split("")
       var sum = 0
       for (var k = 0; k < 17; k++) {
-         sum += parseInt(id_array[k]) * parseInt(c[k])
+         sum += parseInt(id_array[k]) * c[k]
       }
       if (id_array[17].toUpperCase() != b[sum % 11].toUpperCase()) {
          return false
@@ -60,7 +60,7 @@ const isHeightValid = (rule: unknown, value: string | undefined, callback: (msg?
    }
 
    let h = Number(value)
-   if (h < 120 || h > 230) {
+   if (isNaN(h) || h < 120 || h > 230) {
       callback("身高在120~230厘米之间")
       return
    }
@@ -75,7 +75,7 @@ const isWeightValid = (rule: unknown, value: string | undefined, callback: (msg?
    }
 
    let w = Number(value)
-   if (w < 40 || w > 130) {
+   if (isNaN(w) || w < 40 || w > 130) {
       callback("体重在40~130公斤之间")
       return
    }
@@ -124,7 +124,13 @@ const isPhoneValid = (rule: unknown, value: string | undefined, callback: (msg?:
 }
 
 const isSecurityCardValid = (rule: unknown, value: string | undefined, callback: (msg?: string) => void) => {
-   const securityCardString = value?.toString()
+   let s = Number(value)
+   if (isNaN(s) || s < 0) {
+      callback("保安证是6~10位数字")
+      return
+   }
+
+   const securityCardString = s?.toString()
    if (securityCardString && (securityCardString.length < 6 || securityCardString.length > 10)) {
       callback("保安证是6~10位数字")
       return
@@ -140,7 +146,7 @@ const isSalaryValid = (rule: unknown, value: string | undefined, callback: (msg?
    }
 
    let s = Number(value)
-   if (s < 0) {
+   if (isNaN(s) || s <= 0) {
       callback("工资是大于等于0的数字, 单位人民币元")
       return
    }
