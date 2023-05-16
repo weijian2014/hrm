@@ -76,6 +76,7 @@ watch(
                if (res.code === 200) {
                   tableData.value = res.data.employees
                   tableRows.value = res.data.total
+                  currentPage.value = 1
                }
             })
             .catch((err) => {
