@@ -53,10 +53,10 @@ func employeeList(c *gin.Context) {
 		"Post.id == Employee.post_id",
 		-1)
 	if err != nil {
-		log.Warn("职工信息获取失败, %v", err)
+		log.Warn("员工信息获取失败, %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusNoContent,
-			"message": fmt.Sprintf("职工信息获取失败, %v", err),
+			"message": fmt.Sprintf("员工信息获取失败, %v", err),
 			"data":    "",
 		})
 		c.Abort()
@@ -66,7 +66,7 @@ func employeeList(c *gin.Context) {
 	ers := convertToClient(*employees)
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"message": "职工信息获取成功",
+		"message": "员工信息获取成功",
 		"data": gin.H{
 			"total":     len(ers),
 			"employees": ers,
@@ -101,10 +101,10 @@ func employeeSearch(c *gin.Context) {
 		"employees.name || gender || birthday || height || weight || degree || identifier || phone || political_status || social_security || current_address || first_work_time || former_employer || Post.name || salary || security_card || comments like ?",
 		"%"+r.Key+"%")
 	if err != nil {
-		log.Warn("职工信息获取失败, %v", err)
+		log.Warn("员工信息获取失败, %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusNoContent,
-			"message": fmt.Sprintf("职工信息获取失败, %v", err),
+			"message": fmt.Sprintf("员工信息获取失败, %v", err),
 			"data":    "",
 		})
 		c.Abort()
@@ -114,7 +114,7 @@ func employeeSearch(c *gin.Context) {
 	ers := convertToClient(*employees)
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"message": "职工信息获取成功",
+		"message": "员工信息获取成功",
 		"data": gin.H{
 			"total":     len(ers),
 			"employees": ers,
@@ -149,10 +149,10 @@ func employeeAdd(c *gin.Context) {
 
 	e := convertToServer([]EmployeeWithClient{*r})
 	if err := db.Insert(&e[0]); err != nil {
-		log.Warn("职工增加失败, %v", err)
+		log.Warn("员工增加失败, %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusNotAcceptable,
-			"message": fmt.Sprintf("职工增加失败, %v", err),
+			"message": fmt.Sprintf("员工增加失败, %v", err),
 			"data":    "",
 		})
 		c.Abort()
@@ -161,7 +161,7 @@ func employeeAdd(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"message": "职工增加成功",
+		"message": "员工增加成功",
 		"data":    "",
 	})
 }
@@ -193,10 +193,10 @@ func employeeUpdate(c *gin.Context) {
 
 	e := convertToServer([]EmployeeWithClient{*r})
 	if err := db.UpdateRow(&e[0]); err != nil {
-		log.Warn("职工更新失败, %v", err)
+		log.Warn("员工更新失败, %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusNotAcceptable,
-			"message": fmt.Sprintf("职工更新失败, %v", err),
+			"message": fmt.Sprintf("员工更新失败, %v", err),
 			"data":    "",
 		})
 		c.Abort()
@@ -205,7 +205,7 @@ func employeeUpdate(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"message": "职工更新成功",
+		"message": "员工更新成功",
 		"data":    "",
 	})
 }
@@ -225,10 +225,10 @@ func employeeDel(c *gin.Context) {
 	m := &db.Employee{Id: id}
 	err = db.Delete(m, "id = ?", m.Id)
 	if err != nil {
-		log.Warn("职工删除失败")
+		log.Warn("员工删除失败")
 		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusNotAcceptable,
-			"message": "职工删除失败",
+			"message": "员工删除失败",
 			"data":    "",
 		})
 		c.Abort()
@@ -237,7 +237,7 @@ func employeeDel(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"message": "职工删除成功",
+		"message": "员工删除成功",
 		"data":    "",
 	})
 }

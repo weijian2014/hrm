@@ -442,7 +442,7 @@ const handleSizeChange = (value: number) => {
          <el-col class="ml-8" :span="1">
             <el-popover placement="right-end" title="列筛选" :width="300" trigger="click">
                <template #reference>
-                  <el-button type="primary" style="vertical-align: middle"><IEpPlus />列筛选</el-button>
+                  <el-button type="primary" style="vertical-align: middle"><IEpFinished />列筛选</el-button>
                </template>
                <el-checkbox-group v-model="checkList" @change="handleCheckedChange" :min="6" :max="17">
                   <el-checkbox

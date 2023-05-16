@@ -58,6 +58,7 @@ declare module '@vue/runtime-core' {
     IEpDelete: typeof import('~icons/ep/delete')['default']
     IEpDownload: typeof import('~icons/ep/download')['default']
     IEpExpand: typeof import('~icons/ep/expand')['default']
+    IEpFinished: typeof import('~icons/ep/finished')['default']
     IEpFold: typeof import('~icons/ep/fold')['default']
     IEpKey: typeof import('~icons/ep/key')['default']
     IEpLock: typeof import('~icons/ep/lock')['default']

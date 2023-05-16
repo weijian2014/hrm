@@ -131,30 +131,32 @@ const handleSave = async () => {
                .then((res) => {
                   if (res.code === 200) {
                      console.log(res)
-                     emits("save", props.title + "成功")
-                     isLoading.value = false
+                     emits("save", res.message)
                   }
                })
                .catch((res) => {
                   console.log(res)
-                  isLoading.value = false
-                  ElMessage.error(props.title + "失败, " + res)
+                  ElMessage.error(res.message)
                   return new Promise(() => {})
+               })
+               .finally(() => {
+                  isLoading.value = false
                })
          } else {
             await employeeAddApi(rawFormData.value)
                .then((res) => {
                   if (res.code === 200) {
                      console.log(res)
-                     emits("save", props.title + "成功")
-                     isLoading.value = false
+                     emits("save", res.message)
                   }
                })
                .catch((res) => {
                   console.log(res)
-                  isLoading.value = false
-                  ElMessage.error(props.title + "失败, " + res)
+                  ElMessage.error(res.message)
                   return new Promise(() => {})
+               })
+               .finally(() => {
+                  isLoading.value = false
                })
          }
       })
@@ -269,12 +271,13 @@ const handleChange = async (file: UploadFile, files: UploadFiles) => {
          // 清除校验信息
          formRef.value?.clearValidate()
          rawFormData.value = employee
-         isLoading.value = false
       })
       .catch((error) => {
-         isLoading.value = false
          ElMessage.error(file.name + "读取失败, " + error)
          return new Promise(() => {})
+      })
+      .finally(() => {
+         isLoading.value = false
       })
 }
 
