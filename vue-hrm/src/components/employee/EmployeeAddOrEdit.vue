@@ -568,21 +568,28 @@ const postOptions = computed(() => {
          </el-row>
       </el-form>
       <el-upload
+         v-if="!isImportDisabled"
          v-model.file-list="fileList"
+         drag
          accept=".xls, .xlsx"
          :multiple="false"
          :show-file-list="false"
          :auto-upload="false"
          :disabled="isImportDisabled"
          :on-change="handleChange">
-         <template #trigger>
-            <el-button class="ml-130" type="primary" :loading="isLoading" :disabled="isImportDisabled"
-               >导入表格</el-button
-            >
+         <el-icon class="el-icon--upload"><IEpUploadFilled /></el-icon>
+         <div class="el-upload__text">将表格拖拽到此处,或者<em>单击上传</em></div>
+         <template #tip>
+            <div class="el-upload__tip">支持.xls, .xlsx格式(请使用模板导入)</div>
          </template>
-         <el-button class="ml-3 mb-1.3" type="primary" :loading="isLoading" @click="handleSave">保存</el-button>
-         <el-button class="mb-1.3" type="danger" :loading="isLoading" @click="handleCancel">取消</el-button>
       </el-upload>
+
+      <template #footer>
+         <span class="dialog-footer">
+            <el-button type="primary" :loading="isLoading" @click="handleSave">保存</el-button>
+            <el-button type="danger" :loading="isLoading" @click="handleCancel">取消</el-button>
+         </span>
+      </template>
    </el-dialog>
 </template>
 

@@ -73,6 +73,7 @@ declare module '@vue/runtime-core' {
     IEpStamp: typeof import("~icons/ep/stamp")["default"]
     IEpSwitch: typeof import('~icons/ep/switch')['default']
     IEpUpload: typeof import("~icons/ep/upload")["default"]
+    IEpUploadFilled: typeof import('~icons/ep/upload-filled')['default']
     IEpUser: typeof import('~icons/ep/user')['default']
     IEpUserFilled: typeof import("~icons/ep/user-filled")["default"]
     Layout: typeof import('./components/layout/Layout.vue')['default']
