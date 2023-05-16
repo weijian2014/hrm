@@ -50,7 +50,7 @@ func employeeList(c *gin.Context) {
 	employees := new([]db.Employee)
 	err := db.Find2(employees,
 		"Post",
-		"Post.id == Employee.id",
+		"Post.id == Employee.post_id",
 		-1)
 	if err != nil {
 		log.Warn("职工信息获取失败, %v", err)
@@ -96,9 +96,9 @@ func employeeSearch(c *gin.Context) {
 	// 模糊查询
 	err := db.Find2(employees,
 		"Post",
-		"Post.id == Employee.id",
+		"Post.id == Employee.post_id",
 		-1,
-		"name || gender || birthday || height || weight || degree || identifier || phone || political_status || social_security || current_address || first_work_time || former_employer || post || salary || security_card || comments like ?",
+		"employees.name || gender || birthday || height || weight || degree || identifier || phone || political_status || social_security || current_address || first_work_time || former_employer || Post.name || salary || security_card || comments like ?",
 		"%"+r.Key+"%")
 	if err != nil {
 		log.Warn("职工信息获取失败, %v", err)
