@@ -18,6 +18,13 @@
          "@build/*": ["build/*"]
       }
    },
-   "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "auto-imports.d.tsx", "components.d.ts"],
+   "include": [
+      "env.d.ts",
+      "src/**/*",
+      "src/**/*.vue",
+      "auto-imports.d.tsx",
+      "components.d.ts",
+      "public/static/components"
+   ],
    "references": [{ "path": "./tsconfig.node.json" }]
 }

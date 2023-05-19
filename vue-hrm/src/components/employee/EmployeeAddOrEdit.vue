@@ -96,6 +96,17 @@ watch(
    }
 )
 
+// 下载员工信息模板
+const handleDownload = () => {
+   let a = document.createElement("a")
+   a.href = "../static/template/employee.xlsx"
+   a.download = "员工信息模板" + ".xlsx"
+   a.style.display = "none"
+   document.body.appendChild(a)
+   a.click()
+   document.body.removeChild(a)
+}
+
 // el-form组件对象, 自动关联到el-form组件
 // const formRef = ref<FormInstance>()
 const formRef = ref()
@@ -577,15 +588,15 @@ const postOptions = computed(() => {
          :auto-upload="false"
          :disabled="isImportDisabled"
          :on-change="handleChange">
-         <el-icon class="el-icon--upload"><IEpUploadFilled /></el-icon>
-         <div class="el-upload__text">将表格拖拽到此处,或者<em>单击上传</em></div>
-         <template #tip>
+         <!-- <el-icon :size="26" class="el-icon--upload"><IEpUploadFilled /></el-icon> -->
+         <h1 class="el-upload__text">支持.xls, .xlsx格式, 将表格(员工信息模板)拖拽到此处,或者<em>单击上传</em></h1>
+         <!-- <template #tip>
             <div class="el-upload__tip">支持.xls, .xlsx格式(请使用模板导入)</div>
-         </template>
+         </template> -->
       </el-upload>
-
       <template #footer>
          <span class="dialog-footer">
+            <el-button type="primary" :loading="isLoading" @click="handleDownload">下载模板</el-button>
             <el-button type="primary" :loading="isLoading" @click="handleSave">保存</el-button>
             <el-button type="danger" :loading="isLoading" @click="handleCancel">取消</el-button>
          </span>
@@ -593,4 +604,21 @@ const postOptions = computed(() => {
    </el-dialog>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+// ::v-deep .el-upload {
+//    width: 100%;
+//    height: 56px;
+//    text-align: center;
+//    line-height: 56px;
+
+//    .h1 {
+//       text-align: center;
+//       margin: 0 auto;
+//    }
+// }
+
+// ::v-deep .el-upload .el-upload-dragger {
+//    width: 100%;
+//    height: 30%;
+// }
+</style>
