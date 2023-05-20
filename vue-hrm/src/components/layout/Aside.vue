@@ -21,11 +21,6 @@ const state = reactive<{
 
 const { isShow, title } = toRefs(state)
 
-const changeFn = async () => {
-   console.log("changeFn")
-   isShow.value = true
-}
-
 // 组件发送的保存事件
 const handleSave = async (message: string) => {
    isShow.value = false

@@ -10,7 +10,7 @@ import axios from "axios"
 import "virtual:windi.css"
 
 // 重置CSS样式, 放在App.vue的style中也行
-import "@/assets/css/reset.css"
+import "reset.css"
 
 // 使用promise.prototype.finally
 shim()

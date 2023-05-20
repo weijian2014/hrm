@@ -589,7 +589,7 @@ const postOptions = computed(() => {
          :disabled="isImportDisabled"
          :on-change="handleChange">
          <!-- <el-icon :size="26" class="el-icon--upload"><IEpUploadFilled /></el-icon> -->
-         <h1 class="el-upload__text">支持.xls, .xlsx格式, 将表格(员工信息模板)拖拽到此处,或者<em>单击上传</em></h1>
+         <h1 class="el-upload__text">支持.xls, .xlsx格式, 将表格(员工信息模板)拖拽到此处, 或者<em>单击上传</em></h1>
          <!-- <template #tip>
             <div class="el-upload__tip">支持.xls, .xlsx格式(请使用模板导入)</div>
          </template> -->

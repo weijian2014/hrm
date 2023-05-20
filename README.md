@@ -118,6 +118,9 @@ npm install @element-plus/icons-vue
 # 图标按需引入需要unplugin-icons和unplugin-auto-import
 npm install -D unplugin-vue-components unplugin-auto-import unplugin-icons
 
+# reset.css, 在main.ts中导入它
+npm install reset.css
+
 # 安装WindiCSS, https://cn.windicss.org/integrations/vite.html
 # 修改vite.config.js文件, [参考](https://cn.windicss.org/integrations/vite.html#install)
 # 修改main.js文件, [参考](https://cn.windicss.org/integrations/vite.html#install)
@@ -137,6 +140,9 @@ npm install --save xlsx-js-style
 
 # js-cookie, https://github.com/js-cookie/js-cookie
 npm i js-cookie
+
+# echarts, https://echarts.apache.org/zh/index.html
+npm install echarts --save
 
 # 更新package.json中的依赖
 npm outdated               # 列出需要升级的包
