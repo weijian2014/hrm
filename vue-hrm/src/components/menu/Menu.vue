@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import MenuAddOrEditVue from "./MenuAddOrEdit.vue"
 import { menuListApi } from "@/utils/menu"
-import MenuAddOrEdit from "./MenuAddOrEdit.vue"
 
 const state = reactive<{
    // 弹窗
@@ -91,14 +91,14 @@ const handleCancel = (message: string) => {
             </el-table-column>
          </el-table>
       </el-card>
-      <MenuAddOrEdit
+      <MenuAddOrEditVue
          :isShow="isShow"
          :title="title"
          :formData="rowData"
          :allMenu="menus"
          @save="handleSave"
          @cancel="handleCancel">
-      </MenuAddOrEdit>
+      </MenuAddOrEditVue>
    </div>
 </template>
 

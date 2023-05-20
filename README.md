@@ -142,7 +142,7 @@ npm install --save xlsx-js-style
 npm i js-cookie
 
 # echarts, https://echarts.apache.org/zh/index.html
-npm install echarts --save
+npm install echarts @types/echarts --save
 
 # 更新package.json中的依赖
 npm outdated               # 列出需要升级的包

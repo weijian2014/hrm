@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-import EmployeeAddOrEdit from "@/components/employee/EmployeeAddOrEdit.vue"
+import EmployeeAddOrEditVue from "@/components/employee/EmployeeAddOrEdit.vue"
+import EchartsVue from "@/components/echarts/CommonEcharts.vue"
+import type { ECOption } from "@/components/echarts/CommonEcharts.vue"
 import { employeeListApi, employeeSearchApi, employeeDeleteApi } from "@/utils/employee"
 import type { CheckboxValueType } from "element-plus"
 import { useSettings, useData, convertForExport } from "./index"
@@ -405,6 +407,34 @@ const handleSizeChange = (value: number) => {
    pageSize.value = value
    currentPage.value = 1
 }
+
+const options: ECOption = {
+   title: {
+      text: "岗位分布",
+      left: "center",
+      top: "center",
+   },
+   series: [
+      {
+         type: "pie",
+         data: [
+            {
+               value: 335,
+               name: "A",
+            },
+            {
+               value: 234,
+               name: "B",
+            },
+            {
+               value: 1548,
+               name: "C",
+            },
+         ],
+         radius: ["40%", "80%"],
+      },
+   ],
+}
 </script>
 
 <template>
@@ -517,40 +547,28 @@ const handleSizeChange = (value: number) => {
          @size-change="handleSizeChange"
          @current-change="handleCurrentChange" />
    </div>
-   <el-card class="box-card">
-      <template #header>
-         <div class="card-header">
-            <span>部门分布</span>
-            <el-button class="button" text>Operation button</el-button>
-         </div>
-      </template>
-      <div v-for="o in 4" :key="o" class="text item">{{ "List item " + o }}</div>
-   </el-card>
-   <EmployeeAddOrEdit
+   <el-row class="mt-6">
+      <el-col :span="6">
+         <EchartsVue :visible="true" :options="options"></EchartsVue>
+      </el-col>
+      <el-col :span="6">
+         <EchartsVue :visible="true" :options="options"></EchartsVue>
+      </el-col>
+      <el-col :span="6">
+         <EchartsVue :visible="true" :options="options"></EchartsVue>
+      </el-col>
+      <el-col :span="6">
+         <EchartsVue :visible="true" :options="options"></EchartsVue>
+      </el-col>
+   </el-row>
+
+   <EmployeeAddOrEditVue
       :isShow="isAddOrEditShow"
       :title="addOrEditTitle"
       :formData="addOrEditData"
       @save="handleSave"
       @cancel="handleCancel">
-   </EmployeeAddOrEdit>
+   </EmployeeAddOrEditVue>
 </template>
 
-<style lang="scss" scoped>
-.card-header {
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
-}
-
-.text {
-   font-size: 14px;
-}
-
-.item {
-   margin-bottom: 18px;
-}
-
-.box-card {
-   width: 480px;
-}
-</style>
+<style lang="scss" scoped></style>

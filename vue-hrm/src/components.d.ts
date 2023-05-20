@@ -11,6 +11,7 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Aside: typeof import('./components/layout/Aside.vue')['default']
     ChangePassword: typeof import('./components/layout/ChangePassword.vue')['default']
+    CommonEcharts: typeof import('./components/echarts/CommonEcharts.vue')['default']
     ElAside: typeof import("element-plus/es")["ElAside"]
     ElAutoResizer: typeof import("element-plus/es")["ElAutoResizer"]
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -73,7 +74,7 @@ declare module '@vue/runtime-core' {
     IEpStamp: typeof import("~icons/ep/stamp")["default"]
     IEpSwitch: typeof import("~icons/ep/switch")["default"]
     IEpUpload: typeof import("~icons/ep/upload")["default"]
-    IEpUploadFilled: typeof import('~icons/ep/upload-filled')['default']
+    IEpUploadFilled: typeof import("~icons/ep/upload-filled")["default"]
     IEpUser: typeof import('~icons/ep/user')['default']
     IEpUserFilled: typeof import("~icons/ep/user-filled")["default"]
     Layout: typeof import('./components/layout/Layout.vue')['default']

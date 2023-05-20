@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router"
-import HomeView from "@/views/Home.vue"
 import LayoutVue from "@/components/layout/Layout.vue"
 import { useUserStore } from "@/store/user"
 
@@ -19,13 +18,13 @@ const router = createRouter({
          // 首页及其子页需要登录才能显示
          meta: { requiresAuth: true },
          children: [
-            {
-               // 首页默认显示的内容
-               path: "",
-               name: "statistics",
-               // 赖加载
-               component: () => import("@/components/statistics/Statistics.vue"),
-            },
+            // {
+            //    // 首页默认显示的内容
+            //    path: "",
+            //    name: "statistics",
+            //    // 赖加载
+            //    component: () => import("@/components/statistics/Statistics.vue"),
+            // },
             {
                path: "/employee",
                name: "employee",

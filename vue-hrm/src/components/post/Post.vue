@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import PostAddOrEditVue from "./PostAddOrEdit.vue"
 import { postListApi, postDeleteApi } from "@/utils/post"
-import PostAddOrEdit from "./PostAddOrEdit.vue"
 import moment from "moment"
 import { TableColumnCtx } from "element-plus"
 
@@ -150,14 +150,14 @@ const handleCancel = (message: string) => {
             </el-table-column>
          </el-table>
       </el-card>
-      <PostAddOrEdit
+      <PostAddOrEditVue
          :isShow="isShow"
          :title="title"
          :formData="rowData"
          :posts="posts"
          @save="handleSave"
          @cancel="handleCancel">
-      </PostAddOrEdit>
+      </PostAddOrEditVue>
    </div>
 </template>
 
