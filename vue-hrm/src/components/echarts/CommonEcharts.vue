@@ -60,7 +60,6 @@ const props = defineProps<{
 
 const chartRef = ref()
 onMounted(() => {
-   console.log("CommonEcharts")
    var chart = echarts.init(chartRef.value)
    if (props.options) {
       chart.setOption(props.options)

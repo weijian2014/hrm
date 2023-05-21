@@ -292,6 +292,9 @@ export function useData() {
    // 表格加载状态
    const isLoading = ref(true)
 
+   // 岗位
+   const posts = ref<Post[]>([] as Post[])
+
    return {
       tableRef,
       tableData,
@@ -303,6 +306,7 @@ export function useData() {
       addOrEditData,
       selections,
       isLoading,
+      posts,
    }
 }
 

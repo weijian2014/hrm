@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import EmployeeAddOrEditVue from "@/components/employee/EmployeeAddOrEdit.vue"
-import EchartsVue from "@/components/echarts/CommonEcharts.vue"
-import type { ECOption } from "@/components/echarts/CommonEcharts.vue"
+import EchartsVue, { ECOption } from "@/components/echarts/CommonEcharts.vue"
 import { employeeListApi, employeeSearchApi, employeeDeleteApi } from "@/utils/employee"
+import { postListApi } from "@/utils/post"
 import type { CheckboxValueType } from "element-plus"
 import { useSettings, useData, convertForExport } from "./index"
 import moment from "moment"
@@ -21,14 +21,28 @@ const {
    addOrEditData,
    selections,
    isLoading,
+   posts,
 } = useData()
 
 const refresh = async () => {
    isLoading.value = true
+
+   await postListApi()
+      .then((res) => {
+         if (res.code === 200) {
+            console.log("postListApi", res)
+            posts.value = res.data.posts
+         }
+      })
+      .catch((res) => {
+         console.log(res)
+         return new Promise(() => {})
+      })
+
    await employeeListApi()
       .then((res) => {
          if (res.code === 200) {
-            console.log(res)
+            console.log("employeeListApi", res)
             tableData.value = res.data.employees
             tableRows.value = res.data.total
             currentPage.value = 1
@@ -408,30 +422,132 @@ const handleSizeChange = (value: number) => {
    currentPage.value = 1
 }
 
-const options: ECOption = {
+// 男女比例
+const genderOptionData = ref([
+   { name: "男", value: 0 },
+   { name: "女", value: 0 },
+])
+watch(
+   () => tableData.value,
+   (newValue) => {
+      genderOptionData.value[0].value = 0
+      genderOptionData.value[1].value = 0
+      if (tableData.value) {
+         tableData.value.forEach((e) => {
+            if (e.gender === "男") {
+               genderOptionData.value[0].value += 1
+            } else {
+               genderOptionData.value[1].value += 1
+            }
+         })
+      }
+
+      console.log("genderOptionData", genderOptionData.value)
+   }
+)
+const genderOption: ECOption = {
    title: {
-      text: "岗位分布",
+      text: "男女比例",
       left: "center",
       top: "center",
    },
+   tooltip: {
+      trigger: "item",
+      formatter: "{b}{c}%",
+   },
+   series: {
+      type: "pie",
+      radius: [40, 70],
+      itemStyle: {
+         borderColor: "#fff",
+         borderWidth: 1,
+      },
+      color: ["#409eff", "#f89898"],
+      label: {
+         alignTo: "labelLine",
+         formatter: "{name|{b}}\n{time|{c} 人, 占比{d}% }",
+         minMargin: 5,
+         edgeDistance: 10,
+         lineHeight: 15,
+         rich: {
+            time: {
+               fontSize: 10,
+               color: "#999",
+            },
+         },
+      },
+      labelLine: {
+         length: 15,
+         length2: 0,
+         maxSurfaceAngle: 80,
+      },
+      data: genderOptionData.value,
+   },
+}
+
+// 岗位分布
+const postOptionDataX = ref<string[]>([])
+const postOptionDataY = ref<number[]>([])
+watch(
+   () => tableData.value,
+   (newValue) => {
+      if (tableData.value) {
+         if (postOptionDataX.value.length === 0) {
+            posts.value.forEach((p) => {
+               postOptionDataX.value.push(p.name)
+               postOptionDataY.value.push(0)
+            })
+         } else {
+            postOptionDataY.value.map((v, i) => {
+               postOptionDataY.value[i] = 0
+            })
+         }
+
+         tableData.value.forEach((e) => {
+            const index = postOptionDataX.value.indexOf(e.post)
+            if (index !== -1) {
+               postOptionDataY.value[index] += 1
+            }
+         })
+         console.log("postOptionData", postOptionDataX.value, postOptionDataY.value)
+      }
+   }
+)
+
+const postOption: ECOption = {
+   title: {
+      text: "岗位分布",
+      left: "center",
+   },
+   tooltip: {
+      trigger: "item",
+      formatter: "{b}{c}%",
+   },
+   xAxis: {
+      type: "category",
+      data: postOptionDataX.value,
+   },
+   yAxis: {
+      type: "value",
+   },
+   color: ["#409eff"],
    series: [
       {
-         type: "pie",
-         data: [
-            {
-               value: 335,
-               name: "A",
+         data: postOptionDataY.value,
+         type: "bar",
+         itemStyle: {
+            normal: {
+               label: {
+                  show: true, //开启显示数值
+                  position: "top", //数值在上方显示
+                  textStyle: {
+                     //数值样式
+                     color: "#409eff", //字体颜色
+                     fontSize: 14, //字体大小
+                  },
+               },
             },
-            {
-               value: 234,
-               name: "B",
-            },
-            {
-               value: 1548,
-               name: "C",
-            },
-         ],
-         radius: ["40%", "80%"],
+         },
       },
    ],
 }
@@ -549,16 +665,16 @@ const options: ECOption = {
    </div>
    <el-row class="mt-6">
       <el-col :span="6">
-         <EchartsVue :visible="true" :options="options"></EchartsVue>
+         <EchartsVue :visible="true" :options="genderOption"></EchartsVue>
       </el-col>
       <el-col :span="6">
-         <EchartsVue :visible="true" :options="options"></EchartsVue>
+         <EchartsVue :visible="true" :options="genderOption"></EchartsVue>
       </el-col>
       <el-col :span="6">
-         <EchartsVue :visible="true" :options="options"></EchartsVue>
+         <EchartsVue :visible="true" :options="postOption"></EchartsVue>
       </el-col>
       <el-col :span="6">
-         <EchartsVue :visible="true" :options="options"></EchartsVue>
+         <EchartsVue :visible="true" :options="genderOption"></EchartsVue>
       </el-col>
    </el-row>
 
@@ -566,6 +682,7 @@ const options: ECOption = {
       :isShow="isAddOrEditShow"
       :title="addOrEditTitle"
       :formData="addOrEditData"
+      :postData="posts"
       @save="handleSave"
       @cancel="handleCancel">
    </EmployeeAddOrEditVue>

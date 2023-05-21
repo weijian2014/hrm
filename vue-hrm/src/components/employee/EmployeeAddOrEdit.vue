@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { employeeUpdateApi, employeeAddApi } from "@/utils/employee"
-import { postListApi } from "@/utils/post"
 import { excelKeyPosition, excelValuePosition, readFile } from "./index"
 import { rules } from "./validation"
 import { toIsoString } from "@/utils/common"
@@ -13,6 +12,7 @@ const props = defineProps<{
    isShow: boolean
    title: string
    formData: Employee
+   postData: Post[]
 }>()
 
 // defineEmits定义了当前组件的事件, 可以向外部发送(通知外部组件)
@@ -130,7 +130,7 @@ const handleSave = async () => {
          // 转换Golang一致的类型
          rawFormData.value.phone = rawFormData.value.phone.toString()
          rawFormData.value.security_card = rawFormData.value.security_card.toString()
-         posts.value.forEach((item) => {
+         props.postData.forEach((item) => {
             if (item.name === rawFormData.value.post) {
                rawFormData.value.post_id = item.id
             }
@@ -397,22 +397,9 @@ const degreeOptions = [
    },
 ]
 
-const posts = ref<Post[]>([] as Post[])
-postListApi()
-   .then((res) => {
-      if (res.code === 200) {
-         console.log(res)
-         posts.value = res.data.posts
-      }
-   })
-   .catch((res) => {
-      console.log(res)
-      return new Promise(() => {})
-   })
-
 const postOptions = computed(() => {
    let p: any[] = []
-   posts.value.forEach((item) => {
+   props.postData.forEach((item) => {
       const o = {
          value: item.name,
          label: item.name,
