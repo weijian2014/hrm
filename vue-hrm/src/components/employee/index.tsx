@@ -410,13 +410,13 @@ function formatter(row: any, property: string, searchKey: string) {
       if (searchKey && dateStr.indexOf(searchKey) !== -1) {
          dateStr = dateStr.replace(searchKey, '<font color="red">' + searchKey + "</font>")
       }
-      const year = getAgeByBirthday(dateStr)
+      const age = getAgeByBirthday(dateStr)
       if (property === "birthday") {
          // 生日
-         return dateStr + " (" + year + "岁)"
+         return dateStr + " (" + age + "岁)"
       } else {
          // 首次工作
-         return dateStr + " (" + year + "年)"
+         return dateStr + " (" + age + "年)"
       }
    } else {
       if (searchKey && cellValue.indexOf(searchKey) !== -1) {

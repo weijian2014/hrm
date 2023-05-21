@@ -63,6 +63,7 @@ export const newDefaultEmployee = (): Employee => {
       current_address: "",
       first_work_time: new Date().toISOString(),
       former_employer: "",
+      post_id: 0,
       post: "",
       salary: 0,
       security_card: "",

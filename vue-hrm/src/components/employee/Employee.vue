@@ -6,6 +6,7 @@ import { postListApi } from "@/utils/post"
 import type { CheckboxValueType } from "element-plus"
 import { useSettings, useData, convertForExport } from "./index"
 import moment from "moment"
+import { getAgeByBirthday } from "@/utils/common"
 import XLSXS from "xlsx-js-style"
 
 const { table, columns, pagination, checkList } = useSettings()
@@ -429,6 +430,11 @@ watch(
       genderOptionData.value[0].value = 0
       genderOptionData.value[1].value = 0
 
+      // 年龄
+      ageOptionData.value.forEach((v, i) => {
+         ageOptionData.value[i].value = 0
+      })
+
       // 岗位
       if (postOptionDataX.value.length === 0) {
          posts.value.forEach((p) => {
@@ -446,6 +452,7 @@ watch(
          salaryOptionData.value[i].value = 0
       })
 
+      var index = 0
       if (tableData.value) {
          tableData.value.forEach((e) => {
             // 性别
@@ -455,8 +462,26 @@ watch(
                genderOptionData.value[1].value += 1
             }
 
+            // 年龄
+            const dateStr = moment(e.birthday).format("YYYY-MM-DD")
+            const age = getAgeByBirthday(dateStr)
+            if (age < 25) {
+               index = 0
+            } else if (age >= 25 && age < 30) {
+               index = 1
+            } else if (age >= 30 && age < 35) {
+               index = 2
+            } else if (age >= 35 && age < 40) {
+               index = 3
+            } else if (age >= 40 && age < 45) {
+               index = 4
+            } else {
+               index = 5
+            }
+            ageOptionData.value[index].value += 1
+
             // 岗位
-            var index = postOptionDataX.value.indexOf(e.post)
+            index = postOptionDataX.value.indexOf(e.post)
             if (index !== -1) {
                postOptionDataY.value[index] += 1
             }
@@ -480,10 +505,13 @@ watch(
       }
 
       console.log("genderOptionData", genderOptionData.value)
+      console.log("ageOptionData", ageOptionData.value)
+      console.log("postOptionData", postOptionDataX.value, postOptionDataY.value)
+      console.log("salaryOptionData", salaryOptionData.value)
    }
 )
 
-// 男女比例
+// 性别
 const genderOptionData = ref([
    { name: "男", value: 0 },
    { name: "女", value: 0 },
@@ -504,7 +532,6 @@ const genderOption: ECOption = {
          borderColor: "#fff",
          borderWidth: 1,
       },
-      color: ["#409eff", "#f89898"],
       label: {
          alignTo: "labelLine",
          formatter: "{name|{b}}\n{time|{c} 人}",
@@ -527,12 +554,54 @@ const genderOption: ECOption = {
    },
 }
 
-// 岗位分布
+// 年龄
+const ageOptionData = ref<{ value: number; name: string }[]>([
+   { value: 0, name: "25岁以下" },
+   { value: 0, name: "25~30岁" },
+   { value: 0, name: "30~35岁" },
+   { value: 0, name: "35~40岁" },
+   { value: 0, name: "40~45岁" },
+   { value: 0, name: "45岁以上" },
+])
+const ageOption: ECOption = {
+   tooltip: {
+      trigger: "item",
+   },
+   legend: {
+      top: "5%",
+      left: "center",
+   },
+   series: [
+      {
+         name: "Access From",
+         type: "pie",
+         radius: ["40%", "70%"],
+         avoidLabelOverlap: false,
+         label: {
+            show: false,
+            position: "center",
+         },
+         emphasis: {
+            label: {
+               show: true,
+               fontSize: 40,
+               fontWeight: "bold",
+            },
+         },
+         labelLine: {
+            show: false,
+         },
+         data: ageOptionData.value,
+      },
+   ],
+}
+
+// 岗位
 const postOptionDataX = ref<string[]>([])
 const postOptionDataY = ref<number[]>([])
 const postOption: ECOption = {
    title: {
-      text: "岗位分布",
+      text: "岗位结构",
       left: "center",
    },
    tooltip: {
@@ -546,29 +615,31 @@ const postOption: ECOption = {
    yAxis: {
       type: "value",
    },
-   color: ["#409eff"],
    series: [
       {
          data: postOptionDataY.value,
          type: "bar",
+         label: {
+            show: true,
+            formatter: "{c}人", // 显示数值
+            position: "top", // 数值在柱体上方
+         },
          itemStyle: {
-            normal: {
-               label: {
-                  show: true, //开启显示数值
-                  position: "top", //数值在上方显示
-                  textStyle: {
-                     //数值样式
-                     color: "#409eff", //字体颜色
-                     fontSize: 14, //字体大小
-                  },
-               },
+            // 定制显示（按顺序）
+            color: function (params) {
+               var colorList = ["#5c7bd9", "#91cc75", "#ffdc60", "#ee6666", "#73c0de", "#3ba272"]
+               return colorList[params.dataIndex]
             },
+         },
+         labelLine: {
+            length: 15,
+            length2: 0,
          },
       },
    ],
 }
 
-// 工资结构
+// 工资
 const salaryOptionData = ref<{ value: number; name: string }[]>([
    { value: 0, name: "4000元以下" },
    { value: 0, name: "4000~5000元" },
@@ -585,15 +656,6 @@ const salaryOption: ECOption = {
    tooltip: {
       trigger: "item",
       formatter: "{c}%",
-   },
-   toolbox: {
-      show: true,
-      feature: {
-         mark: { show: true },
-         dataView: { show: true, readOnly: false },
-         restore: { show: true },
-         saveAsImage: { show: true },
-      },
    },
    series: [
       {
@@ -739,7 +801,7 @@ const salaryOption: ECOption = {
          <EchartsVue :visible="true" :options="genderOption"></EchartsVue>
       </el-col>
       <el-col :span="6">
-         <EchartsVue :visible="true" :options="genderOption"></EchartsVue>
+         <EchartsVue :visible="true" :options="ageOption"></EchartsVue>
       </el-col>
       <el-col :span="6">
          <EchartsVue :visible="true" :options="postOption"></EchartsVue>
