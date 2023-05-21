@@ -538,7 +538,7 @@ const genderOption: ECOption = {
    },
    tooltip: {
       trigger: "item",
-      formatter: "{c}%",
+      formatter: "{b}: {c}人, 占{d}%",
    },
    series: {
       type: "pie",
@@ -585,7 +585,7 @@ const ageOption: ECOption = {
    },
    tooltip: {
       trigger: "item",
-      formatter: "{c}%",
+      formatter: "{b}: {c}人, 占{d}%",
    },
    legend: {
       show: false,
@@ -631,7 +631,7 @@ const postOption: ECOption = {
    },
    tooltip: {
       trigger: "item",
-      formatter: "{c}%",
+      formatter: "{b}: {c}人, 占{d}%",
    },
    xAxis: {
       type: "category",
@@ -680,7 +680,7 @@ const salaryOption: ECOption = {
    },
    tooltip: {
       trigger: "item",
-      formatter: "{c}%",
+      formatter: "{b}: {c}人, 占{d}%",
    },
    series: [
       {
