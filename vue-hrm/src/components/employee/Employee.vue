@@ -137,9 +137,9 @@ const handleCheckedChange = (values: CheckboxValueType[]) => {
 }
 
 // 表格缩放
-const radioValue = ref("正常")
+const tableSize = ref("正常")
 watch(
-   () => radioValue.value,
+   () => tableSize.value,
    (newValue) => {
       if (newValue == "缩小") {
          table.size = "small"
@@ -147,6 +147,21 @@ watch(
          table.size = "default"
       } else {
          table.size = "large"
+      }
+   }
+)
+
+// 统计图表
+const isChartVisable = ref(true)
+const echartsVisableValue = ref("显示图表")
+watch(
+   () => echartsVisableValue.value,
+   (newValue) => {
+      if (newValue === "隐藏图表") {
+         isChartVisable.value = false
+      } else {
+         // 显示图表
+         isChartVisable.value = true
       }
    }
 )
@@ -436,14 +451,14 @@ watch(
       })
 
       // 岗位
-      if (postOptionDataX.value.length === 0) {
+      if (postOptionData.value.x.length === 0) {
          posts.value.forEach((p) => {
-            postOptionDataX.value.push(p.name)
-            postOptionDataY.value.push(0)
+            postOptionData.value.x.push(p.name)
+            postOptionData.value.y.push(0)
          })
       } else {
-         postOptionDataY.value.map((v, i) => {
-            postOptionDataY.value[i] = 0
+         postOptionData.value.y.map((v, i) => {
+            postOptionData.value.y[i] = 0
          })
       }
 
@@ -481,9 +496,9 @@ watch(
             ageOptionData.value[index].value += 1
 
             // 岗位
-            index = postOptionDataX.value.indexOf(e.post)
+            index = postOptionData.value.x.indexOf(e.post)
             if (index !== -1) {
-               postOptionDataY.value[index] += 1
+               postOptionData.value.y[index] += 1
             }
 
             // 工资
@@ -506,7 +521,7 @@ watch(
 
       console.log("genderOptionData", genderOptionData.value)
       console.log("ageOptionData", ageOptionData.value)
-      console.log("postOptionData", postOptionDataX.value, postOptionDataY.value)
+      console.log("postOptionData", postOptionData.value)
       console.log("salaryOptionData", salaryOptionData.value)
    }
 )
@@ -527,7 +542,7 @@ const genderOption: ECOption = {
    },
    series: {
       type: "pie",
-      radius: [40, 70],
+      radius: [30, 60],
       itemStyle: {
          borderColor: "#fff",
          borderWidth: 1,
@@ -564,41 +579,51 @@ const ageOptionData = ref<{ value: number; name: string }[]>([
    { value: 0, name: "45岁以上" },
 ])
 const ageOption: ECOption = {
+   title: {
+      text: "年龄结构",
+      left: "center",
+   },
    tooltip: {
       trigger: "item",
+      formatter: "{c}%",
    },
    legend: {
-      top: "5%",
-      left: "center",
+      show: false,
+      orient: "vertical",
+      left: "left",
    },
    series: [
       {
          name: "Access From",
          type: "pie",
-         radius: ["40%", "70%"],
-         avoidLabelOverlap: false,
+         radius: "60%",
+         data: ageOptionData.value,
          label: {
-            show: false,
-            position: "center",
-         },
-         emphasis: {
-            label: {
-               show: true,
-               fontSize: 40,
-               fontWeight: "bold",
+            alignTo: "labelLine",
+            formatter: "{name|{b}}\n{time|{c} 人}",
+            minMargin: 5,
+            edgeDistance: 10,
+            lineHeight: 15,
+            rich: {
+               time: {
+                  fontSize: 10,
+                  color: "#999",
+               },
             },
          },
-         labelLine: {
-            show: false,
+         emphasis: {
+            itemStyle: {
+               shadowBlur: 20,
+               shadowOffsetX: 0,
+               shadowColor: "rgba(0, 0, 0, 0.5)",
+            },
          },
-         data: ageOptionData.value,
       },
    ],
 }
 
 // 岗位
-const postOptionDataX = ref<string[]>([])
-const postOptionDataY = ref<number[]>([])
+const postOptionData = ref<{ x: string[]; y: number[] }>({ x: [], y: [] })
 const postOption: ECOption = {
    title: {
       text: "岗位结构",
@@ -610,14 +635,14 @@ const postOption: ECOption = {
    },
    xAxis: {
       type: "category",
-      data: postOptionDataX.value,
+      data: postOptionData.value.x,
    },
    yAxis: {
       type: "value",
    },
    series: [
       {
-         data: postOptionDataY.value,
+         data: postOptionData.value.y,
          type: "bar",
          label: {
             show: true,
@@ -690,7 +715,7 @@ const salaryOption: ECOption = {
    <div>
       <!-- 表头工具 -->
       <el-row class="mb-2">
-         <el-col :span="7">
+         <el-col :span="5">
             <el-button type="primary" @click="handleAddOrImport">
                <IEpPlus />
                <span>新增或导入</span>
@@ -704,7 +729,7 @@ const salaryOption: ECOption = {
                <span>批量删除</span>
             </el-button>
          </el-col>
-         <el-col :span="7">
+         <el-col :span="6">
             <!-- v-model.trim 去掉左右两侧的空格 -->
             <el-input v-model.trim="searchInputValue" placeholder="" clearable>
                <template #suffix> </template>
@@ -713,7 +738,7 @@ const salaryOption: ECOption = {
                ></template>
             </el-input>
          </el-col>
-         <el-col class="ml-4" :span="1">
+         <el-col class="ml-2" :span="1">
             <el-button type="primary">
                <IEpRefresh />
                <span style="vertical-align: middle" @click="handleRefresh">刷新</span>
@@ -736,11 +761,17 @@ const salaryOption: ECOption = {
                </el-checkbox-group>
             </el-popover>
          </el-col>
-         <el-col class="ml-12" :span="5">
-            <el-radio-group v-model="radioValue">
+         <el-col class="ml-12" :span="3">
+            <el-radio-group v-model="tableSize">
                <el-radio-button label="缩小" />
                <el-radio-button label="正常" />
                <el-radio-button label="放大" />
+            </el-radio-group>
+         </el-col>
+         <el-col :span="3">
+            <el-radio-group v-model="echartsVisableValue">
+               <el-radio-button label="隐藏图表" />
+               <el-radio-button label="显示图表" />
             </el-radio-group>
          </el-col>
       </el-row>
@@ -796,18 +827,18 @@ const salaryOption: ECOption = {
          @size-change="handleSizeChange"
          @current-change="handleCurrentChange" />
    </div>
-   <el-row class="mt-6">
+   <el-row v-if="isChartVisable" class="mt-6">
       <el-col :span="6">
-         <EchartsVue :visible="true" :options="genderOption"></EchartsVue>
+         <EchartsVue :options="genderOption"></EchartsVue>
       </el-col>
       <el-col :span="6">
-         <EchartsVue :visible="true" :options="ageOption"></EchartsVue>
+         <EchartsVue :options="ageOption"></EchartsVue>
       </el-col>
       <el-col :span="6">
-         <EchartsVue :visible="true" :options="postOption"></EchartsVue>
+         <EchartsVue :options="postOption"></EchartsVue>
       </el-col>
       <el-col :span="6">
-         <EchartsVue :visible="true" :options="salaryOption"></EchartsVue>
+         <EchartsVue :options="salaryOption"></EchartsVue>
       </el-col>
    </el-row>
 

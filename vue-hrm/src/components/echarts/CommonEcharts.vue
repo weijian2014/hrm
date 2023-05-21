@@ -62,7 +62,6 @@ echarts.use([
 ])
 
 const props = defineProps<{
-   visible: boolean
    options: ECOption
 }>()
 
@@ -81,7 +80,7 @@ onMounted(() => {
 
 <template>
    <!-- echarts的div一定要有高度, 否则不显示 -->
-   <div v-if="visible" ref="chartRef" class="echarts-class"></div>
+   <div ref="chartRef" class="echarts-class"></div>
 </template>
 
 <style lang="scss" scoped>
