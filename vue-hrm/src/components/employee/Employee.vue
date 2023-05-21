@@ -422,38 +422,80 @@ const handleSizeChange = (value: number) => {
    currentPage.value = 1
 }
 
-// 男女比例
-const genderOptionData = ref([
-   { name: "男", value: 0 },
-   { name: "女", value: 0 },
-])
 watch(
    () => tableData.value,
    (newValue) => {
+      // 性别
       genderOptionData.value[0].value = 0
       genderOptionData.value[1].value = 0
+
+      // 岗位
+      if (postOptionDataX.value.length === 0) {
+         posts.value.forEach((p) => {
+            postOptionDataX.value.push(p.name)
+            postOptionDataY.value.push(0)
+         })
+      } else {
+         postOptionDataY.value.map((v, i) => {
+            postOptionDataY.value[i] = 0
+         })
+      }
+
+      // 工资
+      salaryOptionData.value.forEach((v, i) => {
+         salaryOptionData.value[i].value = 0
+      })
+
       if (tableData.value) {
          tableData.value.forEach((e) => {
+            // 性别
             if (e.gender === "男") {
                genderOptionData.value[0].value += 1
             } else {
                genderOptionData.value[1].value += 1
             }
+
+            // 岗位
+            var index = postOptionDataX.value.indexOf(e.post)
+            if (index !== -1) {
+               postOptionDataY.value[index] += 1
+            }
+
+            // 工资
+            if (e.salary < 4000) {
+               index = 0
+            } else if (e.salary >= 4000 && e.salary < 5000) {
+               index = 1
+            } else if (e.salary >= 5000 && e.salary < 6000) {
+               index = 2
+            } else if (e.salary >= 6000 && e.salary < 7000) {
+               index = 3
+            } else if (e.salary >= 7000 && e.salary < 8000) {
+               index = 4
+            } else {
+               index = 5
+            }
+            salaryOptionData.value[index].value += 1
          })
       }
 
       console.log("genderOptionData", genderOptionData.value)
    }
 )
+
+// 男女比例
+const genderOptionData = ref([
+   { name: "男", value: 0 },
+   { name: "女", value: 0 },
+])
 const genderOption: ECOption = {
    title: {
-      text: "男女比例",
+      text: "性别结构",
       left: "center",
-      top: "center",
    },
    tooltip: {
       trigger: "item",
-      formatter: "{b}{c}%",
+      formatter: "{c}%",
    },
    series: {
       type: "pie",
@@ -465,7 +507,7 @@ const genderOption: ECOption = {
       color: ["#409eff", "#f89898"],
       label: {
          alignTo: "labelLine",
-         formatter: "{name|{b}}\n{time|{c} 人, 占比{d}% }",
+         formatter: "{name|{b}}\n{time|{c} 人}",
          minMargin: 5,
          edgeDistance: 10,
          lineHeight: 15,
@@ -488,32 +530,6 @@ const genderOption: ECOption = {
 // 岗位分布
 const postOptionDataX = ref<string[]>([])
 const postOptionDataY = ref<number[]>([])
-watch(
-   () => tableData.value,
-   (newValue) => {
-      if (tableData.value) {
-         if (postOptionDataX.value.length === 0) {
-            posts.value.forEach((p) => {
-               postOptionDataX.value.push(p.name)
-               postOptionDataY.value.push(0)
-            })
-         } else {
-            postOptionDataY.value.map((v, i) => {
-               postOptionDataY.value[i] = 0
-            })
-         }
-
-         tableData.value.forEach((e) => {
-            const index = postOptionDataX.value.indexOf(e.post)
-            if (index !== -1) {
-               postOptionDataY.value[index] += 1
-            }
-         })
-         console.log("postOptionData", postOptionDataX.value, postOptionDataY.value)
-      }
-   }
-)
-
 const postOption: ECOption = {
    title: {
       text: "岗位分布",
@@ -521,7 +537,7 @@ const postOption: ECOption = {
    },
    tooltip: {
       trigger: "item",
-      formatter: "{b}{c}%",
+      formatter: "{c}%",
    },
    xAxis: {
       type: "category",
@@ -548,6 +564,61 @@ const postOption: ECOption = {
                },
             },
          },
+      },
+   ],
+}
+
+// 工资结构
+const salaryOptionData = ref<{ value: number; name: string }[]>([
+   { value: 0, name: "4000元以下" },
+   { value: 0, name: "4000~5000元" },
+   { value: 0, name: "5000~6000元" },
+   { value: 0, name: "6000~7000元" },
+   { value: 0, name: "7000~8000元" },
+   { value: 0, name: "8000元以上" },
+])
+const salaryOption: ECOption = {
+   title: {
+      text: "工资结构",
+      left: "center",
+   },
+   tooltip: {
+      trigger: "item",
+      formatter: "{c}%",
+   },
+   toolbox: {
+      show: true,
+      feature: {
+         mark: { show: true },
+         dataView: { show: true, readOnly: false },
+         restore: { show: true },
+         saveAsImage: { show: true },
+      },
+   },
+   series: [
+      {
+         name: "Nightingale Chart",
+         type: "pie",
+         radius: [20, 60],
+         center: ["50%", "50%"],
+         roseType: "area",
+         itemStyle: {
+            borderRadius: 8,
+         },
+         label: {
+            alignTo: "labelLine",
+            formatter: "{name|{b}}\n{time|{c} 人}",
+            minMargin: 5,
+            edgeDistance: 10,
+            lineHeight: 15,
+            rich: {
+               time: {
+                  fontSize: 10,
+                  color: "#999",
+               },
+            },
+         },
+         data: salaryOptionData.value,
       },
    ],
 }
@@ -674,7 +745,7 @@ const postOption: ECOption = {
          <EchartsVue :visible="true" :options="postOption"></EchartsVue>
       </el-col>
       <el-col :span="6">
-         <EchartsVue :visible="true" :options="genderOption"></EchartsVue>
+         <EchartsVue :visible="true" :options="salaryOption"></EchartsVue>
       </el-col>
    </el-row>
 
